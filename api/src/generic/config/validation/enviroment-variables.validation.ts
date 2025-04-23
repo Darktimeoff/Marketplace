@@ -9,4 +9,9 @@ export const environmentVariablesValidationSchema = Joi.object<EnvironmentVariab
         .default(NodeEnviromentEnum.DEVELOPMENT),
     [EnvironmentVariablesEnum.PORT]: Joi.number().default(4080),
     [EnvironmentVariablesEnum.HOST]: Joi.string().default('localhost'),
+    [EnvironmentVariablesEnum.DB_NAME]: Joi.string().required(),
+    [EnvironmentVariablesEnum.DB_USER]: Joi.string().required(),
+    [EnvironmentVariablesEnum.DB_PASSWORD]: Joi.string().required(),
+    [EnvironmentVariablesEnum.DB_PORT]: Joi.number().required(),
+    [EnvironmentVariablesEnum.DATABASE_URL]: Joi.string().required(),
 })

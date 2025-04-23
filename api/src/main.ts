@@ -10,10 +10,12 @@ async function bootstrap() {
 
     const host = configService.get(EnvironmentVariablesEnum.HOST)
     const port = configService.get(EnvironmentVariablesEnum.PORT)
+    const dbName = configService.get(EnvironmentVariablesEnum.DB_NAME)
 
     await app.listen(port, host)
+
     Logger.log('Marketplace API started ', {
-        // db: dbName,
+        db: dbName,
         url: `http://${host}:${port}`,
         context: 'Bootstrap',
         pid: process.pid,

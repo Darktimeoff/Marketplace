@@ -6,10 +6,10 @@
     "api"
   ],
   "scripts": {
-    "start": "bun --filter=api start",
-    "lint": "bun --filter=api lint",
-    "ts": "bun --filter=api ts",
-    "prepare": "husky && bun --filter=api prepare",
+    "start": "bun --elide-lines 0 --filter=api start",
+    "lint": "bun --elide-lines 0 --filter=api lint",
+    "ts": "bun --elide-lines 0 --filter=api ts",
+    "prepare": "husky && bun --elide-lines 0 --filter=api prepare",
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
