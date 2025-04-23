@@ -9,7 +9,7 @@
     "start": "bun --filter=api start",
     "lint": "bun --filter=api lint",
     "ts": "bun --filter=api ts",
-    "prepare": "husky",
+    "prepare": "husky && bun --filter=api prepare",
     "lint-staged": "lint-staged"
   },
   "devDependencies": {

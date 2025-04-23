@@ -8,13 +8,21 @@ import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 export const baseConfig = tseslint.config(
     {
         ignores: [
-            'node_modules/**/*',
-            'dist/**/*',
-            'build/**/*',
-            'public/**/*',
-            'generated/**/*',
-            'commitlint.config.mjs',
-            'eslint.config.mjs',
+            "**/dist/**/*",
+            "**/build/**/*",
+            "**/.tsbuildinfo",
+            "**/tsconfig.tsbuildinfo",
+            
+            "**/.cache/**/*",
+            "**/tmp/**/*",
+      
+            "**/.env",
+            "**/.env.*",
+            "**/prisma/**/*",
+        
+            "**/generated/**/*",
+            "commitlint.config.mjs",
+            "eslint.config.mjs",
         ],
     },
     eslint.configs.recommended,
