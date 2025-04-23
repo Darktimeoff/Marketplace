@@ -1,0 +1,52 @@
+
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["import", "promise", "node", "security", "jest"],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es2020": true
+    },
+    "rules": {
+        "no-empty": "warn",
+        "no-constant-condition": "warn",
+        "no-inner-declarations": "warn",
+        "no-void": ["error", { "allowAsStatement": true }],
+        "no-var": ["error"],
+        "no-console": "error",
+        "no-unreachable": "error",
+        "eqeqeq": "error",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "ignoreRestSiblings": true }
+        ],
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-implied-eval": "off",
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "import/no-named-as-default-member": ["error"],
+        "import/no-cycle": "off",
+        "sort-imports": [
+            "error",
+            {
+                "allowSeparatedGroups": false,
+                "ignoreCase": false,
+                "ignoreDeclarationSort": true,
+                "ignoreMemberSort": false,
+                "memberSyntaxSortOrder": ["all", "multiple", "none", "single"]
+            }
+        ],
+        "no-undef": "off",
+        "no-array-constructor": "off",
+        "no-implied-eval": "off",
+        "no-loss-of-precision": "off",
+        "no-unused-vars": "off",
+        "require-await": "off",
+        "import/named": "off",
+        "import/namespace": "off",
+        "import/default": "off"
+    }
+}
