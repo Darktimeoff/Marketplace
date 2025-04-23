@@ -1,0 +1,25 @@
+{
+ 
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+      "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo.json",
+      "baseUrl": "./",
+      "allowJs": false,
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "resolveJsonModule": true,
+      "paths": {
+          "@/*": [
+              "./src/*"
+          ]
+      },
+      "types": ["jest", "express"],
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+      "**/node_modules",
+      "**/.*/",
+  ]
+}

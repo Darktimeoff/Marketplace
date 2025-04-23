@@ -1,1 +1,1 @@
-bun lint-staged --allow-empty
+bun ts & bun lint
