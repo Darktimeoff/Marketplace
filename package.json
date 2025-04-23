@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint:oxc": "oxlint -c .oxlintrc.json --fix",
-    "lint": "bun lint:oxc && eslint . --fix --cache",
+    "lint": "bun lint:oxc && eslint . --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
     "ts": "tsc --noEmit",
     "prepare": "husky",
     "lint-staged": "lint-staged"
