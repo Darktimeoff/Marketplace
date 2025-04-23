@@ -26,7 +26,7 @@ export default defineConfig([
         'dist/**/*',
         'build/**/*',
         'public/**/*',
-        'generated/**/*',
+        'generated/**/*'
     ]),
     {
         extends: compat.extends(
