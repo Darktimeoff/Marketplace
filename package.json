@@ -2,16 +2,20 @@
   "name": "marketplace-monorepo",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "api"
+  ],
   "scripts": {
-    "lint:oxc": "oxlint -c .oxlintrc.json --fix",
-    "lint": "bun lint:oxc && eslint . --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
-    "ts": "tsc --noEmit",
-    "prepare": "husky",
+    "start": "bun --elide-lines 0 --filter=api start",
+    "lint": "bun --elide-lines 0 --filter=api lint",
+    "ts": "bun --elide-lines 0 --filter=api ts",
+    "prepare": "husky && bun --elide-lines 0 --filter=api prepare",
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/js": "^9.25.1",
     "@typescript-eslint/eslint-plugin": "8.31.0",
     "@typescript-eslint/parser": "8.31.0",
     "eslint": "9.25.1 ",
@@ -30,11 +34,5 @@
     "oxlint": "0.16.7",
     "prettier": "3.5.3 ",
     "typescript": "5.8.3"
-  },
-  "lint-staged": {
-    "*.{ts}": [
-      "bun lint",
-      "bun ts"
-    ]
   }
 }
