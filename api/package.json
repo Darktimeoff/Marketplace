@@ -5,20 +5,14 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "build:nest": "nest build",
+    "start": "bun --hot src/main.ts",
+    "start:prod": "bun build:nest && bun dist/main.js",
     "ts": "tsc --noEmit",
-    "start:prod": "bun dist/main",
     "lint:oxc": "oxlint -c ../.oxlintrc.json --fix",
-    "lint": "bun lint:oxc && eslint \"{src,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
-    "test": "jest",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "lint": "bun lint:oxc && eslint \"{src,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.0",
