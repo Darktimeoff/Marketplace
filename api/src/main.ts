@@ -1,16 +1,19 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
 import { Logger } from '@nestjs/common'
+import { ApiConfigService } from './generic/config/api-config.module'
+import { EnvironmentVariablesEnum } from './generic/config/enum/enviroment-variables.enum'
 
 async function bootstrap() {
-    const host = process.env.HOST ?? 'localhost'
-    const port = process.env.PORT ?? 3000
-    const dbName = process.env.DB_NAME ?? 'api'
-
     const app = await NestFactory.create(AppModule)
-    await app.listen(port)
+    const configService = app.get(ApiConfigService)
+
+    const host = configService.get(EnvironmentVariablesEnum.HOST)
+    const port = configService.get(EnvironmentVariablesEnum.PORT)
+
+    await app.listen(port, host)
     Logger.log('Marketplace API started ', {
-        db: dbName,
+        // db: dbName,
         url: `http://${host}:${port}`,
         context: 'Bootstrap',
         pid: process.pid,
