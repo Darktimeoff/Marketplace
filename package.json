@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "start": "bun --elide-lines 0 --filter=api start",
-    "lint": "bun --elide-lines 0 --filter=api lint",
+    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint",
     "ts": "bun --elide-lines 0 --filter=api ts",
     "prepare": "husky && bun --elide-lines 0 --filter=api prepare",
     "lint-staged": "lint-staged"

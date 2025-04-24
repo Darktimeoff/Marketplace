@@ -8,7 +8,7 @@ export class DBService extends PrismaClient implements OnModuleInit, OnModuleDes
     @Log(
         'Connecting to database...',
         'Connected to database',
-        (error) => `Error connecting to database: ${getErrorMessage(error)}`
+        error => `Error connecting to database: ${getErrorMessage(error)}`
     )
     async onModuleInit() {
         await this.$connect()
@@ -17,7 +17,7 @@ export class DBService extends PrismaClient implements OnModuleInit, OnModuleDes
     @Log(
         'Disconnecting from database...',
         'Disconnected from database',
-        (error) => `Error disconnecting from database: ${getErrorMessage(error)}`
+        error => `Error disconnecting from database: ${getErrorMessage(error)}`
     )
     async onModuleDestroy() {
         await this.$disconnect()

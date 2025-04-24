@@ -12,8 +12,7 @@
     "start": "bun --hot src/main.ts",
     "start:prod": "bun build:nest && bun dist/main.js",
     "ts": "tsc --noEmit",
-    "lint:oxc": "oxlint -c ../.oxlintrc.json --fix",
-    "lint": "bun lint:oxc && eslint \"{src,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'"
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'"
   },
   "prisma": {
     "schema": "./prisma/schema"
