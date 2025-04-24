@@ -1,0 +1,10 @@
+model Translation {
+  id                  Int        @id @default(autoincrement())
+  value               Json       @db.JsonB
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  deletedAt           DateTime?
+  productTitles       Product[]  @relation("ProductTitle")
+  productDescriptions Product[]  @relation("ProductDescription")
+  Category            Category[]
+}

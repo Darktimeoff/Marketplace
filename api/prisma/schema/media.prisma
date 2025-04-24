@@ -1,0 +1,22 @@
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum MediaFormat {
+  JPEG
+  PNG
+  WEBP
+}
+
+model Media {
+  id           Int            @id @default(autoincrement())
+  url          String         @unique
+  type         MediaType
+  format       MediaFormat
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  Category     Category[]
+  ProductMedia ProductMedia[]
+}

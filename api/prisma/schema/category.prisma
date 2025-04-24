@@ -1,0 +1,18 @@
+model Category {
+  id               Int         @id @default(autoincrement())
+  nameId           Int
+  name             Translation @relation(fields: [nameId], references: [id])
+  parentCategoryId Int?
+  parentCategory   Category?   @relation("Children", fields: [parentCategoryId], references: [id])
+  children         Category[]  @relation("Children")
+  imageId          Int?
+  image            Media?      @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  path             String      @default("")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Product   Product[]
+
+  @@index([path])
+}
