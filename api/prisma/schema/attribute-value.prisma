@@ -1,13 +1,13 @@
 model AttributeValue {
   attributeId Int
-  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   productId   Int
-  product     Product   @relation(fields: [productId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   order       Int       @default(0)
 
   numberValue Decimal?
   textValueId Int?
-  textValue   Translation? @relation(fields: [textValueId], references: [id])
+  textValue   Translation? @relation(fields: [textValueId], references: [id], onDelete: SetNull)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

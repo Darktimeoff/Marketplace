@@ -5,7 +5,7 @@ model Product {
   descriptionId  Int?
   description    Translation?     @relation("ProductDescription", fields: [descriptionId], references: [id], onDelete: SetNull)
   categoryId     Int
-  category       Category         @relation(fields: [categoryId], references: [id])
+  category       Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   slug           String           @unique
   price          Decimal
   oldPrice       Decimal?
