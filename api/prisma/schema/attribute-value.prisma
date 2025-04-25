@@ -1,0 +1,19 @@
+model AttributeValue {
+  attributeId Int
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  productId   Int
+  product     Product   @relation(fields: [productId], references: [id])
+  order       Int       @default(0)
+
+  numberValue Decimal?
+  textValueId Int?
+  textValue   Translation? @relation(fields: [textValueId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@id([attributeId, productId])
+  @@unique([productId, order])
+  @@index([productId, order(asc)])
+}

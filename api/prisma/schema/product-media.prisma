@@ -1,5 +1,4 @@
 model ProductMedia {
-  id        Int       @id @default(autoincrement())
   productId Int
   product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   mediaId   Int
@@ -9,8 +8,8 @@ model ProductMedia {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@id([productId, mediaId])
   @@unique([productId, order])
-  @@unique([productId, mediaId])
   @@index([productId, order(asc)])
   @@index([mediaId])
 }

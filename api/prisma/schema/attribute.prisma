@@ -1,0 +1,15 @@
+model Attribute {
+  id                Int                 @id @default(autoincrement())
+  nameId            Int
+  name              Translation         @relation("attributeName", fields: [nameId], references: [id])
+  order             Int                 @default(0)
+  unitId            Int?
+  unit              Translation?        @relation("attributeUnit", fields: [unitId], references: [id])
+  attributeGroupId  Int
+  attributeGroup    AttributeGroup      @relation(fields: [attributeGroupId], references: [id])
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  CategoryAttribute CategoryAttribute[]
+  AttributeValue    AttributeValue[]
+}
