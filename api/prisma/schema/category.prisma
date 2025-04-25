@@ -4,17 +4,17 @@ model Category {
   name             Translation @relation(fields: [nameId], references: [id], onDelete: Restrict)
   slug             String      @unique
   parentCategoryId Int?
-  parentCategory   Category?   @relation("Children", fields: [parentCategoryId], references: [id], onDelete: Cascade)
-  children         Category[]  @relation("Children")
+  parentCategory   Category?   @relation("children", fields: [parentCategoryId], references: [id], onDelete: Cascade)
+  childrens         Category[]  @relation("children")
   imageId          Int?
   image            Media?      @relation(fields: [imageId], references: [id], onDelete: SetNull)
   path             String      @default("")
 
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  deletedAt         DateTime?
-  Product           Product[]
-  CategoryAttribute CategoryAttribute[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+  products           Product[]
+  categoryAttributes CategoryAttribute[]
 
   @@index([path])
 }

@@ -1,19 +1,19 @@
 model Product {
-  id             Int              @id @default(autoincrement())
-  titleId        Int
-  title          Translation      @relation("ProductTitle", fields: [titleId], references: [id], onDelete: Restrict)
-  descriptionId  Int?
-  description    Translation?     @relation("ProductDescription", fields: [descriptionId], references: [id], onDelete: SetNull)
-  categoryId     Int
-  category       Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  slug           String           @unique
-  price          Decimal
-  oldPrice       Decimal?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deletedAt      DateTime?
-  ProductMedia   ProductMedia[]
-  AttributeValue AttributeValue[]
+  id              Int              @id @default(autoincrement())
+  titleId         Int
+  title           Translation      @relation("productTitles", fields: [titleId], references: [id], onDelete: Restrict)
+  descriptionId   Int?
+  description     Translation?     @relation("productDescriptions", fields: [descriptionId], references: [id], onDelete: SetNull)
+  categoryId      Int
+  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  slug            String           @unique
+  price           Decimal
+  oldPrice        Decimal?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+  productMedia    ProductMedia[]
+  attributeValues AttributeValue[]
 
   @@index([categoryId])
 }

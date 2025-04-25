@@ -124,4 +124,7 @@ Generate code, corrections, and refactorings that comply with the basic principl
 - Write tests for each controller and service.
 - Write end to end tests for each api module.
 - Add a admin/test method to each controller as a smoke test.
+## Specific to Prisma
+  - for relation name use camelCase, plural form for arrays type
+  - analyze structure, and suggest usefull index, and unique 
  

@@ -1,10 +1,10 @@
 model AttributeGroup {
-  id        Int         @id @default(autoincrement())
-  nameId    Int
-  name      Translation @relation(fields: [nameId], references: [id], onDelete: Restrict)
-  order     Int         @default(0)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  deletedAt DateTime?
-  Attribute Attribute[]
+  id         Int         @id @default(autoincrement())
+  nameId     Int
+  name       Translation @relation(fields: [nameId], references: [id], onDelete: Restrict)
+  order      Int         @default(0)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  attributes Attribute[]
 }
