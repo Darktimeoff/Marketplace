@@ -1,8 +1,8 @@
 model CategoryAttribute {
   categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   attributeId Int
-  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
