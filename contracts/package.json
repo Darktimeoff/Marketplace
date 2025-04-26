@@ -1,0 +1,29 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "Marketplace Contracts",
+  "sideEffects": false,
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/esm/index.d.ts"
+    }
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "scripts": {
+    "build:app": "bun run clear && bun build:cjs && bun build:esm",
+    "build:cjs": "bun run tsc -p tsconfig.build-cjs.json && bun run tsc-alias -p tsconfig.build-cjs.json",
+    "build:esm": "bun run tsc -p tsconfig.build-esm.json && bun run tsc-alias -p tsconfig.build-esm.json",
+    "ts": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
+    "clear": "rimraf dist"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.15"
+  }
+}

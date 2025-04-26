@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "api"
+    "api",
+    "contracts"
   ],
   "scripts": {
+    "build:app": "bun --filter=api build:app && bun --filter=contracts build:app",
     "start": "bun --elide-lines 0 --filter=api start",
-    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint",
-    "ts": "bun --elide-lines 0 --filter=api ts",
-    "prepare": "husky && bun --elide-lines 0 --filter=api prepare",
-    "lint-staged": "lint-staged"
+    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint && bun --elide-lines 0 --filter=contracts lint",
+    "ts": "bun --elide-lines 0 --filter=api ts && bun --elide-lines 0 --filter=contracts ts ",
+    "prepare": "husky && bun --elide-lines 0 --filter=api prepare"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",

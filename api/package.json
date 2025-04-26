@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "prepare": "bun prisma generate",
-    "build:nest": "nest build",
+    "build:app": "nest build",
     "start": "bun --hot src/main.ts",
     "start:prod": "bun build:nest && bun dist/main.js",
     "ts": "tsc --noEmit",
@@ -27,7 +27,8 @@
     "@rnw-community/shared": "^1.1.0",
     "joi": "^17.13.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "contracts": "workspace:*"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
