@@ -1,5 +1,4 @@
-
 export interface AttributeGroupInterface {
-    nameId: number;
-    order: number;
+    nameId: number
+    order: number
 }

@@ -1,1 +1,1 @@
-export * from './entity/base-entity.interface';
+export * from './entity/base-entity.interface'
