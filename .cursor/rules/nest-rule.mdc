@@ -37,6 +37,28 @@ Generate code, corrections, and refactorings that comply with the basic principl
     - ctx for contexts
     - req, res, next for middleware function parameters
 
+### Project structure
+  -   **Terminology**: In the guidelines below, "entity" refers to any code unit (component, composable, utility, etc.)
+
+  -   **Generic Code**:
+
+      -   Place domain-agnostic, reusable entities in the `generic` folder
+      -   Example: Common UI components, utility functions, or hooks that aren't tied to a specific feature
+
+  -   **Feature-Specific Code**:
+
+      -   For independent features with their own pages, components, and utilities, create a dedicated folder in the src directory
+      -   Example: A custom fields feature would have its own `custom-fields` folder
+
+  -   **Base Feature Implementations**:
+
+      -   When working on a feature-specific entity without a secondary domain, place it directly in that feature's folder
+      -   Example: Generic custom field components go directly in the `custom-fields` folder
+
+  -   **Feature Integrations**:
+      -   When implementing a feature for a specific domain, create an integration folder within that domain folder
+      -   Example: To add custom fields for assets, create an `@asset-custom-fields` integration folder inside the `@assets` folder and place all related entities there
+
 ### Functions
 
 - In this context, what is understood as a function will also apply to a method.

@@ -1,5 +1,6 @@
 
 export enum AttributeAssociationEnum {
     NAME = 'name',
-    UNIT = 'unit'
+    UNIT = 'unit',
+    ATTRIBUTE_GROUP = 'attributeGroup',
 }
