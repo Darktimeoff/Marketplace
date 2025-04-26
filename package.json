@@ -4,13 +4,14 @@
   "private": true,
   "workspaces": [
     "api",
-    "contracts"
+    "contracts",
+    "lib/*"
   ],
   "scripts": {
-    "build:app": "bun --filter=api build:app && bun --filter=contracts build:app",
+    "build:app": "bun --filter=api build:app && bun --filter=contracts build:app && bun --filter=utils-lib build:app",
     "start": "bun --elide-lines 0 --filter=api start",
-    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint && bun --elide-lines 0 --filter=contracts lint",
-    "ts": "bun --elide-lines 0 --filter=api ts && bun --elide-lines 0 --filter=contracts ts ",
+    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint && bun --elide-lines 0 --filter=contracts lint && bun --elide-lines 0 --filter=utils-lib lint",
+    "ts": "bun --elide-lines 0 --filter=api ts && bun --elide-lines 0 --filter=contracts ts && bun --elide-lines 0 --filter=utils-lib ts",
     "prepare": "husky && bun --elide-lines 0 --filter=api prepare"
   },
   "devDependencies": {

@@ -28,7 +28,8 @@
     "joi": "^17.13.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "contracts": "workspace:*"
+    "contracts": "workspace:*",
+    "utils-lib": "workspace:*"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
