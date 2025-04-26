@@ -1,4 +1,4 @@
-model AttributeValue {
+model AttributeProductValue {
   attributeId Int
   attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
   productId   Int

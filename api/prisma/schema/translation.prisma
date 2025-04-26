@@ -1,14 +1,14 @@
 model Translation {
-  id                  Int              @id @default(autoincrement())
-  value               Json             @db.JsonB
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  id                  Int                     @id @default(autoincrement())
+  value               Json                    @db.JsonB
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
   deletedAt           DateTime?
-  productTitles       Product[]        @relation("productTitles")
-  productDescriptions Product[]        @relation("productDescriptions")
+  productTitles       Product[]               @relation("productTitles")
+  productDescriptions Product[]               @relation("productDescriptions")
   categories          Category[]
-  attributeNames      Attribute[]      @relation("attributeNames")
-  attributeUnits      Attribute[]      @relation("attributeUnits")
-  attributeValues     AttributeValue[]
+  attributeNames      Attribute[]             @relation("attributeNames")
+  attributeUnits      Attribute[]             @relation("attributeUnits")
+  attributeValues     AttributeProductValue[]
   attributeGroups     AttributeGroup[]
 }

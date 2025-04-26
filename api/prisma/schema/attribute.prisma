@@ -1,15 +1,15 @@
 model Attribute {
-  id                 Int                 @id @default(autoincrement())
+  id                 Int                     @id @default(autoincrement())
   nameId             Int
-  name               Translation         @relation("attributeNames", fields: [nameId], references: [id], onDelete: Restrict)
-  order              Int                 @default(0)
+  name               Translation             @relation("attributeNames", fields: [nameId], references: [id], onDelete: Restrict)
+  order              Int                     @default(0)
   unitId             Int?
-  unit               Translation?        @relation("attributeUnits", fields: [unitId], references: [id], onDelete: SetNull)
+  unit               Translation?            @relation("attributeUnits", fields: [unitId], references: [id], onDelete: SetNull)
   attributeGroupId   Int?
-  attributeGroup     AttributeGroup?     @relation(fields: [attributeGroupId], references: [id], onDelete: SetNull)
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  attributeGroup     AttributeGroup?         @relation(fields: [attributeGroupId], references: [id], onDelete: SetNull)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
   deletedAt          DateTime?
   categoryAttributes CategoryAttribute[]
-  attributeValues    AttributeValue[]
+  attributeValues    AttributeProductValue[]
 }
