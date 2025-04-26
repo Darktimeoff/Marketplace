@@ -1,3 +1,4 @@
 export * from './entity/product-entity.interface'
 export * from './interface/product.interface'
 export * from './enum/product-association.enum'
+export * from './product-media'
