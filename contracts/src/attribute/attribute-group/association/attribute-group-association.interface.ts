@@ -3,6 +3,6 @@ import { TranslationEntityInterface } from '@/translation'
 import { AttributeEntityInterface } from '@/attribute/entity/attribute-entity.interface'
 
 export interface AttributeGroupAssociationInterface {
-    [AttributeGroupAssociationEnum.NAME]: TranslationEntityInterface
-    [AttributeGroupAssociationEnum.ATTRIBUTES]: AttributeEntityInterface[]
+    [AttributeGroupAssociationEnum.NAME]?: TranslationEntityInterface
+    [AttributeGroupAssociationEnum.ATTRIBUTES]?: AttributeEntityInterface[]
 }

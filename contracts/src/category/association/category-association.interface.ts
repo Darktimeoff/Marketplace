@@ -5,9 +5,9 @@ import { CategoryEntityInterface } from '@/category/entity/category-entity.inter
 import { CategoryAttributeEntityInterface } from '@/category/category-attribute'
 
 export interface CategoryAssociationInterface {
-    [CategoryAssociationEnum.NAME]: TranslationEntityInterface
-    [CategoryAssociationEnum.IMAGE]: MediaEntityInterface | null
-    [CategoryAssociationEnum.PARENT_CATEGORY]: CategoryEntityInterface | null
-    [CategoryAssociationEnum.CHILDRENS]: CategoryEntityInterface[]
-    [CategoryAssociationEnum.CATEGORY_ATTRIBUTES]: CategoryAttributeEntityInterface[]
+    [CategoryAssociationEnum.NAME]?: TranslationEntityInterface
+    [CategoryAssociationEnum.IMAGE]?: MediaEntityInterface | null
+    [CategoryAssociationEnum.PARENT_CATEGORY]?: CategoryEntityInterface | null
+    [CategoryAssociationEnum.CHILDRENS]?: CategoryEntityInterface[]
+    [CategoryAssociationEnum.CATEGORY_ATTRIBUTES]?: CategoryAttributeEntityInterface[]
 }

@@ -4,9 +4,9 @@ import { TranslationEntityInterface } from '@/translation'
 import { ProductMediaEntityInterface } from '@/product/product-media'
 import { ProductAttributeValueEntityInterface } from '@/product/product-attribute-value'
 export interface ProductAssociationInterface {
-    [ProductAssociationEnum.TITLE]: TranslationEntityInterface
-    [ProductAssociationEnum.DESCRIPTION]: TranslationEntityInterface | null
-    [ProductAssociationEnum.CATEGORY]: CategoryEntityInterface
-    [ProductAssociationEnum.PRODUCT_MEDIA]: ProductMediaEntityInterface[]
-    [ProductAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]: ProductAttributeValueEntityInterface[]
+    [ProductAssociationEnum.TITLE]?: TranslationEntityInterface
+    [ProductAssociationEnum.DESCRIPTION]?: TranslationEntityInterface | null
+    [ProductAssociationEnum.CATEGORY]?: CategoryEntityInterface
+    [ProductAssociationEnum.PRODUCT_MEDIA]?: ProductMediaEntityInterface[]
+    [ProductAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]?: ProductAttributeValueEntityInterface[]
 }

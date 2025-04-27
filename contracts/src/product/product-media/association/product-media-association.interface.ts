@@ -3,6 +3,6 @@ import { ProductMediaAssociationEnum } from '@/product/product-media/enum/produc
 import { ProductEntityInterface } from '@/product'
 
 export interface ProductMediaAssociationInterface {
-    [ProductMediaAssociationEnum.PRODUCT]: ProductEntityInterface
-    [ProductMediaAssociationEnum.MEDIA]: MediaEntityInterface
+    [ProductMediaAssociationEnum.PRODUCT]?: ProductEntityInterface
+    [ProductMediaAssociationEnum.MEDIA]?: MediaEntityInterface
 }

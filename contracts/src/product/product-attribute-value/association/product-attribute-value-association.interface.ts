@@ -4,7 +4,7 @@ import { AttributeEntityInterface } from '@/attribute'
 import { TranslationEntityInterface } from '@/translation'
 
 export interface ProductAttributeValueAssociationInterface {
-    [ProductAttributeValueEnum.PRODUCT]: ProductEntityInterface
-    [ProductAttributeValueEnum.ATTRIBUTE]: AttributeEntityInterface
-    [ProductAttributeValueEnum.TEXT_VALUE]: TranslationEntityInterface
+    [ProductAttributeValueEnum.PRODUCT]?: ProductEntityInterface
+    [ProductAttributeValueEnum.ATTRIBUTE]?: AttributeEntityInterface
+    [ProductAttributeValueEnum.TEXT_VALUE]?: TranslationEntityInterface
 }
