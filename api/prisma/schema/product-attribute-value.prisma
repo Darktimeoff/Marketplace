@@ -13,7 +13,7 @@ model ProductAttributeValue {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  @@id([attributeId, productId])
+  @@id([attributeId, productId, order])
   @@unique([productId, order])
   @@index([productId, order(asc)])
 }
