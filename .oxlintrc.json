@@ -2,6 +2,7 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "plugins": ["import", "promise", "node", "security", "jest"],
+    "ignorePatterns": ["admin/**"],
     "env": {
         "browser": true,
         "node": true,
