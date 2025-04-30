@@ -20,10 +20,12 @@ export default {
         },
         {
             name: 'uk_ua',
+            label: "Ukrainian",
             type: AdminForthDataTypes.STRING,
         },
         {
             name: 'en_us',
+            label: "English",
             type: AdminForthDataTypes.STRING,
         },
         {
