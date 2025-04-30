@@ -1,7 +1,7 @@
 model Translation {
   id                  Int                     @id @default(autoincrement())
   uk_ua               String
-  en_us               String
+  en_us               String?
   createdAt           DateTime                @default(now())
   updatedAt           DateTime                @updatedAt
   deletedAt           DateTime?

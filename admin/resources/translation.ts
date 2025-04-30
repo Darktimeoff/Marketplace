@@ -26,6 +26,7 @@ export default {
         {
             name: 'en_us',
             label: "English",
+            required: false,
             type: AdminForthDataTypes.STRING,
         },
         {
