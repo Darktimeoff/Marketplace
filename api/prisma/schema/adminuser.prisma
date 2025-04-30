@@ -1,6 +1,6 @@
 model adminuser {
-  id            String     @id
-  email         String     @unique
+  id            String   @id
+  email         String   @unique
   password_hash String
   role          String
   created_at    DateTime

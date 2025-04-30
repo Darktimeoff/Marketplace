@@ -6,7 +6,7 @@ export default {
     table: 'Attribute',
     resourceId: 'Attribute', 
     label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
+    recordLabel: (r: any) => `🏡 ${r.slug}`,
     plugins: [
         new ForeignInlineListPlugin({
           foreignResourceId: 'ProductAttributeValue',
@@ -24,6 +24,11 @@ export default {
                 edit: false,
                 create: false,
             },
+        },
+        {
+            name: 'slug',
+            type: AdminForthDataTypes.STRING,
+            required: true,
         },
         {
             name: 'nameId',

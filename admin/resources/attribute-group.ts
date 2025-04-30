@@ -6,7 +6,7 @@ export default {
     table: 'AttributeGroup',
     resourceId: 'AttributeGroup', 
     label: 'Attribute Group',
-    recordLabel: (r: any) => `📋 ${r.id}`,
+    recordLabel: (r: any) => `📋 ${r.slug}`,
     plugins: [
         new ForeignInlineListPlugin({
             foreignResourceId: 'Attribute',
@@ -21,6 +21,11 @@ export default {
                 edit: false,
                 create: false,
             },
+        },
+        {
+            name: 'slug',
+            type: AdminForthDataTypes.STRING,
+            required: true,
         },
         {
             name: 'nameId',

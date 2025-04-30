@@ -1,5 +1,6 @@
 model AttributeGroup {
-  id         Int         @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
+  slug       String      
   nameId     Int
   name       Translation @relation(fields: [nameId], references: [id], onDelete: Restrict)
   order      Int         @default(0)
