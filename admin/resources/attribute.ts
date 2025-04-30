@@ -43,6 +43,24 @@ export default {
             },
         },
         {
+            name: 'unitId',
+            label: "Unit",
+            type: AdminForthDataTypes.INTEGER,
+            required: false,
+            foreignResource: {
+                resourceId: 'Unit',
+            },
+        },
+        {
+            name: 'attributeGroupId',
+            label: "Group Id",
+            type: AdminForthDataTypes.INTEGER,
+            required: true,
+            foreignResource: {
+                resourceId: 'AttributeGroup',
+            },
+        },
+        {
             name: 'order',
             type: AdminForthDataTypes.INTEGER,
             required: true,

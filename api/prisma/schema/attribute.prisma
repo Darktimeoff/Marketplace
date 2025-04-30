@@ -5,9 +5,9 @@ model Attribute {
   name                   Translation             @relation("attributeNames", fields: [nameId], references: [id], onDelete: Restrict)
   order                  Int                     @default(0)
   unitId                 Int?
-  unit                   Translation?            @relation("attributeUnits", fields: [unitId], references: [id], onDelete: SetNull)
-  attributeGroupId       Int?
-  attributeGroup         AttributeGroup?         @relation(fields: [attributeGroupId], references: [id], onDelete: SetNull)
+  unit                   Unit?                   @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  attributeGroupId       Int
+  attributeGroup         AttributeGroup          @relation(fields: [attributeGroupId], references: [id], onDelete: Restrict)
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
   deletedAt              DateTime?

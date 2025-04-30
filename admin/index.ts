@@ -10,6 +10,7 @@ import productMediaResource from "./resources/product-media.ts";
 import productAttributeValueResource from "./resources/product-attribute-value.ts";
 import categoryAttributeResource from "./resources/category-attribute.ts";
 import attributeGroupResource from "./resources/attribute-group.ts";
+import unitResource from './resources/unit.ts'
 
 const ADMIN_BASE_URL = '';
 
@@ -61,7 +62,8 @@ export const admin = new AdminForth({
     productMediaResource,
     productAttributeValueResource,
     categoryAttributeResource,
-    attributeGroupResource
+    attributeGroupResource,
+    unitResource
   ],
   menu: [
     {
@@ -86,6 +88,11 @@ export const admin = new AdminForth({
           resourceId: 'Attribute',
         },
         {
+          label: 'Units',
+          icon: 'flowbite:tag-solid',
+          resourceId: 'Unit',
+        },
+        {
           label: 'Attribute Groups',
           icon: 'flowbite:user-solid',
           resourceId: 'AttributeGroup',
@@ -106,7 +113,7 @@ export const admin = new AdminForth({
           resourceId: 'ProductMedia',
         },
         {
-          label: 'Product Attributes',
+          label: 'Product Value',
           icon: 'flowbite:user-solid',
           resourceId: 'ProductAttributeValue',
         },

@@ -9,7 +9,6 @@ model Translation {
   productDescriptions Product[]               @relation("productDescriptions")
   categories          Category[]
   attributeNames      Attribute[]             @relation("attributeNames")
-  attributeUnits      Attribute[]             @relation("attributeUnits")
   attributeValues     ProductAttributeValue[]
   attributeGroups     AttributeGroup[]
 }

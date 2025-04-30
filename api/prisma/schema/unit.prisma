@@ -1,0 +1,18 @@
+enum UnitType {
+  GB
+  TB
+  Hz
+  MP
+  mAh
+  mm
+}
+
+model Unit {
+  id         Int         @id @default(autoincrement())
+  type       UnitType    @unique
+  uk_ua      String      @unique
+  attributes Attribute[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+}

@@ -3,18 +3,15 @@ import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Media',
-    resourceId: 'Media', 
-    label: 'Media',
-    recordLabel: (r: any) => `🖼️ ${r.url}`,
+    table: 'Unit',
+    resourceId: 'Unit', 
+    label: 'Unit',
+    recordLabel: (r: any) => `🏡 ${r.uk_ua}`,
     plugins: [
         new ForeignInlineListPlugin({
-            foreignResourceId: 'Category',
+          foreignResourceId: 'Attribute',
         }),
-        new ForeignInlineListPlugin({
-            foreignResourceId: 'ProductMedia',
-        }),
-    ],
+      ],
     columns: [
         {
             name: 'id',
@@ -26,29 +23,24 @@ export default {
             },
         },
         {
-            name: 'url',
-            type: AdminForthDataTypes.STRING,
-            required: true,
-            isUnique: true
-        },
-        {
             name: 'type',
+            label: "Type",
             type: AdminForthDataTypes.STRING,
             required: true,
             enum: [
-                { value: "IMAGE", label: "Картинка" },
-                { value: "VIDEO", label: "Видео" },
+                { value: "GB", label: "Гигабайт" },
+                { value: "TB", label: "Терабайт" },
+                { value: "Hz", label: "Герц" },
+                { value: "MP", label: "Мегапикселей" },
+                { value: "mAh", label: "Милиампер" },
+                { value: "mm", label: "Милиметров" }
             ]
         },
         {
-            name: 'format',
+            name: 'uk_ua',
+            label: "Ukrainian",
             type: AdminForthDataTypes.STRING,
-            required: true,
-            enum: [
-                {value: "JPEG", label: "JPEG"},
-                {value: "PNG", label: "PNG"},
-                {value: "WEBP", label: "WEBP"},
-            ]
+            required: true
         },
         {
             name: 'createdAt',
@@ -67,5 +59,6 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
+            
     ]
-} 
+}
