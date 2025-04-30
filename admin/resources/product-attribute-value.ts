@@ -1,47 +1,46 @@
-import ForeignInlineListPlugin from '@adminforth/foreign-inline-list/index.ts';
 import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Attribute',
-    resourceId: 'Attribute', 
-    label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
-    plugins: [
-        new ForeignInlineListPlugin({
-          foreignResourceId: 'ProductAttributeValue',
-        }),
-        new ForeignInlineListPlugin({
-            foreignResourceId: 'CategoryAttribute',
-        }),
-    ],
+    table: 'ProductAttributeValue',
+    resourceId: 'ProductAttributeValue', 
+    label: 'Product Attribute Value',
+    recordLabel: (r: any) => `🏷️ ${r.attributeId}: ${r.textValueId} ${r.numberValue}`,
     columns: [
         {
-            name: 'id',
+            name: 'attributeId',
             primaryKey: true,
             type: AdminForthDataTypes.INTEGER,
-            showIn: {
-                edit: false,
-                create: false,
-            },
+            required: true,
+            foreignResource: {
+                resourceId: 'Attribute',
+            }
         },
         {
-            name: 'nameId',
+            name: 'productId',
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            isUnique: true,
-            showIn: {
-                create: false,
-            },
             foreignResource: {
-                resourceId: 'Translation',
-            },
+                resourceId: 'Product',
+            }
         },
         {
             name: 'order',
+            primaryKey: true,
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            defaultValue: 0,
+            defaultValue: 0
+        },
+        {
+            name: 'numberValue',
+            type: AdminForthDataTypes.DECIMAL,
+        },
+        {
+            name: 'textValueId',
+            type: AdminForthDataTypes.INTEGER,
+            foreignResource: {
+                resourceId: 'Translation',
+            }
         },
         {
             name: 'createdAt',
@@ -60,6 +59,5 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
-            
     ]
-}
+} 

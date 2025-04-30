@@ -3,16 +3,16 @@ import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Attribute',
-    resourceId: 'Attribute', 
-    label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
+    table: 'Media',
+    resourceId: 'Media', 
+    label: 'Media',
+    recordLabel: (r: any) => `🖼️ ${r.url}`,
     plugins: [
         new ForeignInlineListPlugin({
-          foreignResourceId: 'ProductAttributeValue',
+            foreignResourceId: 'Category',
         }),
         new ForeignInlineListPlugin({
-            foreignResourceId: 'CategoryAttribute',
+            foreignResourceId: 'ProductMedia',
         }),
     ],
     columns: [
@@ -26,22 +26,22 @@ export default {
             },
         },
         {
-            name: 'nameId',
-            type: AdminForthDataTypes.INTEGER,
+            name: 'url',
+            type: AdminForthDataTypes.STRING,
             required: true,
-            isUnique: true,
-            showIn: {
-                create: false,
-            },
-            foreignResource: {
-                resourceId: 'Translation',
-            },
+            isUnique: true
         },
         {
-            name: 'order',
-            type: AdminForthDataTypes.INTEGER,
+            name: 'type',
+            type: AdminForthDataTypes.STRING,
             required: true,
-            defaultValue: 0,
+            options: ['IMAGE', 'VIDEO']
+        },
+        {
+            name: 'format',
+            type: AdminForthDataTypes.STRING,
+            required: true,
+            options: ['JPEG', 'PNG', 'WEBP']
         },
         {
             name: 'createdAt',
@@ -60,6 +60,5 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
-            
     ]
-}
+} 

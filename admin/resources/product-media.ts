@@ -1,47 +1,35 @@
-import ForeignInlineListPlugin from '@adminforth/foreign-inline-list/index.ts';
 import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Attribute',
-    resourceId: 'Attribute', 
-    label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
-    plugins: [
-        new ForeignInlineListPlugin({
-          foreignResourceId: 'ProductAttributeValue',
-        }),
-        new ForeignInlineListPlugin({
-            foreignResourceId: 'CategoryAttribute',
-        }),
-    ],
+    table: 'ProductMedia',
+    resourceId: 'ProductMedia', 
+    label: 'Product Media',
+    recordLabel: (r: any) => `🖼️ ${r.productId}-${r.mediaId}`,
     columns: [
         {
-            name: 'id',
+            name: 'productId',
             primaryKey: true,
             type: AdminForthDataTypes.INTEGER,
-            showIn: {
-                edit: false,
-                create: false,
-            },
+            required: true,
+            foreignResource: {
+                resourceId: 'Product',
+            }
         },
         {
-            name: 'nameId',
+            name: 'mediaId',
+            primaryKey: true,
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            isUnique: true,
-            showIn: {
-                create: false,
-            },
             foreignResource: {
-                resourceId: 'Translation',
-            },
+                resourceId: 'Media',
+            }
         },
         {
             name: 'order',
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            defaultValue: 0,
+            defaultValue: 0
         },
         {
             name: 'createdAt',
@@ -60,6 +48,5 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
-            
     ]
-}
+} 

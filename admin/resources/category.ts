@@ -3,18 +3,18 @@ import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Attribute',
-    resourceId: 'Attribute', 
-    label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
+    table: 'Category',
+    resourceId: 'Category', 
+    label: 'Category',
+    recordLabel: (r: any) => `📁 ${r.slug}`,
     plugins: [
         new ForeignInlineListPlugin({
-          foreignResourceId: 'ProductAttributeValue',
+          foreignResourceId: 'Product',
         }),
         new ForeignInlineListPlugin({
             foreignResourceId: 'CategoryAttribute',
         }),
-    ],
+      ],
     columns: [
         {
             name: 'id',
@@ -29,19 +29,34 @@ export default {
             name: 'nameId',
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            isUnique: true,
-            showIn: {
-                create: false,
-            },
             foreignResource: {
                 resourceId: 'Translation',
-            },
+            }
         },
         {
-            name: 'order',
-            type: AdminForthDataTypes.INTEGER,
+            name: 'slug',
+            type: AdminForthDataTypes.STRING,
             required: true,
-            defaultValue: 0,
+            isUnique: true
+        },
+        {
+            name: 'parentCategoryId',
+            type: AdminForthDataTypes.INTEGER,
+            foreignResource: {
+                resourceId: 'Category',
+            }
+        },
+        {
+            name: 'imageId',
+            type: AdminForthDataTypes.INTEGER,
+            foreignResource: {
+                resourceId: 'Media',
+            }
+        },
+        {
+            name: 'path',
+            type: AdminForthDataTypes.STRING,
+            defaultValue: ""
         },
         {
             name: 'createdAt',
@@ -60,6 +75,5 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
-            
     ]
-}
+} 

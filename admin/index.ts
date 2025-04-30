@@ -1,8 +1,15 @@
 import express from 'express';
 import AdminForth, { Filters } from 'adminforth';
-import usersResource from "./resources/adminuser";
-import attributeResource from "./resources/attribute";
-import translationResource from "./resources/translation";
+import usersResource from "./resources/adminuser.ts";
+import attributeResource from "./resources/attribute.ts";
+import translationResource from "./resources/translation.ts";
+import productResource from "./resources/product.ts";
+import mediaResource from "./resources/media.ts";
+import categoryResource from "./resources/category.ts";
+import productMediaResource from "./resources/product-media.ts";
+import productAttributeValueResource from "./resources/product-attribute-value.ts";
+import categoryAttributeResource from "./resources/category-attribute.ts";
+import attributeGroupResource from "./resources/attribute-group.ts";
 
 const ADMIN_BASE_URL = '';
 
@@ -47,24 +54,66 @@ export const admin = new AdminForth({
   resources: [
     usersResource,
     attributeResource,
-    translationResource
+    translationResource,
+    productResource,
+    mediaResource,
+    categoryResource,
+    productMediaResource,
+    productAttributeValueResource,
+    categoryAttributeResource,
+    attributeGroupResource
   ],
   menu: [
     {
-      label: 'Core',
-      icon: 'flowbite:brain-solid',
+      label: 'Catalog',
+      icon: 'flowbite:shopping-bag-solid',
       open: true,
       children: [
         {
           homepage: true,
+          label: 'Products',
+          icon: 'flowbite:user-solid',
+          resourceId: 'Product',
+        },
+        {
+          label: 'Categories',
+          icon: 'flowbite:folder-solid',
+          resourceId: 'Category',
+        },
+        {
           label: 'Attributes',
-          icon: 'flowbite:home-solid',
+          icon: 'flowbite:tag-solid',
           resourceId: 'Attribute',
         },
         {
+          label: 'Attribute Groups',
+          icon: 'flowbite:user-solid',
+          resourceId: 'AttributeGroup',
+        },
+        {
+          label: 'Media',
+          icon: 'flowbite:image-solid',
+          resourceId: 'Media',
+        },
+        {
           label: 'Translations',
-          icon: 'flowbite:home-solid',
+          icon: 'flowbite:user-solid',
           resourceId: 'Translation',
+        },
+        {
+          label: 'Product Media',
+          icon: 'flowbite:user-solid',
+          resourceId: 'ProductMedia',
+        },
+        {
+          label: 'Product Attributes',
+          icon: 'flowbite:user-solid',
+          resourceId: 'ProductAttributeValue',
+        },
+        {
+          label: 'Category Attributes',
+          icon: 'flowbite:user-solid',
+          resourceId: 'CategoryAttribute',
         },
       ]
     },

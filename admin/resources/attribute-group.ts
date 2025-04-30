@@ -3,18 +3,15 @@ import { AdminForthDataTypes } from 'adminforth';
 
 export default {
     dataSource: 'maindb',
-    table: 'Attribute',
-    resourceId: 'Attribute', 
-    label: 'Attribute',
-    recordLabel: (r: any) => `🏡 ${r.id}`,
+    table: 'AttributeGroup',
+    resourceId: 'AttributeGroup', 
+    label: 'Attribute Group',
+    recordLabel: (r: any) => `📋 ${r.id}`,
     plugins: [
         new ForeignInlineListPlugin({
-          foreignResourceId: 'ProductAttributeValue',
-        }),
-        new ForeignInlineListPlugin({
-            foreignResourceId: 'CategoryAttribute',
-        }),
-    ],
+            foreignResourceId: 'Attribute',
+          }),
+      ],
     columns: [
         {
             name: 'id',
@@ -29,19 +26,15 @@ export default {
             name: 'nameId',
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            isUnique: true,
-            showIn: {
-                create: false,
-            },
             foreignResource: {
                 resourceId: 'Translation',
-            },
+            }
         },
         {
             name: 'order',
             type: AdminForthDataTypes.INTEGER,
             required: true,
-            defaultValue: 0,
+            defaultValue: 0
         },
         {
             name: 'createdAt',
@@ -60,6 +53,5 @@ export default {
             type: AdminForthDataTypes.DATETIME,
             showIn: { create: false },
         },
-            
     ]
-}
+} 
