@@ -7,7 +7,7 @@ export default {
     table: 'Translation',
     resourceId: 'Translation', 
     label: 'Translation',
-    recordLabel: (r: any) => `🏡 ${Object.values(r.value)[0]}`,
+    recordLabel: (r: any) => `🏡 ${r.uk_ua}`,
     columns: [
         {
             name: 'id',
@@ -19,9 +19,12 @@ export default {
             },
         },
         {
-            name: 'value',
-            type: AdminForthDataTypes.JSON,
-            required: true,
+            name: 'uk_ua',
+            type: AdminForthDataTypes.STRING,
+        },
+        {
+            name: 'en_us',
+            type: AdminForthDataTypes.STRING,
         },
         {
             name: 'createdAt',
