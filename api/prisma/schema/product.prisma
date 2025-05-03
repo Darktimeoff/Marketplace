@@ -7,8 +7,8 @@ model Product {
   categoryId             Int
   category               Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   slug                   String                  @unique
-  price                  Decimal
-  oldPrice               Decimal?
+  price                  Decimal                 @db.Decimal(10, 2)
+  oldPrice               Decimal?                @db.Decimal(10, 2)
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
   deletedAt              DateTime?
