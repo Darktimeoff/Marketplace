@@ -11,9 +11,9 @@
     "build:shared": "bun --filter=contracts build:app && bun --filter=utils-lib build:app",
     "build:app": "bun --filter=api build:app && bun run build:shared",
     "start": "bun run build:shared && bun --elide-lines 0 --filter=api start",
-    "lint": "oxlint -c .oxlintrc.json --fix && bun --elide-lines 0 --filter=api lint && bun --elide-lines 0 --filter=contracts lint && bun --elide-lines 0 --filter=utils-lib lint",
-    "ts": "bun --elide-lines 0 --filter=api ts && bun --elide-lines 0 --filter=contracts ts && bun --elide-lines 0 --filter=utils-lib ts",
-    "prepare": "husky && bun --elide-lines 0 --filter=api prepare"
+    "lint": "oxlint -c .oxlintrc.json --fix && bun --filter=api lint && bun --filter=contracts lint && bun --filter=utils-lib lint",
+    "ts": "bun --filter=api ts && bun --filter=contracts ts && bun --filter=utils-lib ts",
+    "prepare": "husky && bun --filter=api prepare"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",

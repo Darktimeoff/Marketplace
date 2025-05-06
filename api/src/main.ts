@@ -1,12 +1,15 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
-import { Logger } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ApiConfigService } from './generic/config/api-config.module'
 import { EnvironmentVariablesEnum } from './generic/config/enum/enviroment-variables.enum'
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
     const configService = app.get(ApiConfigService)
+
+    app.setGlobalPrefix('api')
+    app.useGlobalPipes(new ValidationPipe({ transform: true }))
 
     const host = configService.get(EnvironmentVariablesEnum.HOST)
     const port = configService.get(EnvironmentVariablesEnum.PORT)
@@ -16,7 +19,7 @@ async function bootstrap() {
 
     Logger.log('Marketplace API started ', {
         db: dbName,
-        url: `http://${host}:${port}`,
+        url: `http://${host}:${port}/api`,
         context: 'Bootstrap',
         pid: process.pid,
     })

@@ -1,5 +1,4 @@
-import { LanguageLocaleEnum } from '@/translation/enum/language-locale.enum'
-
 export interface TranslationInterface {
-    value: Record<LanguageLocaleEnum, string>
+    uk_ua: string
+    en_us: string | null
 }

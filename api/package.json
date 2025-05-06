@@ -9,7 +9,7 @@
   "scripts": {
     "prepare": "bun prisma generate",
     "build:app": "nest build",
-    "start": "bun src/main.ts",
+    "start": "bun --hot src/main.ts",
     "start:prod": "bun build:nest && bun dist/main.js",
     "ts": "tsc --noEmit",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'"
@@ -26,6 +26,8 @@
     "@rnw-community/nestjs-typed-config": "^1.1.0",
     "@rnw-community/shared": "^1.1.0",
     "axios": "^1.9.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "contracts": "workspace:*",
     "joi": "^17.13.3",
     "reflect-metadata": "^0.2.2",
