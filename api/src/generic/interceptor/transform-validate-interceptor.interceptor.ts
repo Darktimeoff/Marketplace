@@ -4,7 +4,7 @@ import { type ClassConstructor, plainToInstance } from 'class-transformer'
 import { validateOrReject } from 'class-validator'
 
 @Injectable()
-export class TransformValidateInterceptor<T> implements NestInterceptor {
+export class SerializeValidateInterceptor<T> implements NestInterceptor {
     constructor(private dto: ClassConstructor<T>) {}
 
     async transformAndValidate(data: unknown): Promise<T | T[]> {
