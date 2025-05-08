@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { ProductDataloader } from '@/product/dataloader/product.dataloader'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { ProductInterface } from 'contracts'
 import { getErrorMessage } from '@rnw-community/shared'
+import { Prisma } from '@/generic/db/generated'
 
 @Injectable()
 export class ProductService {
@@ -14,12 +15,19 @@ export class ProductService {
         (error, slug) => `Error finding product by slug ${slug}: ${getErrorMessage(error)}`
     )
     async findBySlug(slug: string): Promise<ProductInterface> {
-        const product = await this.dataloader.findBySlug(slug)
+        try {
+            const product = await this.dataloader.findBySlug(slug)
 
-        return {
-            ...product,
-            title: product.title.uk_ua,
-            media: product.productMedia.map(media => media.media),
+            return {
+                ...product,
+                title: product.title.uk_ua,
+                media: product.productMedia.map(media => media.media),
+            }
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+                throw new NotFoundException('Product not found')
+            }
+            throw error
         }
     }
 }
