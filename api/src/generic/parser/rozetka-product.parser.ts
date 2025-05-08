@@ -30,7 +30,7 @@ export async function parseProduct(url: string): Promise<ProductParserType> {
         oldPrice: oldPrice ? parseFloat(oldPrice) : null,
         images: [
             ...$('.simple-slider__item:not([data-place="mock"]) img')
-                .map((i, el) => $(el).attr('src') ?? '')
+                .map((_, el) => $(el).attr('src') ?? '')
                 .get(),
         ],
         slug: $('[data-test="filter-link"]').attr('href')?.split('/').splice(-3, 1)[0] ?? '',

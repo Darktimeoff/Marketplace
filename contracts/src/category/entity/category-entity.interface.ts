@@ -1,8 +1,14 @@
 import { BaseEntityInterface } from '@/generic'
-import { CategoryInterface } from '@/category/interface/category.interface'
-import { CategoryAssociationInterface } from '@/category/association/category-association.interface'
+import { TranslationEntityInterface } from '@/translation'
+import { CategoryAssociationEnum } from '@/category/enum/category-association.enum'
 
-export interface CategoryEntityInterface
-    extends BaseEntityInterface,
-        CategoryInterface,
-        CategoryAssociationInterface {}
+export interface CategoryEntityInterface extends BaseEntityInterface {
+    nameId: number
+    slug: string
+    parentCategoryId: number | null
+    imageId: number | null
+    path: string
+    [CategoryAssociationEnum.NAME]?: TranslationEntityInterface
+    [CategoryAssociationEnum.PARENT_CATEGORY]?: CategoryEntityInterface | null
+    [CategoryAssociationEnum.CHILDRENS]?: CategoryEntityInterface[]
+}

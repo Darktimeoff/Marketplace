@@ -1,6 +1,6 @@
-import { CategoryTreeWithChildrensInterface } from '@/category'
+import { CategoryWithChildrensInterface } from '@/category'
 
 export interface CategoryDtoInterface
-    extends Omit<CategoryTreeWithChildrensInterface, 'path' | 'childrens'> {
+    extends Omit<CategoryWithChildrensInterface, 'path' | 'childrens'> {
     childrens: CategoryDtoInterface[]
 }

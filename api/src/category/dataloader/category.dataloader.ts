@@ -1,12 +1,12 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
-import { CategoryTreeInterface } from 'contracts'
+import { CategoryInterface } from 'contracts'
 
 @Injectable()
 export class CategoryDataloader {
     constructor(private readonly db: DBService) {}
 
-    async getAll(): Promise<CategoryTreeInterface[]> {
+    async getAll(): Promise<CategoryInterface[]> {
         const categories = await this.db.category.findMany({
             include: {
                 name: {
