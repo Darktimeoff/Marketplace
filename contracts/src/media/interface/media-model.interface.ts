@@ -1,4 +1,8 @@
-import { EntityToModel } from '@/generic'
+import { BaseModelInterface } from '@/generic'
 import { MediaEntityInterface } from '@/media/entity/media-entity.interface'
 
-export interface MediaModelInterface extends EntityToModel<MediaEntityInterface> {}
+type MediaModelFields = 'url' | 'type' | 'format'
+
+export interface MediaModelInterface
+    extends BaseModelInterface,
+        Pick<MediaEntityInterface, MediaModelFields> {}

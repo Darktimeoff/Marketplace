@@ -1,4 +1,8 @@
-import { EntityToModel } from '@/generic'
+import { BaseModelInterface } from '@/generic'
 import { TranslationEntityInterface } from '@/translation/entity/translation-entity.interface'
 
-export interface TranslationModelInterface extends EntityToModel<TranslationEntityInterface> {}
+type TranslationModelFields = 'uk_ua' | 'en_us'
+
+export interface TranslationModelInterface
+    extends BaseModelInterface,
+        Pick<TranslationEntityInterface, TranslationModelFields> {}
