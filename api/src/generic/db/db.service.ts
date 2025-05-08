@@ -1,21 +1,31 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from './generated'
 import { Log } from '@rnw-community/nestjs-enterprise'
-import { getErrorMessage } from '@rnw-community/shared'
+import { getErrorMessage, isNotEmptyString } from '@rnw-community/shared'
 import { withOptimize } from '@prisma/extension-optimize'
 import { ApiConfigService } from '@/generic/config/api-config.module'
 import { EnvironmentVariablesEnum } from '@/generic/config/enum/enviroment-variables.enum'
 import { BaseEntityInterface } from 'contracts'
-
+import { createPrismaQueryEventHandler } from 'prisma-query-log'
 @Injectable()
 export class DBService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
     constructor(private readonly config: ApiConfigService) {
         super({
-            log: ['query', 'info', 'warn', 'error'],
+            log: config.get(EnvironmentVariablesEnum.PRISMA_QUERY_LOG_ENABLED)
+                ? [
+                      {
+                          emit: 'event',
+                          level: 'query',
+                      },
+                  ]
+                : [],
         })
 
-        //@ts-expect-error
-        if (typeof Bun !== 'object') {
+        if (
+            //@ts-expect-error
+            typeof Bun !== 'object' &&
+            isNotEmptyString(this.config.get(EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY))
+        ) {
             const optimized = this.$extends(
                 withOptimize({
                     apiKey: this.config.get(EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY),
@@ -33,6 +43,10 @@ export class DBService extends PrismaClient implements OnModuleInit, OnModuleDes
     )
     async onModuleInit() {
         await this.$connect()
+        if (this.config.get(EnvironmentVariablesEnum.PRISMA_QUERY_LOG_ENABLED)) {
+            //@ts-expect-error
+            this.$on('query', createPrismaQueryEventHandler())
+        }
     }
 
     @Log(
