@@ -9,11 +9,11 @@ export class CategoryDataloaderService {
     constructor(private readonly dataloader: CategoryDataloader) {}
 
     @Log(
-        'Get all categories',
-        categories => `Got all categories: ${categories.length}`,
-        error => `Failed to get all categories: ${getErrorMessage(error)}`
+        'Get all categories tree',
+        categories => `Got all categories tree: ${categories.length}`,
+        error => `Failed to get all categories tree: ${getErrorMessage(error)}`
     )
-    async getAll() {
+    async getAllTree() {
         const categories = await this.dataloader.getAll()
 
         return this.buildTree(categories)

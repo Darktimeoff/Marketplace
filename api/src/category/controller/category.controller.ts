@@ -10,7 +10,7 @@ export class CategoryController {
 
     @UseTransformValidator(CategoryDto)
     @Get()
-    async getAll(): Promise<CategoryWithChildrensInterface[]> {
-        return await this.dataloader.getAll()
+    async getAllTree(): Promise<CategoryWithChildrensInterface[]> {
+        return await this.dataloader.getAllTree()
     }
 }
