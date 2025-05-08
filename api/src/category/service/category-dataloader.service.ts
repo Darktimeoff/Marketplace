@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryDataloader } from '@/category/dataloader/category.dataloader'
-import { CategoryInterface, CategoryWithChildrensInterface } from 'contracts'
+import { CategoryModelInterface, CategoryWithChildrensInterface } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage, isDefined, isPositiveNumber } from '@rnw-community/shared'
 
@@ -19,7 +19,7 @@ export class CategoryDataloaderService {
         return this.buildTree(categories)
     }
 
-    private buildTree(categories: CategoryInterface[]): CategoryWithChildrensInterface[] {
+    private buildTree(categories: CategoryModelInterface[]): CategoryWithChildrensInterface[] {
         const map = new Map<number, CategoryWithChildrensInterface>()
         const roots: CategoryWithChildrensInterface[] = []
 

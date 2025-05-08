@@ -1,4 +1,6 @@
 import { BaseEntityInterface } from '@/generic'
-import { TranslationInterface } from '@/translation/interface/translation.interface'
 
-export interface TranslationEntityInterface extends BaseEntityInterface, TranslationInterface {}
+export interface TranslationEntityInterface extends BaseEntityInterface {
+    uk_ua: string
+    en_us: string | null
+}

@@ -1,3 +1,3 @@
-import { MediaInterface } from '@/media'
+import { MediaModelInterface } from '@/media'
 
-export interface MediaDtoInterface extends MediaInterface {}
+export interface MediaDtoInterface extends MediaModelInterface {}

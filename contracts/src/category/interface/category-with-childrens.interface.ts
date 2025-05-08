@@ -1,6 +1,7 @@
-import { CategoryInterface } from '@/category'
+import { CategoryModelInterface } from '@/category'
+import { TranslatedInterface } from '@/generic'
 
-export interface CategoryWithChildrensInterface extends Omit<CategoryInterface, 'name'> {
-    name: string
+export interface CategoryWithChildrensInterface
+    extends TranslatedInterface<CategoryModelInterface> {
     childrens: CategoryWithChildrensInterface[]
 }
