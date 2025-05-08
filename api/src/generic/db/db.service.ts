@@ -2,9 +2,29 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from './generated'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { withOptimize } from '@prisma/extension-optimize'
+import { ApiConfigService } from '@/generic/config/api-config.module'
+import { EnvironmentVariablesEnum } from '@/generic/config/enum/enviroment-variables.enum'
 
 @Injectable()
 export class DBService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+    constructor(private readonly config: ApiConfigService) {
+        super({
+            log: ['query', 'info', 'warn', 'error'],
+        })
+
+        //@ts-expect-error
+        if (typeof Bun !== 'object') {
+            const optimized = this.$extends(
+                withOptimize({
+                    apiKey: this.config.get(EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY),
+                })
+            )
+
+            Object.assign(this, optimized)
+        }
+    }
+
     @Log(
         'Connecting to database...',
         'Connected to database',

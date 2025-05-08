@@ -9,4 +9,5 @@ export interface EnvironmentVariablesInterface {
     [EnvironmentVariablesEnum.DB_PASSWORD]: string
     [EnvironmentVariablesEnum.DB_PORT]: string
     [EnvironmentVariablesEnum.DATABASE_URL]: string
+    [EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY]: string
 }

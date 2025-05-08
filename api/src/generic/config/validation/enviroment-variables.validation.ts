@@ -14,4 +14,5 @@ export const environmentVariablesValidationSchema = Joi.object<EnvironmentVariab
     [EnvironmentVariablesEnum.DB_PASSWORD]: Joi.string().required(),
     [EnvironmentVariablesEnum.DB_PORT]: Joi.number().required(),
     [EnvironmentVariablesEnum.DATABASE_URL]: Joi.string().required(),
+    [EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY]: Joi.string().required(),
 })

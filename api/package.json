@@ -5,7 +5,6 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "type": "module",
   "scripts": {
     "test:app": "bun test",
     "prepare": "bun prisma generate",
@@ -23,6 +22,8 @@
     "@nestjs/core": "^11.1.0",
     "@nestjs/platform-express": "^11.1.0",
     "@prisma/client": "^6.6.0",
+    "@prisma/extension-optimize": "^1.1.8",
+    "@prisma/instrumentation": "^6.7.0",
     "@rnw-community/nestjs-enterprise": "^1.1.0",
     "@rnw-community/nestjs-typed-config": "^1.1.0",
     "@rnw-community/shared": "^1.1.0",
