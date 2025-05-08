@@ -17,6 +17,7 @@
         "no-console": "error",
         "no-unreachable": "error",
         "eqeqeq": "error",
+        "jest/no-standalone-expect": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-non-null-asserted-optional-chain": "off",

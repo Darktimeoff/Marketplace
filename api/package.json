@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
+    "test:app": "bun test",
     "prepare": "bun prisma generate",
     "build:app": "nest build",
     "start": "bun --hot src/main.ts",
@@ -52,34 +53,15 @@
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
     "isomorphic-dompurify": "^2.24.0",
-    "jest": "^29.7.0",
     "oxlint": "^0.16.7",
     "prettier": "^3.5.3",
     "prisma": "^6.6.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.1.0",
-    "ts-jest": "^29.3.2",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

@@ -8,6 +8,7 @@
     "lib/*"
   ],
   "scripts": {
+    "test:app": "bun --filter=api test",
     "build:shared": "bun --filter=contracts build:app && bun --filter=utils-lib build:app",
     "build:app": "bun --filter=api build:app && bun run build:shared",
     "start": "bun run build:shared && bun --elide-lines 0 --filter=api start",

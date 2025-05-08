@@ -23,7 +23,8 @@ export const baseConfig = tseslint.config(
             "**/generated/**/*",
             "commitlint.config.mjs",
             "eslint.config.mjs",
-            "**/parser/**/*"
+            "**/parser/**/*",
+            "test/**/*"
         ],
     },
     eslint.configs.recommended,
