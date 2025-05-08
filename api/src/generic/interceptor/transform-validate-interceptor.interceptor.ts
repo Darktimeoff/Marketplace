@@ -10,6 +10,7 @@ export class SerializeValidateInterceptor<T> implements NestInterceptor {
     async transformAndValidate(data: unknown): Promise<T | T[]> {
         const instances = plainToInstance(this.dto, data, {
             strategy: 'exposeAll',
+            excludeExtraneousValues: true,
         })
 
         const list = Array.isArray(data) ? (instances as T[]) : [instances]

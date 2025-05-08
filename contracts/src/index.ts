@@ -1,2 +1,5 @@
 export * from './translation'
 export * from './category'
+export * from './generic'
+export * from './media'
+export * from './product'

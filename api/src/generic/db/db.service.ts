@@ -5,6 +5,7 @@ import { getErrorMessage } from '@rnw-community/shared'
 import { withOptimize } from '@prisma/extension-optimize'
 import { ApiConfigService } from '@/generic/config/api-config.module'
 import { EnvironmentVariablesEnum } from '@/generic/config/enum/enviroment-variables.enum'
+import { BaseEntityInterface } from 'contracts'
 
 @Injectable()
 export class DBService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
@@ -41,5 +42,16 @@ export class DBService extends PrismaClient implements OnModuleInit, OnModuleDes
     )
     async onModuleDestroy() {
         await this.$disconnect()
+    }
+
+    getDefaultOmit(): Record<
+        keyof Pick<BaseEntityInterface, 'deletedAt' | 'createdAt' | 'updatedAt'>,
+        boolean
+    > {
+        return {
+            deletedAt: true,
+            createdAt: true,
+            updatedAt: true,
+        }
     }
 }

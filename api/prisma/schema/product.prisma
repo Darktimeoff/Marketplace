@@ -1,6 +1,6 @@
 model Product {
   id                     Int                     @id @default(autoincrement())
-  titleId                Int
+  titleId                Int                     @unique  
   title                  Translation             @relation("productTitles", fields: [titleId], references: [id], onDelete: Restrict)
   descriptionId          Int?
   description            Translation?            @relation("productDescriptions", fields: [descriptionId], references: [id], onDelete: SetNull)
