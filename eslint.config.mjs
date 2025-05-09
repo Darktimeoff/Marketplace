@@ -61,7 +61,7 @@ export const baseConfig = tseslint.config(
                 max: 310,
             },
         ],
-
+        '@typescript-eslint/no-unsafe-enum-comparison': 'off',
         '@typescript-eslint/no-empty-object-type': [
             'error',
             {

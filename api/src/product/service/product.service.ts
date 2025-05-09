@@ -4,6 +4,7 @@ import { Log } from '@rnw-community/nestjs-enterprise'
 import { ProductInterface } from 'contracts'
 import { getErrorMessage } from '@rnw-community/shared'
 import { Prisma } from '@/generic/db/generated'
+import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
 
 @Injectable()
 export class ProductService {
@@ -24,7 +25,10 @@ export class ProductService {
                 media: product.productMedia.map(media => media.media),
             }
         } catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === DBErrorCodeEnum.NOT_FOUND
+            ) {
                 throw new NotFoundException('Product not found')
             }
             throw error
@@ -37,6 +41,16 @@ export class ProductService {
         (error, slug) => `Error getting product id by slug ${slug}: ${getErrorMessage(error)}`
     )
     async getProductIdBySlug(slug: string): Promise<number> {
-        return await this.dataloader.getProductIdBySlug(slug)
+        try {
+            return await this.dataloader.getProductIdBySlug(slug)
+        } catch (error) {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === DBErrorCodeEnum.NOT_FOUND
+            ) {
+                throw new NotFoundException('Product not found')
+            }
+            throw error
+        }
     }
 }
