@@ -31,6 +31,21 @@ export class ProductAttributeService {
         return attributes.map(this.convertToTranslatedInterface.bind(this))
     }
 
+    @Log(
+        slug => `Finding grouped attributes by product slug: ${slug}`,
+        (attributes, slug) =>
+            `Found grouped attributes by product slug ${slug}: ${attributes.length}`,
+        (error, slug) =>
+            `Error finding grouped attributes by product slug ${slug}: ${getErrorMessage(error)}`
+    )
+    async findBySlugGrouped(slug: string) {
+        const productId = await this.products.getProductIdBySlug(slug)
+
+        const attributes = await this.dataloader.findByProductIdGrouped(productId)
+
+        return attributes
+    }
+
     private convertToTranslatedInterface(
         attribute: ProductAttributesWithoutGroupingModelInterface
     ): ProductAttributesWithoutGroupingInterface {

@@ -8,4 +8,6 @@ model AttributeGroup {
   updatedAt  DateTime    @updatedAt
   deletedAt  DateTime?
   attributes Attribute[]
+
+  @@index([order(asc)])
 }

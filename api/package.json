@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "start:optimize": "bun build:app && node dist/main.js",
     "test:app": "bun test",
     "prepare": "bun prisma generate",
     "build:app": "nest build",
