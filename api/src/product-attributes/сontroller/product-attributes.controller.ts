@@ -8,7 +8,7 @@ import { ProductAttributesWithoutGroupingInterface } from 'contracts'
 export class ProductAttributesController {
     constructor(private readonly services: ProductAttributeService) {}
 
-    @Get()
+    @Get('short')
     @UseSerializeValidator(ProductAttributesDto)
     async findBySlugWithoutGrouping(
         @Param('slug') slug: string
