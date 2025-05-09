@@ -2,7 +2,9 @@ import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
 import {
     AttributeAssociationEnum,
+    AttributeGroupAssociationEnum,
     ProductAttributeValuesAssociationEnum,
+    ProductAttributesGroupedModelInterface,
     ProductAttributesWithoutGroupingModelInterface,
 } from 'contracts'
 
@@ -68,12 +70,14 @@ export class ProductAttributeDataloader {
         return productAttributesWithoutGrouping
     }
 
-    async findByProductIdGrouped(productId: number) {
+    async findByProductIdGrouped(
+        productId: number
+    ): Promise<ProductAttributesGroupedModelInterface[]> {
         const productAttributes = await this.db.attributeGroup.findMany({
             where: {
-                attributes: {
+                [AttributeGroupAssociationEnum.ATTRIBUTES]: {
                     some: {
-                        productAttributeValues: {
+                        [AttributeAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]: {
                             some: {
                                 productId,
                             },
@@ -83,12 +87,12 @@ export class ProductAttributeDataloader {
             },
             select: {
                 id: true,
-                name: {
+                [AttributeGroupAssociationEnum.NAME]: {
                     omit: this.db.getDefaultOmit(),
                 },
-                attributes: {
+                [AttributeGroupAssociationEnum.ATTRIBUTES]: {
                     where: {
-                        productAttributeValues: {
+                        [AttributeAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]: {
                             some: {
                                 productId,
                             },

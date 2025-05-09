@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
 import {
+    ProductAttributesGroupedInterface,
     ProductAttributesWithoutGroupingInterface,
     ProductAttributesWithoutGroupingModelInterface,
 } from 'contracts'
@@ -38,12 +39,18 @@ export class ProductAttributeService {
         (error, slug) =>
             `Error finding grouped attributes by product slug ${slug}: ${getErrorMessage(error)}`
     )
-    async findBySlugGrouped(slug: string) {
+    async findBySlugGrouped(slug: string): Promise<ProductAttributesGroupedInterface[]> {
         const productId = await this.products.getProductIdBySlug(slug)
 
-        const attributes = await this.dataloader.findByProductIdGrouped(productId)
+        const attributesGrouped = await this.dataloader.findByProductIdGrouped(productId)
 
-        return attributes
+        return attributesGrouped.map(group => {
+            return {
+                ...group,
+                name: group.name?.uk_ua ?? null,
+                attributes: group.attributes.map(this.convertToTranslatedInterface.bind(this)),
+            }
+        })
     }
 
     private convertToTranslatedInterface(
