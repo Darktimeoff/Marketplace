@@ -3,19 +3,27 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { DBService } from '../../src/generic/db/db.service'
-import { ProductAttributesGroupedDtoInterface} from 'contracts'
+import { ProductAttributeValuesDtoInterface, ProductAttributesDtoInterface} from 'contracts'
 import { Server } from 'http'
-import { checkProductAttributesStructure } from './product-attributes-short-endpoint.spec'
 
-function checkProductAttributesGroupedStructure(attributeGroupped: ProductAttributesGroupedDtoInterface): void {
-    expect(attributeGroupped).toHaveProperty('name')
-    expect(attributeGroupped.name === null || typeof attributeGroupped.name === 'string').toBe(true)
-    expect(attributeGroupped).toHaveProperty('attributes')
-    expect(Array.isArray(attributeGroupped.attributes)).toBe(true)
-    attributeGroupped.attributes.forEach(checkProductAttributesStructure)
+function checkProductAttributeValueStructure(value: ProductAttributeValuesDtoInterface): void {
+    expect(value).toHaveProperty('numberValue')
+    expect(value.numberValue === null || typeof value.numberValue === 'number').toBe(true)
+    expect(value).toHaveProperty('textValue')
+    expect(value.textValue === null || typeof value.textValue === 'string').toBe(true)
 }
 
-describe('/product/:slug/characteristics/ (GET)', () => {
+export function checkProductAttributesStructure(attribute: ProductAttributesDtoInterface): void {
+    expect(attribute).toHaveProperty('name')
+    expect(typeof attribute.name).toBe('string')
+    expect(attribute).toHaveProperty('unit')
+    expect(attribute.unit === null || typeof attribute.unit === 'string').toBe(true)
+    expect(attribute).toHaveProperty('values')
+    expect(Array.isArray(attribute.values)).toBe(true)
+    attribute.values.forEach(checkProductAttributeValueStructure)
+}
+
+describe('/product/:slug/characteristics/short (GET)', () => {
     let app: INestApplication<Server>
     let dbService: DBService
     let productSlug: string
@@ -39,17 +47,17 @@ describe('/product/:slug/characteristics/ (GET)', () => {
 
     it('Should return attributes by product slug', async () => {
         await request(app.getHttpServer())
-            .get(`/product/${productSlug}/characteristics/`)
+            .get(`/product/${productSlug}/characteristics/short`)
             .expect(200)
             .expect((res: Response) => {
                 expect(Array.isArray(res.body)).toBe(true)
-                res.body.forEach(checkProductAttributesGroupedStructure)
+                res.body.forEach(checkProductAttributesStructure)
             })
     })
 
     it('Should return attributes by product slug', async () => {
         await request(app.getHttpServer())
-            .get('/product/non-existent-slug-404/characteristics/')
+            .get('/product/non-existent-slug-404/characteristics/short')
             .expect((res: Response) => {
                 expect(res.body).toHaveProperty('statusCode')
                 expect(res.body.statusCode).toBe(404)
