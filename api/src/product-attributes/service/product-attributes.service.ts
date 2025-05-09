@@ -1,9 +1,9 @@
-import { Attribute } from '@/generic/db/generated'
 import { ProductAttributeDataloader } from '@/product-attributes/dataloader/product-attribute.dataloader'
 import { ProductService } from '@/product/service/product.service'
 import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { ProductAttributesWithoutGroupingModelInterface } from 'contracts'
 
 @Injectable()
 export class ProductAttributeService {
@@ -18,7 +18,9 @@ export class ProductAttributeService {
         (error, slug) =>
             `Error finding attributes by product slug ${slug}: ${getErrorMessage(error)}`
     )
-    async findBySlugWithoutGrouping(slug: string): Promise<Attribute[]> {
+    async findBySlugWithoutGrouping(
+        slug: string
+    ): Promise<ProductAttributesWithoutGroupingModelInterface[]> {
         const productId = await this.products.getProductIdBySlug(slug)
 
         const attributes = await this.dataloader.findByProductIdWithoutGroupingAndTake(productId)

@@ -1,14 +1,22 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
+import {
+    AttributeAssociationEnum,
+    ProductAttributeValuesAssociationEnum,
+    ProductAttributesWithoutGroupingModelInterface,
+} from 'contracts'
 
 @Injectable()
 export class ProductAttributeDataloader {
     constructor(private readonly db: DBService) {}
 
-    findByProductIdWithoutGroupingAndTake(productId: number, take: number = 5) {
-        return this.db.attribute.findMany({
+    async findByProductIdWithoutGroupingAndTake(
+        productId: number,
+        take: number = 5
+    ): Promise<ProductAttributesWithoutGroupingModelInterface[]> {
+        const productAttributes = await this.db.attribute.findMany({
             where: {
-                productAttributeValues: {
+                [AttributeAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]: {
                     some: {
                         productId,
                     },
@@ -16,13 +24,13 @@ export class ProductAttributeDataloader {
             },
             select: {
                 id: true,
-                name: {
+                [AttributeAssociationEnum.NAME]: {
                     omit: this.db.getDefaultOmit(),
                 },
-                unit: {
+                [AttributeAssociationEnum.UNIT]: {
                     omit: this.db.getDefaultOmit(),
                 },
-                productAttributeValues: {
+                [AttributeAssociationEnum.PRODUCT_ATTRIBUTE_VALUES]: {
                     where: {
                         productId,
                     },
@@ -31,7 +39,7 @@ export class ProductAttributeDataloader {
                     },
                     select: {
                         numberValue: true,
-                        textValue: {
+                        [ProductAttributeValuesAssociationEnum.TEXT_VALUE]: {
                             omit: this.db.getDefaultOmit(),
                         },
                     },
@@ -42,5 +50,21 @@ export class ProductAttributeDataloader {
             },
             take,
         })
+
+        const productAttributesWithoutGrouping = productAttributes.map(productAttribute => {
+            return {
+                ...productAttribute,
+                productAttributeValues: productAttribute.productAttributeValues.map(
+                    productAttributeValue => {
+                        return {
+                            ...productAttributeValue,
+                            numberValue: productAttributeValue.numberValue?.toNumber() ?? null,
+                        }
+                    }
+                ),
+            }
+        })
+
+        return productAttributesWithoutGrouping
     }
 }
