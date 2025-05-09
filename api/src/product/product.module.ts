@@ -7,5 +7,6 @@ import { ProductDataloader } from './dataloader/product.dataloader'
     imports: [],
     controllers: [ProductController],
     providers: [ProductService, ProductDataloader],
+    exports: [ProductService],
 })
 export class ProductModule {}

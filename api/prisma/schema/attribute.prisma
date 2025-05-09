@@ -13,4 +13,6 @@ model Attribute {
   deletedAt              DateTime?
   categoryAttributes     CategoryAttribute[]
   productAttributeValues ProductAttributeValue[]
+
+  @@index([order(asc)])
 }

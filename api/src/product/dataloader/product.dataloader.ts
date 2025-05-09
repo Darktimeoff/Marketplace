@@ -50,4 +50,17 @@ export class ProductDataloader {
             price: Number(product.price),
         }
     }
+
+    async getProductIdBySlug(slug: string): Promise<number> {
+        const product = await this.db.product.findUniqueOrThrow({
+            where: {
+                slug,
+            },
+            select: {
+                id: true,
+            },
+        })
+
+        return product.id
+    }
 }

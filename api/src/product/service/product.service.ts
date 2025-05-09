@@ -30,4 +30,13 @@ export class ProductService {
             throw error
         }
     }
+
+    @Log(
+        slug => `Getting product id by slug: ${slug}`,
+        (productId, slug) => `Found product id by slug ${slug}: ${productId}`,
+        (error, slug) => `Error getting product id by slug ${slug}: ${getErrorMessage(error)}`
+    )
+    async getProductIdBySlug(slug: string): Promise<number> {
+        return await this.dataloader.getProductIdBySlug(slug)
+    }
 }
