@@ -3,7 +3,10 @@ import { ProductService } from '@/product/service/product.service'
 import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
-import { ProductAttributesWithoutGroupingModelInterface } from 'contracts'
+import {
+    ProductAttributesWithoutGroupingInterface,
+    ProductAttributesWithoutGroupingModelInterface,
+} from 'contracts'
 
 @Injectable()
 export class ProductAttributeService {
@@ -20,11 +23,27 @@ export class ProductAttributeService {
     )
     async findBySlugWithoutGrouping(
         slug: string
-    ): Promise<ProductAttributesWithoutGroupingModelInterface[]> {
+    ): Promise<ProductAttributesWithoutGroupingInterface[]> {
         const productId = await this.products.getProductIdBySlug(slug)
 
         const attributes = await this.dataloader.findByProductIdWithoutGroupingAndTake(productId)
 
-        return attributes
+        return attributes.map(this.convertToTranslatedInterface.bind(this))
+    }
+
+    private convertToTranslatedInterface(
+        attribute: ProductAttributesWithoutGroupingModelInterface
+    ): ProductAttributesWithoutGroupingInterface {
+        return {
+            ...attribute,
+            unit: attribute.unit?.uk_ua ?? null,
+            name: attribute.name.uk_ua,
+            productAttributeValues: attribute.productAttributeValues.map(productAttributeValue => {
+                return {
+                    ...productAttributeValue,
+                    textValue: productAttributeValue.textValue?.uk_ua ?? null,
+                }
+            }),
+        }
     }
 }
