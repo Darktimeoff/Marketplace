@@ -1,0 +1,10 @@
+
+model Brand {
+    id Int @id @default(autoincrement())
+    name String @unique
+    slug String @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+    products Product[]
+}
