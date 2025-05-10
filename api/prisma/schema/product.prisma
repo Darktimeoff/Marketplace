@@ -18,4 +18,5 @@ model Product {
   productAttributeValues ProductAttributeValue[]
 
   @@index([categoryId])
+  @@index([brandId])
 }
