@@ -18,7 +18,7 @@ model Product {
   deletedAt              DateTime?
   productMedia           ProductMedia[]
   productAttributeValues ProductAttributeValue[]
-  offer                  ProductOffer            @relation(fields: [id], references: [productId])
+  offers                 ProductOffer[]
 
   @@index([sellerId])
   @@index([categoryId])
