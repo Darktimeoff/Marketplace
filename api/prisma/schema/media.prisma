@@ -19,4 +19,5 @@ model Media {
   deletedAt    DateTime?
   categories   Category[]
   productMedia ProductMedia[]
+  sellers      Seller[]
 }

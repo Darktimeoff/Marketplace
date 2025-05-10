@@ -8,7 +8,7 @@ model Category {
   childrens        Category[]  @relation("children")
   imageId          Int?
   image            Media?      @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  path             String      @default("") @unique
+  path             String      @unique @default("")
 
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt

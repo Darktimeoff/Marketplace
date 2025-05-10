@@ -1,11 +1,11 @@
 model AttributeGroup {
-  id         Int         @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   slug       String
   nameId     Int?
   name       Translation? @relation(fields: [nameId], references: [id], onDelete: Restrict)
-  order      Int         @default(0)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  order      Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
   deletedAt  DateTime?
   attributes Attribute[]
 
