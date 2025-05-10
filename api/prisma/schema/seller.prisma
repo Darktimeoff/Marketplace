@@ -1,11 +1,12 @@
 model Seller {
-  id        Int       @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   logoId    Int?
-  logo      Media?    @relation(fields: [logoId], references: [id], onDelete: SetNull)
-  name      String    @unique
-  slug      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  logo      Media?         @relation(fields: [logoId], references: [id], onDelete: SetNull)
+  name      String         @unique
+  slug      String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   deletedAt DateTime?
   products  Product[]
+  offers    ProductOffer[]
 }

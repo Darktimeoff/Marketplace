@@ -18,7 +18,9 @@ model Product {
   deletedAt              DateTime?
   productMedia           ProductMedia[]
   productAttributeValues ProductAttributeValue[]
+  offer                  ProductOffer?
 
+  @@index([sellerId])
   @@index([categoryId])
   @@index([brandId])
 }

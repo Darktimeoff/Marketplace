@@ -1,0 +1,11 @@
+model ProductOffer {
+  productId Int     @unique
+  sellerId  Int
+  isActive  Boolean @default(true)
+  quantity  Int     @default(0)
+  seller    Seller  @relation(fields: [sellerId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([productId, sellerId])
+  @@index([productId, isActive, quantity])
+}
