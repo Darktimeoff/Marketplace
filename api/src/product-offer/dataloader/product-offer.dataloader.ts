@@ -5,7 +5,40 @@ import { Injectable } from '@nestjs/common'
 export class ProductOfferDataloader {
     constructor(private db: DBService) {}
 
-    async findProduct() {
-        return await this.db.product.findMany()
+    async findByProductId(productId: number) {
+        return await this.db.product.findUnique({
+            where: {
+                id: productId,
+            },
+            select: {
+                id: true,
+                brand: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                    },
+                },
+                seller: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                        logo: {
+                            omit: {
+                                ...this.db.getDefaultOmit(),
+                            },
+                        },
+                    },
+                },
+                offers: {
+                    select: {
+                        isActive: true,
+                        quantity: true,
+                    },
+                    take: 1,
+                },
+            },
+        })
     }
 }
