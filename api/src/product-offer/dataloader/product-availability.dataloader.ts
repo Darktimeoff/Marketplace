@@ -2,7 +2,7 @@ import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class ProductOfferDataloader {
+export class ProductAvailabilityDataloader {
     constructor(private db: DBService) {}
 
     async findByProductId(productId: number) {

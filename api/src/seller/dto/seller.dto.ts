@@ -1,4 +1,4 @@
-import { SellerDtoInterface } from 'contracts'
+import type { SellerDtoInterface } from 'contracts'
 import { BaseDto } from '@/generic/dto/base.dto'
 import { Expose } from 'class-transformer'
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator'

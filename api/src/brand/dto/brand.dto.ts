@@ -1,4 +1,4 @@
-import { BrandDtoInterface } from 'contracts'
+import type { BrandDtoInterface } from 'contracts'
 import { BaseDto } from '@/generic/dto/base.dto'
 import { Expose } from 'class-transformer'
 import { IsNotEmpty, IsString } from 'class-validator'

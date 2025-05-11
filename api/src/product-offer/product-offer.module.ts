@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
-import { ProductOfferController } from './controller/product-offer.controller'
-import { ProductOfferService } from './service/product-offer.service'
-import { ProductOfferDataloader } from './dataloader/product-offer.dataloader'
+import { ProductAvailabilityController } from './controller/product-availability.controller'
+import { ProductAvailabilityService } from './service/product-availability.service'
+import { ProductAvailabilityDataloader } from './dataloader/product-availability.dataloader'
 @Module({
     imports: [],
-    controllers: [ProductOfferController],
-    providers: [ProductOfferService, ProductOfferDataloader],
+    controllers: [ProductAvailabilityController],
+    providers: [ProductAvailabilityService, ProductAvailabilityDataloader],
 })
 export class ProductOfferModule {}
