@@ -3,11 +3,20 @@ import { ProductAvailabilityDataloader } from '@/product-offer/dataloader/produc
 import { Prisma } from '@/generic/db/generated'
 import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
 import { ProductAvailabilityInterface, ProductAvailabilityStatusEnum } from 'contracts'
+import { Log } from '@rnw-community/nestjs-enterprise'
+import { getErrorMessage } from '@rnw-community/shared'
 
 @Injectable()
 export class ProductAvailabilityService {
     constructor(private readonly dataloader: ProductAvailabilityDataloader) {}
 
+    @Log(
+        productId => `Finding product availability by productId: ${productId}`,
+        (productAvailability, productId) =>
+            `Found product availability by productId ${productId}: ${productAvailability.availabilityStatus}`,
+        (error, productId) =>
+            `Error finding product availability by productId ${productId}: ${getErrorMessage(error)}`
+    )
     async findByProductId(productId: number): Promise<ProductAvailabilityInterface> {
         try {
             const productAvailability = await this.dataloader.findByProductId(productId)
