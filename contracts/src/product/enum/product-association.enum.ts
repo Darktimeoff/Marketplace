@@ -3,4 +3,7 @@ export enum ProductAssociationEnum {
     DESCRIPTION = 'description',
     PRODUCT_MEDIA = 'productMedia',
     CATEGORY = 'category',
+    BRAND = 'brand',
+    SELLER = 'seller',
+    OFFERS = 'offers',
 }

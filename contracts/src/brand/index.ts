@@ -1,3 +1,4 @@
 export * from './entity/brand-entity.interface'
 export * from './interface/brand.interface'
 export * from './dto/brand-dto.interface'
+export * from './interface/brand-model.interface'

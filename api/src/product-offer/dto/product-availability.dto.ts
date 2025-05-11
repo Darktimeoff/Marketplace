@@ -1,15 +1,24 @@
 import { BaseDto } from '@/generic/dto/base.dto'
 import { Expose } from 'class-transformer'
-import { IsBoolean, IsNumber, IsPositive } from 'class-validator'
-import type { ProductOfferDtoInterface } from 'contracts'
+import { IsEnum, IsOptional, ValidateNested } from 'class-validator'
+import { type ProductAvailabilityDtoInterface, ProductAvailabilityStatusEnum } from 'contracts'
+import { BrandDto } from '@/brand/dto/brand.dto'
+import { Type } from 'class-transformer'
+import { SellerDto } from '@/seller/dto/seller.dto'
 
-export class ProductOfferDto extends BaseDto implements ProductOfferDtoInterface {
+export class ProductAvailabilityDto extends BaseDto implements ProductAvailabilityDtoInterface {
     @Expose()
-    @IsBoolean()
-    isActive!: ProductOfferDtoInterface['isActive']
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => BrandDto)
+    brand!: ProductAvailabilityDtoInterface['brand']
 
     @Expose()
-    @IsNumber()
-    @IsPositive()
-    quantity!: ProductOfferDtoInterface['quantity']
+    @ValidateNested()
+    @Type(() => SellerDto)
+    seller!: ProductAvailabilityDtoInterface['seller']
+
+    @Expose()
+    @IsEnum(ProductAvailabilityStatusEnum)
+    availabilityStatus!: ProductAvailabilityDtoInterface['availabilityStatus']
 }
