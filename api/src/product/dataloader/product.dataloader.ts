@@ -10,10 +10,10 @@ import {
 export class ProductDataloader {
     constructor(private readonly db: DBService) {}
 
-    async findBySlug(slug: string): Promise<ProductModelInterface> {
+    async findById(productId: number): Promise<ProductModelInterface> {
         const product = await this.db.product.findUniqueOrThrow({
             where: {
-                slug,
+                id: productId,
             },
             include: {
                 [ProductAssociationEnum.TITLE]: {
@@ -49,18 +49,5 @@ export class ProductDataloader {
             oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
             price: Number(product.price),
         }
-    }
-
-    async getProductIdBySlug(slug: string): Promise<number> {
-        const product = await this.db.product.findUniqueOrThrow({
-            where: {
-                slug,
-            },
-            select: {
-                id: true,
-            },
-        })
-
-        return product.id
     }
 }

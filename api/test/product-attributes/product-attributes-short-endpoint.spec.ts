@@ -23,10 +23,10 @@ export function checkProductAttributesStructure(attribute: ProductAttributesDtoI
     attribute.values.forEach(checkProductAttributeValueStructure)
 }
 
-describe('/product/:slug/characteristics/short (GET)', () => {
+describe('/product/:productId/characteristics/short (GET)', () => {
     let app: INestApplication<Server>
     let dbService: DBService
-    let productSlug: string
+    let productId: number
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -38,16 +38,16 @@ describe('/product/:slug/characteristics/short (GET)', () => {
         dbService = app.get(DBService)
         const product = await dbService.product.findFirst()
         if (!product) throw new Error('No product in database')
-        productSlug = product.slug
+        productId = product.id
     })
 
     afterAll(async () => {
         await app.close()
     })
 
-    it('Should return attributes by product slug', async () => {
+    it('Should return attributes by product id', async () => {
         await request(app.getHttpServer())
-            .get(`/product/${productSlug}/characteristics/short`)
+            .get(`/product/${productId}/characteristics/short`)
             .expect(200)
             .expect((res: Response) => {
                 expect(Array.isArray(res.body)).toBe(true)
@@ -55,14 +55,21 @@ describe('/product/:slug/characteristics/short (GET)', () => {
             })
     })
 
-    it('Should return attributes by product slug', async () => {
+    it('Should return empty array for not found product', async () => {
         await request(app.getHttpServer())
-            .get('/product/non-existent-slug-404/characteristics/short')
+            .get('/product/99999999/characteristics/short')
+            .expect((res: Response) => {
+                expect(Array.isArray(res.body)).toBe(true)
+                expect(res.body.length).toBe(0)
+            })
+    })
+
+    it('Should return 400 for not number product id', async () => {
+        await request(app.getHttpServer())
+            .get('/product/not-number/characteristics/short')
             .expect((res: Response) => {
                 expect(res.body).toHaveProperty('statusCode')
-                expect(res.body.statusCode).toBe(404)
-                expect(res.body).toHaveProperty('message')
-                expect(res.body.message).toBe('Product not found')
+                expect(res.body.statusCode).toBe(400)
             })
     })
 }) 

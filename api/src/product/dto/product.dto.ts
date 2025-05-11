@@ -26,9 +26,15 @@ export class ProductDto extends BaseDto implements ProductDtoInterface {
     price!: number
 
     @Expose()
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    slug!: string
+    @IsPositive()
+    id!: number
+
+    @Expose()
+    @IsString()
+    @IsOptional()
+    slug?: string
 
     @Expose()
     @IsString()

@@ -1,5 +1,4 @@
 import { ProductAttributeDataloader } from '@/product-attributes/dataloader/product-attribute.dataloader'
-import { ProductService } from '@/product/service/product.service'
 import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
@@ -11,37 +10,31 @@ import {
 
 @Injectable()
 export class ProductAttributeService {
-    constructor(
-        private readonly dataloader: ProductAttributeDataloader,
-        private readonly products: ProductService
-    ) {}
+    constructor(private readonly dataloader: ProductAttributeDataloader) {}
 
     @Log(
-        slug => `Finding attributes by product slug: ${slug}`,
-        (attributes, slug) => `Found attributes by product slug ${slug}: ${attributes.length}`,
-        (error, slug) =>
-            `Error finding attributes by product slug ${slug}: ${getErrorMessage(error)}`
+        productId => `Finding attributes by product id: ${productId}`,
+        (attributes, productId) =>
+            `Found attributes by product id ${productId}: ${attributes.length}`,
+        (error, productId) =>
+            `Error finding attributes by product id ${productId}: ${getErrorMessage(error)}`
     )
-    async findBySlugWithoutGrouping(
-        slug: string
+    async findByProductIdWithoutGrouping(
+        productId: number
     ): Promise<ProductAttributesWithoutGroupingInterface[]> {
-        const productId = await this.products.getProductIdBySlug(slug)
-
         const attributes = await this.dataloader.findByProductIdWithoutGroupingAndTake(productId)
 
         return attributes.map(this.convertToTranslatedInterface.bind(this))
     }
 
     @Log(
-        slug => `Finding grouped attributes by product slug: ${slug}`,
-        (attributes, slug) =>
-            `Found grouped attributes by product slug ${slug}: ${attributes.length}`,
-        (error, slug) =>
-            `Error finding grouped attributes by product slug ${slug}: ${getErrorMessage(error)}`
+        productId => `Finding grouped attributes by product id: ${productId}`,
+        (attributes, productId) =>
+            `Found grouped attributes by product id ${productId}: ${attributes.length}`,
+        (error, productId) =>
+            `Error finding grouped attributes by product id ${productId}: ${getErrorMessage(error)}`
     )
-    async findBySlugGrouped(slug: string): Promise<ProductAttributesGroupedInterface[]> {
-        const productId = await this.products.getProductIdBySlug(slug)
-
+    async findByProductIdGrouped(productId: number): Promise<ProductAttributesGroupedInterface[]> {
         const attributesGrouped = await this.dataloader.findByProductIdGrouped(productId)
 
         return attributesGrouped.map(group => {

@@ -11,38 +11,18 @@ export class ProductService {
     constructor(private readonly dataloader: ProductDataloader) {}
 
     @Log(
-        (slug: string) => `Finding product by slug: ${slug}`,
-        (product, slug) => `Found product by slug ${slug}: ${product.id}`,
-        (error, slug) => `Error finding product by slug ${slug}: ${getErrorMessage(error)}`
+        (productId: number) => `Finding product by id: ${productId}`,
+        (product, productId) => `Found product by id ${productId}: ${product.id}`,
+        (error, productId) => `Error finding product by id ${productId}: ${getErrorMessage(error)}`
     )
-    async findBySlug(slug: string): Promise<ProductInterface> {
+    async findById(productId: number): Promise<ProductInterface> {
         try {
-            const product = await this.dataloader.findBySlug(slug)
-
+            const product = await this.dataloader.findById(productId)
             return {
                 ...product,
                 title: product.title.uk_ua,
                 media: product.productMedia.map(media => media.media),
             }
-        } catch (error) {
-            if (
-                error instanceof Prisma.PrismaClientKnownRequestError &&
-                error.code === DBErrorCodeEnum.NOT_FOUND
-            ) {
-                throw new NotFoundException('Product not found')
-            }
-            throw error
-        }
-    }
-
-    @Log(
-        slug => `Getting product id by slug: ${slug}`,
-        (productId, slug) => `Found product id by slug ${slug}: ${productId}`,
-        (error, slug) => `Error getting product id by slug ${slug}: ${getErrorMessage(error)}`
-    )
-    async getProductIdBySlug(slug: string): Promise<number> {
-        try {
-            return await this.dataloader.getProductIdBySlug(slug)
         } catch (error) {
             if (
                 error instanceof Prisma.PrismaClientKnownRequestError &&

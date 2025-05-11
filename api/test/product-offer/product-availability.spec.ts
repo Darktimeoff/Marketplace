@@ -72,4 +72,13 @@ describe('ProductAvailabilityController (e2e)', () => {
                 expect(res.body).toHaveProperty('message')
             })
     })
+
+    it('/product/:productId/availability (GET) should return 400 for not number productId', async () => {
+        await request(app.getHttpServer())
+            .get('/product/not-number/availability')
+            .expect((res: Response) => {
+                expect(res.body).toHaveProperty('statusCode')
+                expect(res.body.statusCode).toBe(400)
+            })
+    })
 }) 

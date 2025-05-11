@@ -39,7 +39,7 @@ const checkProductMediaStructure = (media: MediaModelInterface): void => {
 describe('ProductController (e2e)', () => {
     let app: INestApplication<Server>
     let dbService: DBService
-    let productSlug: string
+    let productId: number
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -51,30 +51,39 @@ describe('ProductController (e2e)', () => {
         dbService = app.get(DBService)
         const product = await dbService.product.findFirst()
         if (!product) throw new Error('No product in database')
-        productSlug = product.slug
+        productId = product.id
     })
 
     afterAll(async () => {
         await app.close()
     })
 
-    it('/product/:slug (GET) should return product by slug', async () => {
+    it('/product/:id (GET) should return product by id', async () => {
         await request(app.getHttpServer())
-            .get(`/product/${productSlug}`)
+            .get(`/product/${productId}`)
             .expect(200)
             .expect((res: Response) => {
                 checkProductStructure(res.body as ProductInterface)
             })
     })
 
-    it('/product/:slug (GET) should return 404 for not found', async () => {
+    it('/product/:id (GET) should return 404 for not found', async () => {
         await request(app.getHttpServer())
-            .get('/product/non-existent-slug-404')
+            .get('/product/99999999')
             .expect((res: Response) => {
                 expect(res.body).toHaveProperty('statusCode')
                 expect(res.body.statusCode).toBe(404)
                 expect(res.body).toHaveProperty('message')
                 expect(res.body.message).toBe('Product not found')
+            })
+    })
+
+    it('/product/:id (GET) should return bad request for not number id', async () => {
+        await request(app.getHttpServer())
+            .get('/product/not-number')
+            .expect((res: Response) => {
+                expect(res.body).toHaveProperty('statusCode')
+                expect(res.body.statusCode).toBe(400)
             })
     })
 })
