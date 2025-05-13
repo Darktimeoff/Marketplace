@@ -1,3 +1,4 @@
+import { CatalogModule } from '@/catalog/catalog.module'
 import { CategoryModule } from '@/category/category.module'
 import { ApiConfigModule } from '@/generic/config/api-config.module'
 import { DBModule } from '@/generic/db/db.module'
@@ -14,6 +15,7 @@ import { Module } from '@nestjs/common'
         ProductModule,
         ProductAttributeModule,
         ProductOfferModule,
+        CatalogModule,
     ],
     controllers: [],
     providers: [],
