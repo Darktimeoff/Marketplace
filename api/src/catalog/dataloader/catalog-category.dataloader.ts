@@ -5,11 +5,21 @@ import { DBService } from '@/generic/db/db.service'
 export class CatalogCategoryDataloader {
     constructor(private readonly db: DBService) {}
 
-    async getByCategoryId(id: number) {
-        return await this.db.category.findFirst({
+    async getByCategoryIds(categoryIds: number[]): Promise<number[]> {
+        const products = await this.db.product.findMany({
             where: {
-                id,
+                categoryId: {
+                    in: categoryIds,
+                },
+            },
+            select: {
+                id: true,
+            },
+            take: 56,
+            orderBy: {
+                id: 'asc',
             },
         })
+        return products.map(product => product.id)
     }
 }

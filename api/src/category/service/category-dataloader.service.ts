@@ -9,6 +9,15 @@ export class CategoryDataloaderService {
     constructor(private readonly dataloader: CategoryDataloader) {}
 
     @Log(
+        id => `Get children ids: ${id}`,
+        (ids, id) => `Got children ids by id ${id}: ${ids.length}`,
+        (error, id) => `Failed to get children ids by id ${id}: ${getErrorMessage(error)}`
+    )
+    async getChildrenIds(id: number): Promise<number[]> {
+        return await this.dataloader.getChildrenIds(id)
+    }
+
+    @Log(
         'Get all categories tree',
         categories => `Got all categories tree: ${categories.length}`,
         error => `Failed to get all categories tree: ${getErrorMessage(error)}`

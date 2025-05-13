@@ -6,6 +6,21 @@ import { CategoryModelInterface } from 'contracts'
 export class CategoryDataloader {
     constructor(private readonly db: DBService) {}
 
+    async getChildrenIds(id: number): Promise<number[]> {
+        const ids = await this.db.category.findMany({
+            where: {
+                path: {
+                    contains: `/${id}/`,
+                },
+            },
+            select: {
+                id: true,
+            },
+        })
+
+        return ids.map(id => id.id)
+    }
+
     async getAll(): Promise<CategoryModelInterface[]> {
         const categories = await this.db.category.findMany({
             include: {
