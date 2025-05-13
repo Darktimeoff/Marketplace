@@ -11,4 +11,5 @@ model Translation {
   attributeNames      Attribute[]             @relation("attributeNames")
   attributeValues     ProductAttributeValue[]
   attributeGroups     AttributeGroup[]
+  productShortDescriptions Product[] @relation("productShortDescriptions")
 }
