@@ -3,8 +3,9 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { DBService } from '../../src/generic/db/db.service'
-import { MediaFormatEnum, MediaModelInterface, MediaTypeEnum, ProductInterface } from 'contracts'
+import { ProductInterface } from 'contracts'
 import { Server } from 'http'
+import { checkProductMediaStructure } from '../shared/media.structure'
 
 const checkProductStructure = (product: ProductInterface): void => {
     expect(product).toHaveProperty('id')
@@ -21,19 +22,6 @@ const checkProductStructure = (product: ProductInterface): void => {
     expect(product).toHaveProperty('media')
     expect(Array.isArray(product.media)).toBe(true)
     product.media.forEach(checkProductMediaStructure)
-}
-
-const checkProductMediaStructure = (media: MediaModelInterface): void => {
-    expect(media).toHaveProperty('id')
-    expect(typeof media.id).toBe('number')
-    expect(media).toHaveProperty('url')
-    expect(typeof media.url).toBe('string')
-    expect(media).toHaveProperty('type')
-    expect(typeof media.type).toBe('string')
-    expect(Object.values(MediaTypeEnum).includes(media.type as MediaTypeEnum)).toBe(true)
-    expect(media).toHaveProperty('format')
-    expect(typeof media.format).toBe('string')
-    expect(Object.values(MediaFormatEnum).includes(media.format as MediaFormatEnum)).toBe(true)
 }
 
 describe('ProductController (e2e)', () => {
