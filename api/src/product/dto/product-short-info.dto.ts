@@ -2,7 +2,7 @@ import { BaseDto } from '@/generic/dto/base.dto'
 import { MediaDto } from '@/media/dto/media.dto'
 import { Expose, Type } from 'class-transformer'
 import {
-    IsArray,
+    IsEnum,
     IsNotEmpty,
     IsNumber,
     IsOptional,
@@ -10,9 +10,13 @@ import {
     IsString,
     ValidateNested,
 } from 'class-validator'
-import type { MediaDtoInterface, ProductDtoInterface } from 'contracts'
+import {
+    type MediaDtoInterface,
+    ProductAvailabilityStatusEnum,
+    type ProductShortInfoDtoInterface,
+} from 'contracts'
 
-export class ProductDto extends BaseDto implements ProductDtoInterface {
+export class ProductShortInfoDto extends BaseDto implements ProductShortInfoDtoInterface {
     @Expose()
     @IsNumber()
     @IsOptional()
@@ -21,13 +25,12 @@ export class ProductDto extends BaseDto implements ProductDtoInterface {
 
     @Expose()
     @IsNumber()
-    @IsNotEmpty()
     @IsPositive()
     price!: number
 
     @Expose()
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     slug!: string
 
     @Expose()
@@ -35,9 +38,17 @@ export class ProductDto extends BaseDto implements ProductDtoInterface {
     @IsNotEmpty()
     title!: string
 
+    @Expose()
+    @IsString()
+    @IsOptional()
+    shortDescription!: string | null
+
     @Expose({})
-    @IsArray()
+    @ValidateNested()
     @Type(() => MediaDto)
-    @ValidateNested({ each: true })
-    media!: MediaDtoInterface[]
+    image!: MediaDtoInterface
+
+    @Expose()
+    @IsEnum(ProductAvailabilityStatusEnum)
+    status!: ProductAvailabilityStatusEnum
 }

@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { DBService } from '@/generic/db/db.service'
-import { ProductAssociationEnum } from 'contracts'
+import { ProductAssociationEnum, ProductShortInfoModelInterface } from 'contracts'
 
 @Injectable()
 export class ProductCatalogDataloader {
     constructor(private readonly db: DBService) {}
 
-    async getProductShortInfoByIds(productIds: number[]) {
-        return await this.db.product.findMany({
+    async getProductShortInfoByIds(
+        productIds: number[]
+    ): Promise<ProductShortInfoModelInterface[]> {
+        const products = await this.db.product.findMany({
             where: {
                 id: { in: productIds },
             },
@@ -27,8 +29,12 @@ export class ProductCatalogDataloader {
                     },
                 },
                 [ProductAssociationEnum.PRODUCT_MEDIA]: {
-                    omit: {
-                        ...this.db.getDefaultOmit(),
+                    select: {
+                        media: {
+                            omit: {
+                                ...this.db.getDefaultOmit(),
+                            },
+                        },
                     },
                     take: 1,
                     orderBy: {
@@ -43,7 +49,13 @@ export class ProductCatalogDataloader {
                     take: 1,
                 },
             },
-            take: 1,
+            take: productIds.length,
         })
+
+        return products.map(product => ({
+            ...product,
+            price: Number(product.price),
+            oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
+        }))
     }
 }

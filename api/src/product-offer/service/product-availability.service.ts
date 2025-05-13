@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { ProductAvailabilityDataloader } from '@/product-offer/dataloader/product-availability.dataloader'
 import { Prisma } from '@/generic/db/generated'
 import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
-import { ProductAvailabilityInterface, ProductAvailabilityStatusEnum } from 'contracts'
+import { ProductAvailabilityInterface } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { getAvailableStatusByOffer } from '@/product-offer/util/get-available-status-by-offer.utilt'
 
 @Injectable()
 export class ProductAvailabilityService {
@@ -23,11 +24,7 @@ export class ProductAvailabilityService {
 
             return {
                 ...productAvailability,
-                availabilityStatus:
-                    productAvailability.offers[0].isActive &&
-                    productAvailability.offers[0].quantity > 0
-                        ? ProductAvailabilityStatusEnum.AVAILABLE
-                        : ProductAvailabilityStatusEnum.UNAVAILABLE,
+                availabilityStatus: getAvailableStatusByOffer(productAvailability.offers[0]),
             }
         } catch (error) {
             if (
