@@ -1,0 +1,10 @@
+model CategoryAttributeFilter {
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  attributeId Int
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
+  order       Int       @default(0)
+
+  @@id([categoryId, attributeId])
+  @@index([categoryId])
+}

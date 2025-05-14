@@ -4,8 +4,8 @@ model Product {
   title                  Translation             @relation("productTitles", fields: [titleId], references: [id], onDelete: Restrict)
   descriptionId          Int?
   description            Translation?            @relation("productDescriptions", fields: [descriptionId], references: [id], onDelete: SetNull)
-  shortDescriptionId     Int?                    
-  shortDescription       Translation?             @relation("productShortDescriptions", fields: [shortDescriptionId], references: [id])
+  shortDescriptionId     Int?
+  shortDescription       Translation?            @relation("productShortDescriptions", fields: [shortDescriptionId], references: [id])
   categoryId             Int
   category               Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   brandId                Int?

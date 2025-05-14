@@ -1,5 +1,5 @@
 model ProductAttributeValue {
-  id        Int       @default(autoincrement())
+  id          Int       @default(autoincrement())
   attributeId Int
   attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
   productId   Int
@@ -16,6 +16,6 @@ model ProductAttributeValue {
 
   @@id([attributeId, productId, order])
   @@unique([productId, attributeId, order])
-  @@index([productId, order(asc)])
   @@unique([id])
+  @@index([productId, order(asc)])
 }

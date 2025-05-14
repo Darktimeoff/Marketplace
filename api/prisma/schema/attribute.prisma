@@ -1,18 +1,19 @@
 model Attribute {
-  id                     Int                     @id @default(autoincrement())
-  slug                   String
-  nameId                 Int
-  name                   Translation             @relation("attributeNames", fields: [nameId], references: [id], onDelete: Restrict)
-  order                  Int                     @default(0)
-  unitId                 Int?
-  unit                   Unit?                   @relation(fields: [unitId], references: [id], onDelete: SetNull)
-  attributeGroupId       Int
-  attributeGroup         AttributeGroup          @relation(fields: [attributeGroupId], references: [id], onDelete: Restrict)
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
-  deletedAt              DateTime?
-  categoryAttributes     CategoryAttribute[]
-  productAttributeValues ProductAttributeValue[]
+  id                      Int                       @id @default(autoincrement())
+  slug                    String
+  nameId                  Int
+  name                    Translation               @relation("attributeNames", fields: [nameId], references: [id], onDelete: Restrict)
+  order                   Int                       @default(0)
+  unitId                  Int?
+  unit                    Unit?                     @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  attributeGroupId        Int
+  attributeGroup          AttributeGroup            @relation(fields: [attributeGroupId], references: [id], onDelete: Restrict)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deletedAt               DateTime?
+  categoryAttributes      CategoryAttribute[]
+  productAttributeValues  ProductAttributeValue[]
+  categoryAttributeFilter CategoryAttributeFilter[]
 
   @@index([order(asc)])
 }
