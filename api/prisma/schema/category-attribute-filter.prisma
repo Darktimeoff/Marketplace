@@ -3,7 +3,7 @@ model CategoryAttributeFilter {
   category    Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   attributeId Int
   attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
-  order       Int       @default(0)
+  order       Int       @default(autoincrement())
 
   @@id([categoryId, attributeId])
   @@index([categoryId])
