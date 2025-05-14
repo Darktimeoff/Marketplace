@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { CatalogCategoryDataloader } from '@/catalog/dataloader/catalog-category.dataloader'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
-import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloade.service'
+import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloader.service'
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
         private readonly dataloader: CatalogCategoryDataloader,
         private readonly categories: CategoryDataloaderService,
-        private readonly filterDataloader: CatalogCategoryFilterDataloaderService
+        private readonly filters: CatalogCategoryFilterDataloaderService
     ) {}
 
     async getByCategoryId(id: number) {
@@ -16,7 +16,7 @@ export class CatalogCategoryDataloaderService {
 
         return {
             total: await this.dataloader.countByCategoryIds(categories),
-            filters: await this.filterDataloader.getFiltersByCategoryId(categories),
+            filters: await this.filters.getFiltersByCategoryId(id, categories),
         }
     }
 }

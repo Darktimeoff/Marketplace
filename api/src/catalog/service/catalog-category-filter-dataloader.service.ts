@@ -9,6 +9,7 @@ interface FilterValue {
 }
 
 interface Filter {
+    id: number
     name: string
     slug: string
     values: FilterValue[] | { min: number; max: number }
@@ -18,13 +19,77 @@ interface Filter {
 export class CatalogCategoryFilterDataloaderService {
     constructor(private readonly db: DBService) {}
 
-    async getFiltersByCategoryId(categoryIds: number[]): Promise<Filter[]> {
-        const [sellerFilter, brandFilter, priceFilter] = await Promise.all([
+    async getFiltersByCategoryId(categoryId: number, categoryIds: number[]): Promise<Filter[]> {
+        const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
             this.getSellerFilter(categoryIds),
             this.getBrandFilter(categoryIds),
             this.getPriceFilter(categoryIds),
+            this.getDynamicFilter(categoryId),
         ])
-        return [sellerFilter, brandFilter, priceFilter]
+        return [sellerFilter, brandFilter, priceFilter].concat(dynamicFilters)
+    }
+
+    private async getDynamicFilter(categoryId: number): Promise<Filter[]> {
+        const attributes = await this.db.categoryAttributeFilter.findMany({
+            where: { categoryId },
+            orderBy: { order: 'asc' },
+            select: {
+                attribute: {
+                    select: {
+                        id: true,
+                        name: {
+                            omit: {
+                                ...this.db.getDefaultOmit(),
+                            },
+                        },
+                        slug: true,
+                        unit: {
+                            omit: {
+                                ...this.db.getDefaultOmit(),
+                            },
+                        },
+                    },
+                },
+            },
+        })
+
+        return await Promise.all(
+            attributes.map(async a => ({
+                id: a.attribute.id,
+                name: a.attribute.name.uk_ua,
+                slug: a.attribute.slug,
+                values: await this.getValues(
+                    categoryId,
+                    a.attribute.id,
+                    a.attribute.unit?.uk_ua ?? null
+                ),
+            }))
+        )
+    }
+
+    private async getValues(
+        categoryId: number,
+        attributeId: number,
+        unit: string | null
+    ): Promise<FilterValue[]> {
+        const values = await this.db.$queryRaw<FilterValue[]>`
+            SELECT 
+                MIN(PAV.id) AS id,
+                COALESCE(T_PAV.uk_ua, TO_CHAR(ROUND(PAV."numberValue", 2), 'FM999999999.00')) AS name,
+                COUNT(*) AS count
+            FROM "ProductAttributeValue" PAV
+            LEFT JOIN "Translation" T_PAV ON T_PAV.id = PAV."textValueId"
+            JOIN "Product" P ON PAV."productId" = P.id
+            WHERE PAV."attributeId" = ${attributeId} AND P."categoryId" = ${categoryId}
+            GROUP BY name
+            ORDER BY count DESC
+        `
+
+        return values.map(v => ({
+            id: v.id,
+            name: v.name + (unit ? ` ${unit}` : ''),
+            count: Number(v.count),
+        }))
     }
 
     private async getSellerFilter(categoryIds: number[]): Promise<Filter> {
@@ -51,7 +116,9 @@ export class CatalogCategoryFilterDataloaderService {
                 name: sellerMap.get(sc.sellerId) || null,
                 count: sc._count._all || 0,
             }))
+            .sort((a, b) => b.count - a.count)
         return {
+            id: 1,
             name: 'Продавец',
             slug: 'seller',
             values,
@@ -82,7 +149,9 @@ export class CatalogCategoryFilterDataloaderService {
                 name: brandMap.get(bc.brandId as number) ?? null,
                 count: bc._count._all || 0,
             }))
+            .sort((a, b) => b.count - a.count)
         return {
+            id: 2,
             name: 'Бренд',
             slug: 'brand',
             values,
@@ -96,6 +165,7 @@ export class CatalogCategoryFilterDataloaderService {
             _max: { price: true },
         })
         return {
+            id: 3,
             name: 'Ціна',
             slug: 'price',
             values: {
