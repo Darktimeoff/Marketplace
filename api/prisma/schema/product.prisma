@@ -25,4 +25,5 @@ model Product {
   @@index([sellerId])
   @@index([categoryId])
   @@index([brandId])
+  @@index([categoryId, brandId])
 }
