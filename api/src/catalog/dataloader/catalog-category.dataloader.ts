@@ -22,4 +22,14 @@ export class CatalogCategoryDataloader {
         })
         return products.map(product => product.id)
     }
+
+    async countByCategoryIds(categoryIds: number[]) {
+        return await this.db.product.count({
+            where: {
+                categoryId: {
+                    in: categoryIds,
+                },
+            },
+        })
+    }
 }
