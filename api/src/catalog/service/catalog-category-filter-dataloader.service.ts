@@ -1,6 +1,7 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
 import { isPositiveNumber } from '@rnw-community/shared'
+import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 
 interface FilterValue {
     id: number
@@ -8,7 +9,7 @@ interface FilterValue {
     count: number
 }
 
-interface Filter {
+export interface Filter {
     id: number
     name: string
     slug: string
@@ -120,7 +121,7 @@ export class CatalogCategoryFilterDataloaderService {
         return {
             id: 1,
             name: 'Продавец',
-            slug: 'seller',
+            slug: CatalogDefaultFilterSlugEnum.SELLER,
             values,
         }
     }
@@ -153,7 +154,7 @@ export class CatalogCategoryFilterDataloaderService {
         return {
             id: 2,
             name: 'Бренд',
-            slug: 'brand',
+            slug: CatalogDefaultFilterSlugEnum.BRAND,
             values,
         }
     }
@@ -167,7 +168,7 @@ export class CatalogCategoryFilterDataloaderService {
         return {
             id: 3,
             name: 'Ціна',
-            slug: 'price',
+            slug: CatalogDefaultFilterSlugEnum.PRICE,
             values: {
                 min: priceAggregates._min.price ? Number(priceAggregates._min.price) : 0,
                 max: priceAggregates._max.price ? Number(priceAggregates._max.price) : 0,
