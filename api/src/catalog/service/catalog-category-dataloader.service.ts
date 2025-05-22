@@ -1,22 +1,44 @@
 import { Injectable } from '@nestjs/common'
-import { CatalogCategoryDataloader } from '@/catalog/dataloader/catalog-category.dataloader'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
 import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloader.service'
+import { FilterInput } from './catalog-category-filter-dataloader.service'
+import { CatalogDefaultSorting } from '@/catalog/enum/catalog-default-sorting.enum'
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
-        private readonly dataloader: CatalogCategoryDataloader,
         private readonly categories: CategoryDataloaderService,
         private readonly filters: CatalogCategoryFilterDataloaderService
     ) {}
 
-    async getByCategoryId(id: number) {
+    async getByCategoryIdFilters(id: number, filtersInput: FilterInput[]) {
         const categories = await this.categories.getChildrenIds(id)
-        // const productsIds = await this.dataloader.getByCategoryIds(categories)
+        const [total, filters] = await Promise.all([
+            this.filters.getTotalCount(categories, filtersInput),
+            this.filters.getFiltersByCategoryId(id, categories, filtersInput),
+        ])
 
         return {
-            total: await this.dataloader.countByCategoryIds(categories),
-            filters: await this.filters.getFiltersByCategoryId(id, categories),
+            total,
+            filters,
+            sorting: await this.filters.getSortingOptions(),
         }
+    }
+
+    async getByCategoryId(
+        id: number,
+        offset: number,
+        limit: number,
+        filters: FilterInput[],
+        sorting: CatalogDefaultSorting
+    ) {
+        const categories = await this.categories.getChildrenIds(id)
+        const products = await this.filters.getProductIds(
+            categories,
+            filters,
+            offset,
+            limit,
+            sorting
+        )
+        return products
     }
 }
