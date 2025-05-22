@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
 import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloader.service'
-import { FilterInput } from './catalog-category-filter-dataloader.service'
 import { CatalogDefaultSorting } from '@/catalog/enum/catalog-default-sorting.enum'
+import { FilterInputInterface } from 'contracts'
+
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
@@ -10,7 +11,7 @@ export class CatalogCategoryDataloaderService {
         private readonly filters: CatalogCategoryFilterDataloaderService
     ) {}
 
-    async getByCategoryIdFilters(id: number, filtersInput: FilterInput[]) {
+    async getByCategoryIdFilters(id: number, filtersInput: FilterInputInterface[]) {
         const categories = await this.categories.getChildrenIds(id)
         const [total, filters] = await Promise.all([
             this.filters.getTotalCount(categories, filtersInput),
@@ -28,7 +29,7 @@ export class CatalogCategoryDataloaderService {
         id: number,
         offset: number,
         limit: number,
-        filters: FilterInput[],
+        filters: FilterInputInterface[],
         sorting: CatalogDefaultSorting
     ) {
         const categories = await this.categories.getChildrenIds(id)

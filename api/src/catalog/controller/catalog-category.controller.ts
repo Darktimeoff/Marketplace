@@ -1,6 +1,8 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common'
 import { CatalogCategoryDataloaderService } from '@/catalog/service/catalog-category-dataloader.service'
 import { CatalogDefaultSorting } from '@/catalog/enum/catalog-default-sorting.enum'
+import type { FilterInputInterface } from 'contracts'
+import { ParseFilterPipe } from '@/catalog/pipe/parse-filter-pipe'
 @Controller('catalog/category')
 export class CatalogCategoryController {
     constructor(private readonly service: CatalogCategoryDataloaderService) {}
@@ -27,27 +29,10 @@ export class CatalogCategoryController {
     }
 
     @Get(':id/filters')
-    async getByCategoryIdFilters(@Param('id', ParseIntPipe) id: number) {
-        return await this.service.getByCategoryIdFilters(id, [
-            {
-                slug: 'brand',
-                values: [12, 1],
-            },
-            {
-                slug: 'price',
-                values: {
-                    min: 10000,
-                    max: 30000,
-                },
-            },
-            {
-                slug: 'діагональ-екрана',
-                values: [629, 234],
-            },
-            {
-                slug: "вбудована-пам'ять",
-                values: [637, 243],
-            },
-        ])
+    async getByCategoryIdFilters(
+        @Param('id', ParseIntPipe) id: number,
+        @Query('filters', ParseFilterPipe) filters: FilterInputInterface[]
+    ) {
+        return await this.service.getByCategoryIdFilters(id, filters)
     }
 }
