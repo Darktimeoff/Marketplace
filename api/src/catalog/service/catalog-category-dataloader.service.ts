@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
 import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloader.service'
-import { CatalogDefaultSorting } from '@/catalog/enum/catalog-default-sorting.enum'
 import { FilterInputInterface } from 'contracts'
+import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 
 @Injectable()
 export class CatalogCategoryDataloaderService {
@@ -27,19 +27,11 @@ export class CatalogCategoryDataloaderService {
 
     async getByCategoryId(
         id: number,
-        offset: number,
-        limit: number,
-        filters: FilterInputInterface[],
-        sorting: CatalogDefaultSorting
+        pagination: CatalogPaginationInput,
+        filters: FilterInputInterface[]
     ) {
         const categories = await this.categories.getChildrenIds(id)
-        const products = await this.filters.getProductIds(
-            categories,
-            filters,
-            offset,
-            limit,
-            sorting
-        )
+        const products = await this.filters.getProductIds(categories, filters, pagination)
         return products
     }
 }

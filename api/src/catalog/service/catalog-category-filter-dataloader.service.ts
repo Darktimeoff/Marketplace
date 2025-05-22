@@ -3,8 +3,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { isDefined, isEmptyArray, isNotEmptyArray, isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Prisma } from '@/generic/db/generated'
-import { CatalogDefaultSorting } from '@/catalog/enum/catalog-default-sorting.enum'
-import { FilterInputInterface } from 'contracts'
+import { CatalogSortingEnum, FilterInputInterface } from 'contracts'
+import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 
 interface FilterValue {
     id: number
@@ -57,9 +57,7 @@ export class CatalogCategoryFilterDataloaderService {
     async getProductIds(
         categoryIds: number[],
         filters: FilterInputInterface[],
-        offset: number,
-        limit: number,
-        sorting: CatalogDefaultSorting
+        { offset, limit, sorting }: CatalogPaginationInput
     ): Promise<number[]> {
         const productWhere = {
             categoryId: { in: categoryIds },
@@ -80,35 +78,35 @@ export class CatalogCategoryFilterDataloaderService {
     async getSortingOptions(): Promise<SortingOption[]> {
         return [
             {
-                id: CatalogDefaultSorting.NEWEST,
+                id: CatalogSortingEnum.NEWEST,
                 isDefault: true,
                 name: 'Новинки',
             },
             {
-                id: CatalogDefaultSorting.RATING,
+                id: CatalogSortingEnum.RATING,
                 isDefault: false,
                 name: 'Рейтинг',
             },
             {
-                id: CatalogDefaultSorting.CHEAP,
+                id: CatalogSortingEnum.CHEAP,
                 isDefault: false,
                 name: 'Дешеві',
             },
             {
-                id: CatalogDefaultSorting.EXPENSIVE,
+                id: CatalogSortingEnum.EXPENSIVE,
                 isDefault: false,
                 name: 'Дорогі',
             },
         ]
     }
 
-    private buildOrderBy(sorting: CatalogDefaultSorting): Prisma.ProductOrderByWithRelationInput {
+    private buildOrderBy(sorting: CatalogSortingEnum): Prisma.ProductOrderByWithRelationInput {
         switch (sorting) {
-            case CatalogDefaultSorting.NEWEST:
+            case CatalogSortingEnum.NEWEST:
                 return { createdAt: 'desc' }
-            case CatalogDefaultSorting.CHEAP:
+            case CatalogSortingEnum.CHEAP:
                 return { price: 'asc' }
-            case CatalogDefaultSorting.EXPENSIVE:
+            case CatalogSortingEnum.EXPENSIVE:
                 return { price: 'desc' }
             default:
                 throw new BadRequestException('Unsupported sorting')

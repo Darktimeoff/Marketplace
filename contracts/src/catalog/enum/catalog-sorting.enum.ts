@@ -1,4 +1,4 @@
-export enum CatalogDefaultSorting {
+export enum CatalogSortingEnum {
     CHEAP = 'cheap',
     EXPENSIVE = 'expensive',
     NEWEST = 'newest',
