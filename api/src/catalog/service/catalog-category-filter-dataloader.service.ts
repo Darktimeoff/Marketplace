@@ -6,17 +6,22 @@ import { Prisma } from '@/generic/db/generated'
 import { CatalogSortingEnum, FilterInputInterface } from 'contracts'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 
-interface FilterValue {
+export interface FilterValue {
     id: number
     name: string | null
     count: number
+}
+
+export interface FilterValueRange {
+    min: number
+    max: number
 }
 
 export interface Filter {
     id: number
     name: string
     slug: string
-    values: FilterValue[] | { min: number; max: number }
+    values: FilterValue[] | FilterValueRange
 }
 
 export interface SortingOption {
