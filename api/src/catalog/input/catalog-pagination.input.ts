@@ -7,15 +7,15 @@ export class CatalogPaginationInput implements CatalogPaginationInputInterface {
     @Min(0)
     @IsInt()
     @Type(() => Number)
-    offset!: number
+    offset: number = 0
 
     @IsNumber()
     @IsPositive()
     @IsInt()
     @Max(100)
     @Type(() => Number)
-    limit!: number
+    limit: number = 20
 
     @IsEnum(CatalogSortingEnum)
-    sorting!: CatalogSortingEnum
+    sorting: CatalogSortingEnum = CatalogSortingEnum.NEWEST
 }

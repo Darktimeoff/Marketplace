@@ -9,7 +9,15 @@ async function bootstrap() {
     const configService = app.get(ApiConfigService)
 
     app.setGlobalPrefix('api')
-    app.useGlobalPipes(new ValidationPipe({ transform: true }))
+    app.useGlobalPipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+            whitelist: true,
+        })
+    )
 
     const host = configService.get(EnvironmentVariablesEnum.HOST)
     const port = configService.get(EnvironmentVariablesEnum.PORT)
