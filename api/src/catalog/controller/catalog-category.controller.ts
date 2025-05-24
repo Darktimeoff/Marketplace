@@ -3,6 +3,8 @@ import { CatalogCategoryDataloaderService } from '@/catalog/service/catalog-cate
 import type { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
 import { ParseFilterPipe } from '@/catalog/pipe/parse-filter-pipe'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
+import { UseSerializeValidator } from '@/generic/decorator/use-transform-validator.decorator'
+import { CatalogCategoryFiltersDto } from '@/catalog/dto/catalog-category-filters.dto'
 @Controller('catalog/category')
 export class CatalogCategoryController {
     constructor(private readonly service: CatalogCategoryDataloaderService) {}
@@ -17,6 +19,7 @@ export class CatalogCategoryController {
     }
 
     @Get(':id/filters')
+    @UseSerializeValidator(CatalogCategoryFiltersDto)
     async getByCategoryIdFilters(
         @Param('id', ParseIntPipe) id: number,
         @Query('filters', ParseFilterPipe) filters: CatalogFilterInputInterface[]
