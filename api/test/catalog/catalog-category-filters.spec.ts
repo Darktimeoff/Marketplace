@@ -4,18 +4,13 @@ import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogFilterInteface, CatalogFilterValuesSelectType } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectType } from 'contracts'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
 import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
 import { getPriceFilter, getPriceRange } from '../util/get-price-filter.util'
 import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
-interface CatalogFiltersResponse {
-    total: number
-    filters: CatalogFilterInteface[]
-    sorting: Array<{ id: string; isDefault: boolean; name: string }>
-}
 
 describe('CatalogCategoryFilters (e2e)', () => {
     let app: INestApplication<Server>
@@ -39,7 +34,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const brandValues = getBrandValues(baseBrandFilter)
 
@@ -53,7 +48,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${firstBrand.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBe(firstBrand.count)
 
@@ -71,7 +66,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const brandValues = getBrandValues(baseBrandFilter)
 
@@ -87,7 +82,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.BRAND}:${firstBrand.id},${secondBrand.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(expectedTotal)
             expect(filteredBody.total).toBeGreaterThan(0)
@@ -104,7 +99,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseSellerFilter = getSellerFilter(baseBody.filters)
             const sellerValues = getSellerValues(baseSellerFilter)
 
@@ -118,7 +113,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBe(firstSeller.count)
 
@@ -132,7 +127,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseSellerFilter = getSellerFilter(baseBody.filters)
             const sellerValues = getSellerValues(baseSellerFilter)
 
@@ -148,7 +143,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id},${secondSeller.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(expectedTotal)
             expect(filteredBody.total).toBeGreaterThan(0)
@@ -161,7 +156,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const basePriceFilter = getPriceFilter(baseBody.filters)
             const priceRange = getPriceRange(basePriceFilter)
 
@@ -173,7 +168,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=price:${testMin}-to-${testMax}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(baseBody.total)
             expect(filteredBody.total).toBeGreaterThanOrEqual(0)
@@ -192,7 +187,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
 
             const dynamicFilter = getDynamicFilter(baseBody.filters)
 
@@ -205,7 +200,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${dynamicFilter!.slug}:${firstValue.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBe(firstValue.count)
 
@@ -219,7 +214,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
             const dynamicValues1 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
@@ -229,7 +224,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${baseDynamicFilter!.slug}:${dynamicValues1.id},${dynamicValues2.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBe(dynamicValues1.count + dynamicValues2.count)
 
@@ -249,7 +244,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const baseSellerFilter = getSellerFilter(baseBody.filters)
             
@@ -266,7 +261,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};seller:${selectedSeller.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(selectedBrand.count)
             expect(filteredBody.total).toBeLessThanOrEqual(selectedSeller.count)
@@ -278,7 +273,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const basePriceFilter = getPriceFilter(baseBody.filters)
             
@@ -295,7 +290,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(selectedBrand.count)
             expect(filteredBody.total).toBeLessThanOrEqual(baseBody.total)
@@ -307,7 +302,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
@@ -318,7 +313,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${brandValues[0].id};${baseDynamicFilter!.slug}:${dynamicValues.id}`)
                 .expect(200)
 
-            const filteredBody: CatalogFiltersResponse = filteredResponse.body
+            const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
 
             expect(filteredBody.total).toBeLessThanOrEqual(brandValues[0].count)
             expect(filteredBody.filters.length).toBe(baseBody.filters.length)
@@ -341,7 +336,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${nonExistentBrandId}`)
                 .expect(200)
 
-            const body: CatalogFiltersResponse = response.body
+            const body: CatalogCategoryFiltersDtoInterface = response.body
             expect(body.total).toBe(0)
         })
 
@@ -350,7 +345,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const basePriceFilter = getPriceFilter(baseBody.filters)
             const priceRange = getPriceRange(basePriceFilter)
 
@@ -361,7 +356,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=price:${invalidMin}-to-${invalidMax}`)
                 .expect(200)
 
-            const body: CatalogFiltersResponse = response.body
+            const body: CatalogCategoryFiltersDtoInterface = response.body
             expect(body.total).toBe(0)
         })
 
@@ -370,7 +365,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const body: CatalogFiltersResponse = response.body
+            const body: CatalogCategoryFiltersDtoInterface = response.body
             expect(body.total).toBeGreaterThan(0)
             expect(body.filters).toBeDefined()
             expect(Array.isArray(body.filters)).toBe(true)
@@ -381,7 +376,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const baseBody: CatalogFiltersResponse = baseResponse.body
+            const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
             const baseSellerFilter = getSellerFilter(baseBody.filters)
             
@@ -398,7 +393,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${lastBrand.id};seller:${firstSeller.id}`)
                 .expect(200)
 
-            const body: CatalogFiltersResponse = response.body
+            const body: CatalogCategoryFiltersDtoInterface = response.body
             
             expect(body.total).toBeGreaterThanOrEqual(0)
             expect(body.filters).toBeDefined()

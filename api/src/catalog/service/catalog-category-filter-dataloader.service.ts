@@ -65,7 +65,7 @@ export class CatalogCategoryFilterDataloaderService {
         ).map(p => p.id)
     }
 
-    async getSortingOptions(): Promise<CatalogSoringInterface[]> {
+    getSortingOptions(): CatalogSoringInterface[] {
         return [
             {
                 id: CatalogSortingEnum.NEWEST,

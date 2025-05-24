@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogFilterInteface, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 import { DBService } from '../../src/generic/db/db.service'
 import { isDefined, isNotEmptyArray } from '@rnw-community/shared'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
@@ -14,12 +14,6 @@ import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
 const INVALID_CATEGORY_ID = 'invalid'
 const NON_EXISTENT_CATEGORY_ID = 999999
-
-interface CatalogFiltersResponse {
-    total: number
-    filters: CatalogFilterInteface[]
-    sorting: Array<{ id: string; isDefault: boolean; name: string }>
-}
 
 async function getProductPrices(app: INestApplication, productIds: number[]): Promise<number[]> {
     const dbService = app.get(DBService)
@@ -230,7 +224,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const brandFilter = getBrandFilter(filtersBody.filters)
             const brandValues = getBrandValues(brandFilter)
 
@@ -256,7 +250,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const brandFilter = getBrandFilter(filtersBody.filters)
             const brandValues = getBrandValues(brandFilter)
 
@@ -286,7 +280,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const sellerFilter = getSellerFilter(filtersBody.filters)
             const sellerValues = getSellerValues(sellerFilter)
 
@@ -313,7 +307,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const sellerFilter = getSellerFilter(filtersBody.filters)
             const sellerValues = getSellerValues(sellerFilter)
 
@@ -343,7 +337,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const priceFilter = getPriceFilter(filtersBody.filters)
             const priceRange = getPriceRange(priceFilter)
 
@@ -371,7 +365,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const priceFilter = getPriceFilter(filtersBody.filters)
             const priceRange = getPriceRange(priceFilter)
 
@@ -396,7 +390,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
             const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
@@ -415,7 +409,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
             const values = dynamicFilter.values as CatalogFilterValuesSelectType[]
@@ -437,7 +431,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const brandFilter = getBrandFilter(filtersBody.filters)
             const priceFilter = getPriceFilter(filtersBody.filters)
             
@@ -555,11 +549,11 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
-            const filtersBody: CatalogFiltersResponse = filtersResponse.body
+            const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const brandFilter = getBrandFilter(filtersBody.filters)
             const brandValues = getBrandValues(brandFilter)
 
-            if (brandValues.length === 0) return
+            expect(brandValues.length).toBeGreaterThan(0)
 
             const selectedBrand = brandValues[0]
 

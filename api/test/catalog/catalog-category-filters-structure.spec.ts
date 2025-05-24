@@ -4,7 +4,7 @@ import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSoringInterface, CatalogSortingEnum } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterDtoInterface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingDtoInterface, CatalogSortingEnum } from 'contracts'
 import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
 function checkFilterValueStructure(value: CatalogFilterValuesSelectType | CatalogFilterValuesRangeType) {
@@ -25,7 +25,7 @@ function checkFilterValueStructure(value: CatalogFilterValuesSelectType | Catalo
     }
 }
 
-function checkFilterStructure(filter: CatalogFilterInteface) {
+function checkFilterStructure(filter: CatalogFilterDtoInterface) {
     expect(filter).toHaveProperty('id')
     expect(typeof filter.id).toBe('number')
     expect(filter).toHaveProperty('name')
@@ -40,7 +40,7 @@ function checkFilterStructure(filter: CatalogFilterInteface) {
     }
 }
 
-function checkSortingOptionStructure(sorting: CatalogSoringInterface) {
+function checkSortingOptionStructure(sorting: CatalogSortingDtoInterface) {
     expect(sorting).toHaveProperty('id')
     expect(typeof sorting.id).toBe('string')
     expect(sorting).toHaveProperty('isDefault')
@@ -49,11 +49,7 @@ function checkSortingOptionStructure(sorting: CatalogSoringInterface) {
     expect(typeof sorting.name).toBe('string')
 }
 
-function checkCatalogCategoryFiltersStructure(catalog: {
-    total: number
-    filters: CatalogFilterInteface[]
-    sorting: CatalogSoringInterface[]
-}) {
+function checkCatalogCategoryFiltersStructure(catalog: CatalogCategoryFiltersDtoInterface) {
     expect(catalog).toHaveProperty('total')
     expect(typeof catalog.total).toBe('number')
     expect(catalog.total).toBeGreaterThan(0)
@@ -89,11 +85,7 @@ describe('CatalogCategoryController (e2e)', () => {
             .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
             .expect(200)
             .expect((res: Response) => {
-                const body: {
-                    total: number
-                    filters: CatalogFilterInteface[]
-                    sorting: CatalogSoringInterface[]
-                } = res.body
+                const body: CatalogCategoryFiltersDtoInterface = res.body
 
                 checkCatalogCategoryFiltersStructure(body)
             })

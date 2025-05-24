@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common'
 import { CatalogCategoryDataloaderService } from '@/catalog/service/catalog-category-dataloader.service'
-import type { CatalogFilterInputInterface } from 'contracts'
+import type { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
 import { ParseFilterPipe } from '@/catalog/pipe/parse-filter-pipe'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 @Controller('catalog/category')
@@ -12,7 +12,7 @@ export class CatalogCategoryController {
         @Param('id', ParseIntPipe) id: number,
         @Query() pagination: CatalogPaginationInput,
         @Query('filters', ParseFilterPipe) filters: CatalogFilterInputInterface[]
-    ) {
+    ): Promise<number[]> {
         return await this.service.getByCategoryId(id, pagination, filters)
     }
 
@@ -20,7 +20,7 @@ export class CatalogCategoryController {
     async getByCategoryIdFilters(
         @Param('id', ParseIntPipe) id: number,
         @Query('filters', ParseFilterPipe) filters: CatalogFilterInputInterface[]
-    ) {
+    ): Promise<CatalogCategoryFiltersInteface> {
         return await this.service.getByCategoryIdFilters(id, filters)
     }
 }
