@@ -4,7 +4,7 @@ import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectType } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectDtoInterface } from 'contracts'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
 import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
@@ -194,7 +194,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(dynamicFilter).toBeDefined()
             expect(Array.isArray(dynamicFilter?.values)).toBe(true)
 
-            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
             
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${dynamicFilter!.slug}:${firstValue.id}`)
@@ -217,8 +217,8 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const baseBody: CatalogCategoryFiltersDtoInterface = baseResponse.body
             const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
-            const dynamicValues1 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
-            const dynamicValues2 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
+            const dynamicValues1 = (baseDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
+            const dynamicValues2 = (baseDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[1]
 
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${baseDynamicFilter!.slug}:${dynamicValues1.id},${dynamicValues2.id}`)
@@ -229,10 +229,10 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(filteredBody.total).toBe(dynamicValues1.count + dynamicValues2.count)
 
             const filteredDynamicFilter = filteredBody.filters.find(f => f.slug === baseDynamicFilter!.slug)
-            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
             expect(filteredDynamicValues.id).toBe(dynamicValues1.id)
 
-            const filteredDynamicValues2 = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
+            const filteredDynamicValues2 = (filteredDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[1]
             expect(filteredDynamicValues2.id).toBe(dynamicValues2.id)
             expect(filteredBody.filters.length).toBe(baseBody.filters.length)
         })
@@ -307,7 +307,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
             const brandValues = getBrandValues(baseBrandFilter)
-            const dynamicValues = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const dynamicValues = (baseDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
 
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${brandValues[0].id};${baseDynamicFilter!.slug}:${dynamicValues.id}`)
@@ -323,7 +323,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(filteredBrandValues.length).toBeGreaterThan(0)
 
             const filteredDynamicFilter = filteredBody.filters.find(f => f.slug === baseDynamicFilter!.slug)
-            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
             expect(filteredDynamicValues.id).toBe(dynamicValues.id)
         })
     })

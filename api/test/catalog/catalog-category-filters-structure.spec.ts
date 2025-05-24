@@ -4,10 +4,10 @@ import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogCategoryFiltersDtoInterface, CatalogFilterDtoInterface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingDtoInterface, CatalogSortingEnum } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterDtoInterface, CatalogFilterValuesRangeDtoInterface, CatalogFilterValuesSelectDtoInterface, CatalogSortingDtoInterface, CatalogSortingEnum } from 'contracts'
 import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
-function checkFilterValueStructure(value: CatalogFilterValuesSelectType | CatalogFilterValuesRangeType) {
+function checkFilterValueStructure(value: CatalogFilterValuesSelectDtoInterface | CatalogFilterValuesRangeDtoInterface) {
     if ('name' in value) {
         expect(typeof value.id).toBe('number')
         expect(value).toHaveProperty('name')

@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectDtoInterface, CatalogSortingEnum } from 'contracts'
 import { DBService } from '../../src/generic/db/db.service'
 import { isDefined, isNotEmptyArray } from '@rnw-community/shared'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
@@ -393,7 +393,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
-            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectDtoInterface[])[0]
 
             const response = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=${dynamicFilter!.slug}:${firstValue.id}`)
@@ -412,7 +412,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const filtersBody: CatalogCategoryFiltersDtoInterface = filtersResponse.body
             const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
-            const values = dynamicFilter.values as CatalogFilterValuesSelectType[]
+            const values = dynamicFilter.values as CatalogFilterValuesSelectDtoInterface[]
             const selectedValues = [values[0], values[1]]
             const valueIds = selectedValues.map(v => v.id)
 
