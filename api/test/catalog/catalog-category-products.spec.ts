@@ -10,8 +10,8 @@ import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
 import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
 import { getPriceFilter, getPriceRange } from '../util/get-price-filter.util'
+import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
-const MOBILE_PHONE_CATEGORY_ID = 10
 const INVALID_CATEGORY_ID = 'invalid'
 const NON_EXISTENT_CATEGORY_ID = 999999
 
@@ -98,7 +98,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Pagination', () => {
         it('should return products with default pagination', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}`)
                 .expect(200)
 
             const body: number[] = response.body
@@ -110,7 +110,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
         it('should respect limit parameter', async () => {
             const limit = 5
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=${limit}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=${limit}`)
                 .expect(200)
 
             const body: number[] = response.body
@@ -121,11 +121,11 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const limit = 5
 
             const firstPageResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=${limit}&offset=0`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=${limit}&offset=0`)
                 .expect(200)
 
             const secondPageResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=${limit}&offset=${limit}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=${limit}&offset=${limit}`)
                 .expect(200)
 
             const firstPage: number[] = firstPageResponse.body
@@ -140,7 +140,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should handle large offset gracefully', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?offset=10000`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?offset=10000`)
                 .expect(200)
 
             const body: number[] = response.body
@@ -152,7 +152,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Sorting', () => {
         it('should sort by newest (default)', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}`)
                 .query({ limit: 10, sorting: CatalogSortingEnum.NEWEST })
                 .expect(200)
 
@@ -174,7 +174,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should sort by price ascending (cheap)', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}`)
                 .query({ limit: 10, sorting: CatalogSortingEnum.CHEAP })
                 .expect(200)
 
@@ -197,7 +197,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should sort by price descending (expensive)', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}`)
                 .query({ limit: 10, sorting: CatalogSortingEnum.EXPENSIVE })
                 .expect(200)
 
@@ -219,7 +219,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should handle invalid sorting gracefully', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?sorting=invalid`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?sorting=invalid`)
                 .expect(400)
         })
     })
@@ -227,7 +227,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Brand Filtering', () => {
         it('should filter products by single brand', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -239,7 +239,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const selectedBrand = brandValues[0]
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:${selectedBrand.id}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -253,7 +253,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should filter products by multiple brands', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -266,7 +266,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const brandIds = selectedBrands.map(b => b.id)
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${brandIds.join(',')}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:${brandIds.join(',')}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -283,7 +283,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Seller Filtering', () => {
         it('should filter products by single seller', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -295,7 +295,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const selectedSeller = sellerValues[0]
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=seller:${selectedSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=seller:${selectedSeller.id}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -310,7 +310,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should filter products by multiple sellers', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -323,7 +323,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const sellerIds = selectedSellers.map(s => s.id)
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=seller:${sellerIds.join(',')}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=seller:${sellerIds.join(',')}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -340,7 +340,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Price Filtering', () => {
         it('should filter products by price range', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -352,7 +352,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const testMax = midPrice
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=price:${testMin}-to-${testMax}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=price:${testMin}-to-${testMax}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -368,7 +368,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should handle edge price ranges', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -377,7 +377,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
             // Тестируем минимальную цену
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=price:${priceRange.min}-to-${priceRange.min}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=price:${priceRange.min}-to-${priceRange.min}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -393,7 +393,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Dynamic Attribute Filtering', () => {
         it('should filter products by dynamic attributes', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -402,7 +402,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=${dynamicFilter!.slug}:${firstValue.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=${dynamicFilter!.slug}:${firstValue.id}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -412,7 +412,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should filter products by multiple dynamic attribute values', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -423,7 +423,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const valueIds = selectedValues.map(v => v.id)
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=${dynamicFilter.slug}:${valueIds.join(',')}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=${dynamicFilter.slug}:${valueIds.join(',')}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -434,7 +434,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
     describe('Combined Filtering', () => {
         it('should apply multiple filters correctly', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -450,7 +450,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const midPrice = Math.floor((priceRange.min + priceRange.max) / 2)
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -479,37 +479,37 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should reject negative limit', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=-1`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=-1`)
                 .expect(400)
         })
 
         it('should reject limit exceeding maximum', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=101`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=101`)
                 .expect(400)
         })
 
         it('should reject negative offset', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?offset=-1`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?offset=-1`)
                 .expect(400)
         })
 
         it('should reject non-integer offset', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?offset=1.5`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?offset=1.5`)
                 .expect(400)
         })
 
         it('should reject non-integer limit', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?limit=1.5`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?limit=1.5`)
                 .expect(400)
         })
 
         it('should reject invalid sorting option', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?sorting=invalid`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?sorting=invalid`)
                 .expect(400)
         })
     })
@@ -527,7 +527,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should handle empty filters gracefully', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=`)
                 .expect(200)
 
             const body: number[] = response.body
@@ -536,13 +536,13 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should handle malformed filter syntax', async () => {
             await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=invalid-filter-format`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=invalid-filter-format`)
                 .expect(400)
         })
 
         it('should handle non-existent filter values', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:999999`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:999999`)
                 .expect(200)
 
             const body: number[] = response.body
@@ -552,7 +552,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
         it('should maintain consistency with pagination and filtering', async () => {
             const filtersResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
@@ -564,11 +564,11 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const selectedBrand = brandValues[0]
 
             const firstPageResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=0`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=0`)
                 .expect(200)
 
             const secondPageResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=5`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=5`)
                 .expect(200)
 
             const firstPage: number[] = firstPageResponse.body

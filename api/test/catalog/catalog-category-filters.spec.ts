@@ -9,8 +9,7 @@ import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
 import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
 import { getPriceFilter, getPriceRange } from '../util/get-price-filter.util'
-
-const MOBILE_PHONE_CATEGORY_ID = 10
+import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
 interface CatalogFiltersResponse {
     total: number
@@ -37,7 +36,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
     describe('Brand Filtering', () => {
         it('should return correct total when single brand is selected', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -51,7 +50,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const firstBrand = brandValues[0]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${firstBrand.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${firstBrand.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -69,7 +68,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should return correct total when multiple brands are selected', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -85,7 +84,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const expectedTotal = firstBrand.count + secondBrand.count
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.BRAND}:${firstBrand.id},${secondBrand.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.BRAND}:${firstBrand.id},${secondBrand.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -102,7 +101,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
     describe('Seller Filtering', () => {
         it('should return correct total when single seller is selected', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -116,7 +115,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const firstSeller = sellerValues[0]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -130,7 +129,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should return correct total when multiple sellers are selected', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -146,7 +145,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const expectedTotal = firstSeller.count + secondSeller.count
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id},${secondSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id},${secondSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -159,7 +158,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
     describe('Price Filtering', () => {
         it('should return correct total when price range is applied', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -171,7 +170,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const testMax = midPrice
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=price:${testMin}-to-${testMax}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=price:${testMin}-to-${testMax}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -190,7 +189,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
     describe('Dynamic Attribute Filtering', () => {
         it('should return correct total when dynamic attribute is selected', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -203,7 +202,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
             
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${dynamicFilter!.slug}:${firstValue.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${dynamicFilter!.slug}:${firstValue.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -217,7 +216,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should return correct total when dynamic attribute is selected with multiple values', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -227,7 +226,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const dynamicValues2 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${baseDynamicFilter!.slug}:${dynamicValues1.id},${dynamicValues2.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${baseDynamicFilter!.slug}:${dynamicValues1.id},${dynamicValues2.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -247,7 +246,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
     describe('Combined Filtering', () => {
         it('should return correct total when brand and seller filters are combined', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -264,7 +263,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const selectedSeller = sellerValues[0]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};seller:${selectedSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};seller:${selectedSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -276,7 +275,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should return correct total when brand and price filters are combined', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -293,7 +292,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const midPrice = Math.floor((priceRange.min + priceRange.max) / 2)
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -305,7 +304,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should return correct when brand and dynamic attribute filters are combined', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -316,7 +315,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const dynamicValues = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${brandValues[0].id};${baseDynamicFilter!.slug}:${dynamicValues.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${brandValues[0].id};${baseDynamicFilter!.slug}:${dynamicValues.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
@@ -339,7 +338,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const nonExistentBrandId = 999999
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${nonExistentBrandId}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${nonExistentBrandId}`)
                 .expect(200)
 
             const body: CatalogFiltersResponse = response.body
@@ -348,7 +347,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should handle invalid price range gracefully', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -359,7 +358,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const invalidMax = priceRange.max + 2000
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=price:${invalidMin}-to-${invalidMax}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=price:${invalidMin}-to-${invalidMax}`)
                 .expect(200)
 
             const body: CatalogFiltersResponse = response.body
@@ -368,7 +367,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should handle empty filters array', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const body: CatalogFiltersResponse = response.body
@@ -379,7 +378,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
         it('should maintain filter consistency when filters exclude all products', async () => {
             const baseResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
@@ -396,7 +395,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const firstSeller = sellerValues[0]
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${lastBrand.id};seller:${firstSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=brand:${lastBrand.id};seller:${firstSeller.id}`)
                 .expect(200)
 
             const body: CatalogFiltersResponse = response.body

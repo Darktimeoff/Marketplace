@@ -1,0 +1,1 @@
+export const MOBILE_CATEGORY_ID = 10

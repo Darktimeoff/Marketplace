@@ -5,8 +5,7 @@ import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
 import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSoringInterface, CatalogSortingEnum } from 'contracts'
-
-const MOBILE_PHONE_CATEGORY_ID = 10
+import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
 function checkFilterValueStructure(value: CatalogFilterValuesSelectType | CatalogFilterValuesRangeType) {
     if ('name' in value) {
@@ -87,7 +86,7 @@ describe('CatalogCategoryController (e2e)', () => {
 
     it('/catalog/category/:id/filters (GET) should return an array of products', async () => {
         await request(app.getHttpServer())
-            .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
+            .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters`)
             .expect(200)
             .expect((res: Response) => {
                 const body: {
