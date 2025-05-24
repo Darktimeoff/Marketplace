@@ -3,9 +3,8 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import type { SortingOption } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
+import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSoringInterface, CatalogSortingEnum } from 'contracts'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
@@ -42,7 +41,7 @@ function checkFilterStructure(filter: CatalogFilterInteface) {
     }
 }
 
-function checkSortingOptionStructure(sorting: SortingOption) {
+function checkSortingOptionStructure(sorting: CatalogSoringInterface) {
     expect(sorting).toHaveProperty('id')
     expect(typeof sorting.id).toBe('string')
     expect(sorting).toHaveProperty('isDefault')
@@ -54,7 +53,7 @@ function checkSortingOptionStructure(sorting: SortingOption) {
 function checkCatalogCategoryFiltersStructure(catalog: {
     total: number
     filters: CatalogFilterInteface[]
-    sorting: SortingOption[]
+    sorting: CatalogSoringInterface[]
 }) {
     expect(catalog).toHaveProperty('total')
     expect(typeof catalog.total).toBe('number')
@@ -94,7 +93,7 @@ describe('CatalogCategoryController (e2e)', () => {
                 const body: {
                     total: number
                     filters: CatalogFilterInteface[]
-                    sorting: SortingOption[]
+                    sorting: CatalogSoringInterface[]
                 } = res.body
 
                 checkCatalogCategoryFiltersStructure(body)

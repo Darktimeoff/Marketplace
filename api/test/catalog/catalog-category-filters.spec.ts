@@ -5,6 +5,7 @@ import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
 import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType } from 'contracts'
+import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
@@ -224,11 +225,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
 
-            const dynamicFilter = baseBody.filters.find(f => 
-                !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
-                Array.isArray(f.values) &&
-                f.values.length > 0
-            )
+            const dynamicFilter = getDynamicFilter(baseBody.filters)
 
             expect(dynamicFilter).toBeDefined()
             expect(Array.isArray(dynamicFilter?.values)).toBe(true)
@@ -254,11 +251,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 .expect(200)
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
-            const baseDynamicFilter = baseBody.filters.find(f => 
-                !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
-                Array.isArray(f.values) &&
-                f.values.length > 0
-            )
+            const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
             const dynamicValues1 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
             const dynamicValues2 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
@@ -294,28 +287,24 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const brandValues = getBrandValues(baseBrandFilter)
             const sellerValues = getSellerValues(baseSellerFilter)
 
-            if (brandValues.length === 0 || sellerValues.length === 0) {
-                return // Недостаточно данных для тестирования
-            }
+            expect(brandValues.length).toBeGreaterThan(0)
+            expect(sellerValues.length).toBeGreaterThan(0)
 
             const selectedBrand = brandValues[0]
             const selectedSeller = sellerValues[0]
 
-            // Применяем комбинированные фильтры
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};seller:${selectedSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
 
-            // Проверяем что total меньше или равен каждому отдельному фильтру
             expect(filteredBody.total).toBeLessThanOrEqual(selectedBrand.count)
             expect(filteredBody.total).toBeLessThanOrEqual(selectedSeller.count)
             expect(filteredBody.total).toBeGreaterThanOrEqual(0)
         })
 
         it('should return correct total when brand and price filters are combined', async () => {
-            // Получаем базовые фильтры
             const baseResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
                 .expect(200)
@@ -327,21 +316,18 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const brandValues = getBrandValues(baseBrandFilter)
             const priceRange = getPriceRange(basePriceFilter)
 
-            if (brandValues.length === 0 || priceRange.min >= priceRange.max) {
-                return // Недостаточно данных для тестирования
-            }
+            expect(brandValues.length).toBeGreaterThan(0)
+            expect(priceRange.min).toBeLessThan(priceRange.max)
 
             const selectedBrand = brandValues[0]
             const midPrice = Math.floor((priceRange.min + priceRange.max) / 2)
 
-            // Применяем комбинированные фильтры
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${selectedBrand.id};price:${priceRange.min}-to-${midPrice}`)
                 .expect(200)
 
             const filteredBody: CatalogFiltersResponse = filteredResponse.body
 
-            // Проверяем что total меньше или равен бренду и базовому total
             expect(filteredBody.total).toBeLessThanOrEqual(selectedBrand.count)
             expect(filteredBody.total).toBeLessThanOrEqual(baseBody.total)
             expect(filteredBody.total).toBeGreaterThanOrEqual(0)
@@ -354,11 +340,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
 
             const baseBody: CatalogFiltersResponse = baseResponse.body
             const baseBrandFilter = getBrandFilter(baseBody.filters)
-            const baseDynamicFilter = baseBody.filters.find(f => 
-                !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
-                Array.isArray(f.values) &&
-                f.values.length > 0
-            )   
+            const baseDynamicFilter = getDynamicFilter(baseBody.filters)
 
             const brandValues = getBrandValues(baseBrandFilter)
             const dynamicValues = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
@@ -395,7 +377,6 @@ describe('CatalogCategoryFilters (e2e)', () => {
         })
 
         it('should handle invalid price range gracefully', async () => {
-            // Получаем базовые фильтры для определения валидного диапазона
             const baseResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
                 .expect(200)
@@ -404,7 +385,6 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const basePriceFilter = getPriceFilter(baseBody.filters)
             const priceRange = getPriceRange(basePriceFilter)
 
-            // Используем диапазон за пределами возможного
             const invalidMin = priceRange.max + 1000
             const invalidMax = priceRange.max + 2000
 

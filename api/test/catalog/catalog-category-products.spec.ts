@@ -6,7 +6,8 @@ import { Server } from 'node:http'
 import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
 import { DBService } from '../../src/generic/db/db.service'
-import { isDefined } from '@rnw-community/shared'
+import { isDefined, isNotEmptyArray } from '@rnw-community/shared'
+import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 const INVALID_CATEGORY_ID = 'invalid'
@@ -192,7 +193,6 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
             const dates = await getProductDates(app, productIds)
         
-            // Проверяем что даты отсортированы по убыванию (новые первыми)
             let isSorted = true
             for (let i = 0; i < dates.length - 1; i++) {
                 if (dates[i].getTime() < dates[i + 1].getTime()) {
@@ -257,7 +257,6 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
     describe('Brand Filtering', () => {
         it('should filter products by single brand', async () => {
-            // Получаем доступные бренды
             const filtersResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters`)
                 .expect(200)
@@ -266,7 +265,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const brandFilter = getBrandFilter(filtersBody.filters)
             const brandValues = getBrandValues(brandFilter)
 
-            if (brandValues.length === 0) return
+           expect(brandValues.length).toBeGreaterThan(0)
 
             const selectedBrand = brandValues[0]
 
@@ -277,7 +276,6 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const productIds: number[] = response.body
             expect(productIds.length).toBeGreaterThan(0)
 
-            // Проверяем что все продукты имеют выбранный бренд
             const productBrands = await getProductBrands(app, productIds)
             productBrands.forEach(brandId => {
                 expect(brandId).toBe(selectedBrand.id)
@@ -293,7 +291,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const brandFilter = getBrandFilter(filtersBody.filters)
             const brandValues = getBrandValues(brandFilter)
 
-            if (brandValues.length < 2) return
+           expect(brandValues.length).toBeGreaterThan(1)
 
             const selectedBrands = [brandValues[0], brandValues[1]]
             const brandIds = selectedBrands.map(b => b.id)
@@ -323,7 +321,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const sellerFilter = getSellerFilter(filtersBody.filters)
             const sellerValues = getSellerValues(sellerFilter)
 
-            if (sellerValues.length === 0) return
+            expect(sellerValues.length).toBeGreaterThan(0)
 
             const selectedSeller = sellerValues[0]
 
@@ -430,18 +428,12 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
-            const dynamicFilter = filtersBody.filters.find(f => 
-                !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
-                Array.isArray(f.values) &&
-                f.values.length > 0
-            )
+            const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
-            if (!dynamicFilter) return
-
-            const firstValue = (dynamicFilter.values as CatalogFilterValuesSelectType[])[0]
+            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
 
             const response = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=${dynamicFilter.slug}:${firstValue.id}`)
+                .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=${dynamicFilter!.slug}:${firstValue.id}`)
                 .expect(200)
 
             const productIds: number[] = response.body
@@ -455,13 +447,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
                 .expect(200)
 
             const filtersBody: CatalogFiltersResponse = filtersResponse.body
-            const dynamicFilter = filtersBody.filters.find(f => 
-                !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
-                Array.isArray(f.values) &&
-                (f.values as CatalogFilterValuesSelectType[]).length > 1
-            )
-
-            if (!dynamicFilter) return
+            const dynamicFilter = getDynamicFilter(filtersBody.filters)
 
             const values = dynamicFilter.values as CatalogFilterValuesSelectType[]
             const selectedValues = [values[0], values[1]]
@@ -500,14 +486,12 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
             const productIds: number[] = response.body
             
-            if (productIds.length > 0) {
-                // Проверяем бренд
+            if (isNotEmptyArray(productIds)) {
                 const productBrands = await getProductBrands(app, productIds)
                 productBrands.forEach(brandId => {
                     expect(brandId).toBe(selectedBrand.id)
                 })
 
-                // Проверяем цену
                 const prices = await getProductPrices(app, productIds)
                 prices.forEach(price => {
                     expect(price).toBeGreaterThanOrEqual(priceRange.min)
@@ -610,12 +594,10 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
             const selectedBrand = brandValues[0]
 
-            // Получаем первую страницу с фильтром
             const firstPageResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=0`)
                 .expect(200)
 
-            // Получаем вторую страницу с тем же фильтром
             const secondPageResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=brand:${selectedBrand.id}&limit=5&offset=5`)
                 .expect(200)
@@ -623,19 +605,17 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const firstPage: number[] = firstPageResponse.body
             const secondPage: number[] = secondPageResponse.body
 
-            // Проверяем что страницы не пересекаются
             const intersection = firstPage.filter(id => secondPage.includes(id))
             expect(intersection.length).toBe(0)
 
-            // Проверяем что все продукты соответствуют фильтру
-            if (firstPage.length > 0) {
+            if (isNotEmptyArray(firstPage)) {
                 const firstPageBrands = await getProductBrands(app, firstPage)
                 firstPageBrands.forEach(brandId => {
                     expect(brandId).toBe(selectedBrand.id)
                 })
             }
 
-            if (secondPage.length > 0) {
+            if (isNotEmptyArray(secondPage)) {
                 const secondPageBrands = await getProductBrands(app, secondPage)
                 secondPageBrands.forEach(brandId => {
                     expect(brandId).toBe(selectedBrand.id)
