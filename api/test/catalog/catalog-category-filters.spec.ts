@@ -4,8 +4,11 @@ import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType } from 'contracts'
+import { CatalogFilterInteface, CatalogFilterValuesSelectType } from 'contracts'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
+import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
+import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
+import { getPriceFilter, getPriceRange } from '../util/get-price-filter.util'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
@@ -13,39 +16,6 @@ interface CatalogFiltersResponse {
     total: number
     filters: CatalogFilterInteface[]
     sorting: Array<{ id: string; isDefault: boolean; name: string }>
-}
-
-function getBrandFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
-    const brandFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.BRAND)
-    expect(brandFilter).toBeDefined()
-    return brandFilter!
-}
-
-function getSellerFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
-    const sellerFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.SELLER)
-    expect(sellerFilter).toBeDefined()
-    return sellerFilter!
-}
-
-function getPriceFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
-    const priceFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.PRICE)
-    expect(priceFilter).toBeDefined()
-    return priceFilter!
-}
-
-function getBrandValues(brandFilter: CatalogFilterInteface): CatalogFilterValuesSelectType[] {
-    expect(Array.isArray(brandFilter.values)).toBe(true)
-    return brandFilter.values as CatalogFilterValuesSelectType[]
-}
-
-function getSellerValues(sellerFilter: CatalogFilterInteface): CatalogFilterValuesSelectType[] {
-    expect(Array.isArray(sellerFilter.values)).toBe(true)
-    return sellerFilter.values as CatalogFilterValuesSelectType[]
-}
-
-function getPriceRange(priceFilter: CatalogFilterInteface): CatalogFilterValuesRangeType {
-    expect(Array.isArray(priceFilter.values)).toBe(false)
-    return priceFilter.values as CatalogFilterValuesRangeType
 }
 
 describe('CatalogCategoryFilters (e2e)', () => {
