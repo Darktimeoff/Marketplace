@@ -3,26 +3,13 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { isDefined, isEmptyArray, isNotEmptyArray, isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Prisma } from '@/generic/db/generated'
-import { CatalogSortingEnum, FilterInputInterface } from 'contracts'
+import {
+    CatalogFilterInputInterface,
+    CatalogFilterModelInteface,
+    CatalogFilterValuesSelectType,
+    CatalogSortingEnum,
+} from 'contracts'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
-
-export interface FilterValue {
-    id: number
-    name: string | null
-    count: number
-}
-
-export interface FilterValueRange {
-    min: number
-    max: number
-}
-
-export interface Filter {
-    id: number
-    name: string
-    slug: string
-    values: FilterValue[] | FilterValueRange
-}
 
 export interface SortingOption {
     id: string
@@ -37,8 +24,8 @@ export class CatalogCategoryFilterDataloaderService {
     async getFiltersByCategoryId(
         categoryId: number,
         categoryIds: number[],
-        filters: FilterInputInterface[]
-    ): Promise<Filter[]> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterModelInteface[]> {
         const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
             this.getSellerFilter(categoryIds, filters),
             this.getBrandFilter(categoryIds, filters),
@@ -48,7 +35,10 @@ export class CatalogCategoryFilterDataloaderService {
         return [sellerFilter, brandFilter, priceFilter].concat(dynamicFilters)
     }
 
-    async getTotalCount(categoryIds: number[], filters: FilterInputInterface[]): Promise<number> {
+    async getTotalCount(
+        categoryIds: number[],
+        filters: CatalogFilterInputInterface[]
+    ): Promise<number> {
         const productWhere = {
             categoryId: { in: categoryIds },
             ...(await this.buildProductWhereByFilters(filters)),
@@ -61,7 +51,7 @@ export class CatalogCategoryFilterDataloaderService {
 
     async getProductIds(
         categoryIds: number[],
-        filters: FilterInputInterface[],
+        filters: CatalogFilterInputInterface[],
         { offset, limit, sorting }: CatalogPaginationInput
     ): Promise<number[]> {
         const productWhere = {
@@ -120,8 +110,8 @@ export class CatalogCategoryFilterDataloaderService {
 
     private async getDynamicFilter(
         categoryId: number,
-        filters: FilterInputInterface[]
-    ): Promise<Filter[]> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterModelInteface[]> {
         const attributes = await this.db.categoryAttributeFilter.findMany({
             where: { categoryId },
             orderBy: { order: 'asc' },
@@ -166,8 +156,8 @@ export class CatalogCategoryFilterDataloaderService {
         attributeId: number,
         attributeSlug: string,
         unit: string | null,
-        filters: FilterInputInterface[]
-    ): Promise<FilterValue[]> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterValuesSelectType[]> {
         const productWhere = {
             categoryId,
             ...(await this.buildProductWhereByFilters(filters, attributeSlug)),
@@ -183,7 +173,7 @@ export class CatalogCategoryFilterDataloaderService {
             return []
         }
 
-        const values = await this.db.$queryRaw<FilterValue[]>`
+        const values = await this.db.$queryRaw<CatalogFilterValuesSelectType[]>`
             SELECT 
                 MIN(PAV.id) AS id,
                 COALESCE(T_PAV.uk_ua, TO_CHAR(ROUND(PAV."numberValue", 2), 'FM999999999.00')) AS name,
@@ -205,8 +195,8 @@ export class CatalogCategoryFilterDataloaderService {
 
     private async getSellerFilter(
         categoryIds: number[],
-        filters: FilterInputInterface[]
-    ): Promise<Filter> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterModelInteface> {
         const sellerCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
@@ -229,7 +219,7 @@ export class CatalogCategoryFilterDataloaderService {
                   })
                 : []
         const sellerMap = new Map(sellers.map(s => [s.id, s.name]))
-        const values: FilterValue[] = sellerCounts
+        const values = sellerCounts
             .filter(sc => isPositiveNumber(sc.sellerId))
             .map(sc => ({
                 id: sc.sellerId,
@@ -247,8 +237,8 @@ export class CatalogCategoryFilterDataloaderService {
 
     private async getBrandFilter(
         categoryIds: number[],
-        filters: FilterInputInterface[]
-    ): Promise<Filter> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterModelInteface> {
         const brandCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
@@ -272,7 +262,7 @@ export class CatalogCategoryFilterDataloaderService {
                   })
                 : []
         const brandMap = new Map(brands.map(b => [b.id, b.name]))
-        const values: FilterValue[] = brandCounts
+        const values: CatalogFilterValuesSelectType[] = brandCounts
             .filter(bc => isPositiveNumber(bc.brandId))
             .map(bc => ({
                 id: bc.brandId as number,
@@ -290,8 +280,8 @@ export class CatalogCategoryFilterDataloaderService {
 
     private async getPriceFilter(
         categoryIds: number[],
-        filters: FilterInputInterface[]
-    ): Promise<Filter> {
+        filters: CatalogFilterInputInterface[]
+    ): Promise<CatalogFilterModelInteface> {
         const priceAggregates = await this.db.product.aggregate({
             where: {
                 categoryId: { in: categoryIds },
@@ -315,7 +305,7 @@ export class CatalogCategoryFilterDataloaderService {
     }
 
     private async buildProductWhereByFilters(
-        filters: FilterInputInterface[],
+        filters: CatalogFilterInputInterface[],
         excludeSlug?: string
     ): Promise<Prisma.ProductWhereInput> {
         const where: Prisma.ProductWhereInput = {}

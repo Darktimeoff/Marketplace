@@ -3,9 +3,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogSortingEnum } from 'contracts'
+import { CatalogFilterModelInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import type { Filter, FilterValue, FilterValueRange } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
 import { DBService } from '../../src/generic/db/db.service'
 import { isDefined } from '@rnw-community/shared'
 
@@ -15,41 +14,41 @@ const NON_EXISTENT_CATEGORY_ID = 999999
 
 interface CatalogFiltersResponse {
     total: number
-    filters: Filter[]
+    filters: CatalogFilterModelInteface[]
     sorting: Array<{ id: string; isDefault: boolean; name: string }>
 }
 
-function getBrandFilter(filters: Filter[]): Filter {
+function getBrandFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const brandFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.BRAND)
     expect(brandFilter).toBeDefined()
     return brandFilter!
 }
 
-function getSellerFilter(filters: Filter[]): Filter {
+function getSellerFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const sellerFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.SELLER)
     expect(sellerFilter).toBeDefined()
     return sellerFilter!
 }
 
-function getPriceFilter(filters: Filter[]): Filter {
+function getPriceFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const priceFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.PRICE)
     expect(priceFilter).toBeDefined()
     return priceFilter!
 }
 
-function getBrandValues(brandFilter: Filter): FilterValue[] {
+function getBrandValues(brandFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(brandFilter.values)).toBe(true)
-    return brandFilter.values as FilterValue[]
+    return brandFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getSellerValues(sellerFilter: Filter): FilterValue[] {
+function getSellerValues(sellerFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(sellerFilter.values)).toBe(true)
-    return sellerFilter.values as FilterValue[]
+    return sellerFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getPriceRange(priceFilter: Filter): FilterValueRange {
+function getPriceRange(priceFilter: CatalogFilterModelInteface): CatalogFilterValuesRangeType {
     expect(Array.isArray(priceFilter.values)).toBe(false)
-    return priceFilter.values as FilterValueRange
+    return priceFilter.values as CatalogFilterValuesRangeType
 }
 
 async function getProductPrices(app: INestApplication, productIds: number[]): Promise<number[]> {
@@ -439,7 +438,7 @@ describe('CatalogCategoryProducts (e2e)', () => {
 
             if (!dynamicFilter) return
 
-            const firstValue = (dynamicFilter.values as FilterValue[])[0]
+            const firstValue = (dynamicFilter.values as CatalogFilterValuesSelectType[])[0]
 
             const response = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}?filters=${dynamicFilter.slug}:${firstValue.id}`)
@@ -459,12 +458,12 @@ describe('CatalogCategoryProducts (e2e)', () => {
             const dynamicFilter = filtersBody.filters.find(f => 
                 !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
                 Array.isArray(f.values) &&
-                (f.values as FilterValue[]).length > 1
+                (f.values as CatalogFilterValuesSelectType[]).length > 1
             )
 
             if (!dynamicFilter) return
 
-            const values = dynamicFilter.values as FilterValue[]
+            const values = dynamicFilter.values as CatalogFilterValuesSelectType[]
             const selectedValues = [values[0], values[1]]
             const valueIds = selectedValues.map(v => v.id)
 

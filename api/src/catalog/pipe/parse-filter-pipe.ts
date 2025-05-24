@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { BadRequestException, PipeTransform } from '@nestjs/common'
 import { isNotEmptyString } from '@rnw-community/shared'
-import { FilterInputInterface, FilterValuesRangeType, FilterValuesSelectType } from 'contracts'
+import {
+    CatalogFilterInputInterface,
+    CatalogFilterValuesRangeInputType,
+    CatalogFilterValuesSelectInputType,
+} from 'contracts'
 
 @Injectable()
-export class ParseFilterPipe implements PipeTransform<string, FilterInputInterface[]> {
-    transform(value: string): FilterInputInterface[] {
+export class ParseFilterPipe implements PipeTransform<string, CatalogFilterInputInterface[]> {
+    transform(value: string): CatalogFilterInputInterface[] {
         if (!isNotEmptyString(value)) {
             return []
         }
@@ -21,7 +25,7 @@ export class ParseFilterPipe implements PipeTransform<string, FilterInputInterfa
                 if (isNaN(min) || isNaN(max)) {
                     throw new BadRequestException('Invalid range filter value')
                 }
-                return { slug, values: { min, max } as FilterValuesRangeType }
+                return { slug, values: { min, max } as CatalogFilterValuesRangeInputType }
             }
 
             if (raw.includes(',')) {
@@ -41,7 +45,7 @@ export class ParseFilterPipe implements PipeTransform<string, FilterInputInterfa
                 throw new BadRequestException('Invalid single value format')
             }
 
-            return { slug, values: [Number(raw)] as FilterValuesSelectType }
+            return { slug, values: [Number(raw)] as CatalogFilterValuesSelectInputType }
         })
     }
 }

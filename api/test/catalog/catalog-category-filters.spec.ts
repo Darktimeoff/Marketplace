@@ -3,48 +3,48 @@ import { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import type { Filter, FilterValue, FilterValueRange } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
+import { CatalogFilterModelInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType } from 'contracts'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
 interface CatalogFiltersResponse {
     total: number
-    filters: Filter[]
+    filters: CatalogFilterModelInteface[]
     sorting: Array<{ id: string; isDefault: boolean; name: string }>
 }
 
-function getBrandFilter(filters: Filter[]): Filter {
+function getBrandFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const brandFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.BRAND)
     expect(brandFilter).toBeDefined()
     return brandFilter!
 }
 
-function getSellerFilter(filters: Filter[]): Filter {
+function getSellerFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const sellerFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.SELLER)
     expect(sellerFilter).toBeDefined()
     return sellerFilter!
 }
 
-function getPriceFilter(filters: Filter[]): Filter {
+function getPriceFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
     const priceFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.PRICE)
     expect(priceFilter).toBeDefined()
     return priceFilter!
 }
 
-function getBrandValues(brandFilter: Filter): FilterValue[] {
+function getBrandValues(brandFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(brandFilter.values)).toBe(true)
-    return brandFilter.values as FilterValue[]
+    return brandFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getSellerValues(sellerFilter: Filter): FilterValue[] {
+function getSellerValues(sellerFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(sellerFilter.values)).toBe(true)
-    return sellerFilter.values as FilterValue[]
+    return sellerFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getPriceRange(priceFilter: Filter): FilterValueRange {
+function getPriceRange(priceFilter: CatalogFilterModelInteface): CatalogFilterValuesRangeType {
     expect(Array.isArray(priceFilter.values)).toBe(false)
-    return priceFilter.values as FilterValueRange
+    return priceFilter.values as CatalogFilterValuesRangeType
 }
 
 describe('CatalogCategoryFilters (e2e)', () => {
@@ -233,7 +233,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(dynamicFilter).toBeDefined()
             expect(Array.isArray(dynamicFilter?.values)).toBe(true)
 
-            const firstValue = (dynamicFilter!.values as FilterValue[])[0]
+            const firstValue = (dynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
             
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${dynamicFilter!.slug}:${firstValue.id}`)
@@ -260,8 +260,8 @@ describe('CatalogCategoryFilters (e2e)', () => {
                 f.values.length > 0
             )
 
-            const dynamicValues1 = (baseDynamicFilter!.values as FilterValue[])[0]
-            const dynamicValues2 = (baseDynamicFilter!.values as FilterValue[])[1]
+            const dynamicValues1 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
+            const dynamicValues2 = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
 
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=${baseDynamicFilter!.slug}:${dynamicValues1.id},${dynamicValues2.id}`)
@@ -272,10 +272,10 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(filteredBody.total).toBe(dynamicValues1.count + dynamicValues2.count)
 
             const filteredDynamicFilter = filteredBody.filters.find(f => f.slug === baseDynamicFilter!.slug)
-            const filteredDynamicValues = (filteredDynamicFilter!.values as FilterValue[])[0]
+            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
             expect(filteredDynamicValues.id).toBe(dynamicValues1.id)
 
-            const filteredDynamicValues2 = (filteredDynamicFilter!.values as FilterValue[])[1]
+            const filteredDynamicValues2 = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[1]
             expect(filteredDynamicValues2.id).toBe(dynamicValues2.id)
             expect(filteredBody.filters.length).toBe(baseBody.filters.length)
         })
@@ -361,7 +361,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             )   
 
             const brandValues = getBrandValues(baseBrandFilter)
-            const dynamicValues = (baseDynamicFilter!.values as FilterValue[])[0]
+            const dynamicValues = (baseDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
 
             const filteredResponse = await request(app.getHttpServer())
                 .get(`/catalog/category/${MOBILE_PHONE_CATEGORY_ID}/filters?filters=brand:${brandValues[0].id};${baseDynamicFilter!.slug}:${dynamicValues.id}`)
@@ -377,7 +377,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             expect(filteredBrandValues.length).toBeGreaterThan(0)
 
             const filteredDynamicFilter = filteredBody.filters.find(f => f.slug === baseDynamicFilter!.slug)
-            const filteredDynamicValues = (filteredDynamicFilter!.values as FilterValue[])[0]
+            const filteredDynamicValues = (filteredDynamicFilter!.values as CatalogFilterValuesSelectType[])[0]
             expect(filteredDynamicValues.id).toBe(dynamicValues.id)
         })
     })

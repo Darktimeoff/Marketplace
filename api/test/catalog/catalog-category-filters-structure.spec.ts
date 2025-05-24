@@ -3,13 +3,13 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import type { Filter, FilterValue, FilterValueRange, SortingOption } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
+import type { SortingOption } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogSortingEnum } from 'contracts'
+import { CatalogFilterModelInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
-function checkFilterValueStructure(value: FilterValue | FilterValueRange) {
+function checkFilterValueStructure(value: CatalogFilterValuesSelectType | CatalogFilterValuesRangeType) {
     if ('name' in value) {
         expect(typeof value.id).toBe('number')
         expect(value).toHaveProperty('name')
@@ -27,7 +27,7 @@ function checkFilterValueStructure(value: FilterValue | FilterValueRange) {
     }
 }
 
-function checkFilterStructure(filter: Filter) {
+function checkFilterStructure(filter: CatalogFilterModelInteface) {
     expect(filter).toHaveProperty('id')
     expect(typeof filter.id).toBe('number')
     expect(filter).toHaveProperty('name')
@@ -53,7 +53,7 @@ function checkSortingOptionStructure(sorting: SortingOption) {
 
 function checkCatalogCategoryFiltersStructure(catalog: {
     total: number
-    filters: Filter[]
+    filters: CatalogFilterModelInteface[]
     sorting: SortingOption[]
 }) {
     expect(catalog).toHaveProperty('total')
@@ -93,7 +93,7 @@ describe('CatalogCategoryController (e2e)', () => {
             .expect((res: Response) => {
                 const body: {
                     total: number
-                    filters: Filter[]
+                    filters: CatalogFilterModelInteface[]
                     sorting: SortingOption[]
                 } = res.body
 
