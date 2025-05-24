@@ -7,15 +7,10 @@ import {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
     CatalogFilterValuesSelectType,
+    CatalogPaginationInputInterface,
+    CatalogSoringInterface,
     CatalogSortingEnum,
 } from 'contracts'
-import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
-
-export interface SortingOption {
-    id: string
-    isDefault: boolean
-    name: string
-}
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
@@ -52,7 +47,7 @@ export class CatalogCategoryFilterDataloaderService {
     async getProductIds(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[],
-        { offset, limit, sorting }: CatalogPaginationInput
+        { offset, limit, sorting }: CatalogPaginationInputInterface
     ): Promise<number[]> {
         const productWhere = {
             categoryId: { in: categoryIds },
@@ -70,7 +65,7 @@ export class CatalogCategoryFilterDataloaderService {
         ).map(p => p.id)
     }
 
-    async getSortingOptions(): Promise<SortingOption[]> {
+    async getSortingOptions(): Promise<CatalogSoringInterface[]> {
         return [
             {
                 id: CatalogSortingEnum.NEWEST,
