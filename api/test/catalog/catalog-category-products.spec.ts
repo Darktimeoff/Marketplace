@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogFilterModelInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
+import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
 import { DBService } from '../../src/generic/db/db.service'
 import { isDefined } from '@rnw-community/shared'
@@ -14,39 +14,39 @@ const NON_EXISTENT_CATEGORY_ID = 999999
 
 interface CatalogFiltersResponse {
     total: number
-    filters: CatalogFilterModelInteface[]
+    filters: CatalogFilterInteface[]
     sorting: Array<{ id: string; isDefault: boolean; name: string }>
 }
 
-function getBrandFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
+function getBrandFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
     const brandFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.BRAND)
     expect(brandFilter).toBeDefined()
     return brandFilter!
 }
 
-function getSellerFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
+function getSellerFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
     const sellerFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.SELLER)
     expect(sellerFilter).toBeDefined()
     return sellerFilter!
 }
 
-function getPriceFilter(filters: CatalogFilterModelInteface[]): CatalogFilterModelInteface {
+function getPriceFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
     const priceFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.PRICE)
     expect(priceFilter).toBeDefined()
     return priceFilter!
 }
 
-function getBrandValues(brandFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
+function getBrandValues(brandFilter: CatalogFilterInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(brandFilter.values)).toBe(true)
     return brandFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getSellerValues(sellerFilter: CatalogFilterModelInteface): CatalogFilterValuesSelectType[] {
+function getSellerValues(sellerFilter: CatalogFilterInteface): CatalogFilterValuesSelectType[] {
     expect(Array.isArray(sellerFilter.values)).toBe(true)
     return sellerFilter.values as CatalogFilterValuesSelectType[]
 }
 
-function getPriceRange(priceFilter: CatalogFilterModelInteface): CatalogFilterValuesRangeType {
+function getPriceRange(priceFilter: CatalogFilterInteface): CatalogFilterValuesRangeType {
     expect(Array.isArray(priceFilter.values)).toBe(false)
     return priceFilter.values as CatalogFilterValuesRangeType
 }

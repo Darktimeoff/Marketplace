@@ -5,7 +5,7 @@ import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-fil
 import { Prisma } from '@/generic/db/generated'
 import {
     CatalogFilterInputInterface,
-    CatalogFilterModelInteface,
+    CatalogFilterInteface,
     CatalogFilterValuesSelectType,
     CatalogSortingEnum,
 } from 'contracts'
@@ -25,7 +25,7 @@ export class CatalogCategoryFilterDataloaderService {
         categoryId: number,
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterModelInteface[]> {
+    ): Promise<CatalogFilterInteface[]> {
         const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
             this.getSellerFilter(categoryIds, filters),
             this.getBrandFilter(categoryIds, filters),
@@ -111,7 +111,7 @@ export class CatalogCategoryFilterDataloaderService {
     private async getDynamicFilter(
         categoryId: number,
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterModelInteface[]> {
+    ): Promise<CatalogFilterInteface[]> {
         const attributes = await this.db.categoryAttributeFilter.findMany({
             where: { categoryId },
             orderBy: { order: 'asc' },
@@ -196,7 +196,7 @@ export class CatalogCategoryFilterDataloaderService {
     private async getSellerFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterModelInteface> {
+    ): Promise<CatalogFilterInteface> {
         const sellerCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
@@ -238,7 +238,7 @@ export class CatalogCategoryFilterDataloaderService {
     private async getBrandFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterModelInteface> {
+    ): Promise<CatalogFilterInteface> {
         const brandCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
@@ -281,7 +281,7 @@ export class CatalogCategoryFilterDataloaderService {
     private async getPriceFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterModelInteface> {
+    ): Promise<CatalogFilterInteface> {
         const priceAggregates = await this.db.product.aggregate({
             where: {
                 categoryId: { in: categoryIds },

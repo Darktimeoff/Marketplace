@@ -7,7 +7,7 @@ export interface CatalogFilterValuesSelectType extends Pick<BaseEntityInterface,
 
 export type CatalogFilterValuesRangeType = { min: number; max: number }
 
-export interface CatalogFilterModelInteface extends Pick<BaseEntityInterface, 'id'> {
+export interface CatalogFilterInteface extends Pick<BaseEntityInterface, 'id'> {
     slug: string
     name: string
     values: CatalogFilterValuesSelectType[] | CatalogFilterValuesRangeType

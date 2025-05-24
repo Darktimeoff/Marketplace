@@ -5,7 +5,7 @@ import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
 import type { SortingOption } from '../../src/catalog/service/catalog-category-filter-dataloader.service'
 import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogFilterModelInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
+import { CatalogFilterInteface, CatalogFilterValuesRangeType, CatalogFilterValuesSelectType, CatalogSortingEnum } from 'contracts'
 
 const MOBILE_PHONE_CATEGORY_ID = 10
 
@@ -27,7 +27,7 @@ function checkFilterValueStructure(value: CatalogFilterValuesSelectType | Catalo
     }
 }
 
-function checkFilterStructure(filter: CatalogFilterModelInteface) {
+function checkFilterStructure(filter: CatalogFilterInteface) {
     expect(filter).toHaveProperty('id')
     expect(typeof filter.id).toBe('number')
     expect(filter).toHaveProperty('name')
@@ -53,7 +53,7 @@ function checkSortingOptionStructure(sorting: SortingOption) {
 
 function checkCatalogCategoryFiltersStructure(catalog: {
     total: number
-    filters: CatalogFilterModelInteface[]
+    filters: CatalogFilterInteface[]
     sorting: SortingOption[]
 }) {
     expect(catalog).toHaveProperty('total')
@@ -93,7 +93,7 @@ describe('CatalogCategoryController (e2e)', () => {
             .expect((res: Response) => {
                 const body: {
                     total: number
-                    filters: CatalogFilterModelInteface[]
+                    filters: CatalogFilterInteface[]
                     sorting: SortingOption[]
                 } = res.body
 
