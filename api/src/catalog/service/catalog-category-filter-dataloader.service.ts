@@ -1,8 +1,7 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
-import { isEmptyArray, isPositiveNumber } from '@rnw-community/shared'
+import { isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
-import { Prisma } from '@/generic/db/generated'
 import {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
@@ -12,12 +11,14 @@ import {
     CatalogSortingEnum,
 } from 'contracts'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
+import { CatalogCategoryDynamicFilterDataloaderService } from './filter/catalog-category-dynamic-filter-dataloader.service'
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
     constructor(
         private readonly db: DBService,
-        private readonly dataloader: CatalogCategoryFilterDataloader
+        private readonly dataloader: CatalogCategoryFilterDataloader,
+        private readonly dynamicFilters: CatalogCategoryDynamicFilterDataloaderService
     ) {}
 
     async getFiltersByCategoryId(
@@ -29,7 +30,7 @@ export class CatalogCategoryFilterDataloaderService {
             this.getSellerFilter(categoryIds, filters),
             this.getBrandFilter(categoryIds, filters),
             this.getPriceFilter(categoryIds, filters),
-            this.getDynamicFilter(categoryId, filters),
+            this.dynamicFilters.getFilters(categoryId, filters),
         ])
         return [sellerFilter, brandFilter, priceFilter].concat(dynamicFilters)
     }
@@ -76,91 +77,6 @@ export class CatalogCategoryFilterDataloaderService {
                 name: 'Дорогі',
             },
         ]
-    }
-
-    private async getDynamicFilter(
-        categoryId: number,
-        filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterInteface[]> {
-        const attributes = await this.db.categoryAttributeFilter.findMany({
-            where: { categoryId },
-            orderBy: { order: 'asc' },
-            select: {
-                attribute: {
-                    select: {
-                        id: true,
-                        name: {
-                            omit: {
-                                ...this.db.getDefaultOmit(),
-                            },
-                        },
-                        slug: true,
-                        unit: {
-                            omit: {
-                                ...this.db.getDefaultOmit(),
-                            },
-                        },
-                    },
-                },
-            },
-        })
-
-        return await Promise.all(
-            attributes.map(async a => ({
-                id: a.attribute.id,
-                name: a.attribute.name.uk_ua,
-                slug: a.attribute.slug,
-                values: await this.getValues(
-                    categoryId,
-                    a.attribute.id,
-                    a.attribute.slug,
-                    a.attribute.unit?.uk_ua ?? null,
-                    filters
-                ),
-            }))
-        )
-    }
-
-    private async getValues(
-        categoryId: number,
-        attributeId: number,
-        attributeSlug: string,
-        unit: string | null,
-        filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterValuesSelectType[]> {
-        const productWhere = {
-            categoryId,
-            ...(await this.dataloader.buildProductWhereByFilters(filters, attributeSlug)),
-        }
-
-        const productIds = (
-            await this.db.product.findMany({
-                where: productWhere,
-                select: { id: true },
-            })
-        ).map(p => p.id)
-        if (isEmptyArray(productIds)) {
-            return []
-        }
-
-        const values = await this.db.$queryRaw<CatalogFilterValuesSelectType[]>`
-            SELECT 
-                MIN(PAV.id) AS id,
-                COALESCE(T_PAV.uk_ua, TO_CHAR(ROUND(PAV."numberValue", 2), 'FM999999999.00')) AS name,
-                COUNT(*) AS count
-            FROM "ProductAttributeValue" PAV
-            LEFT JOIN "Translation" T_PAV ON T_PAV.id = PAV."textValueId"
-            JOIN "Product" P ON PAV."productId" = P.id
-            WHERE PAV."attributeId" = ${attributeId} AND P."categoryId" = ${categoryId} AND PAV."productId" IN (${Prisma.join(productIds)})
-            GROUP BY name
-            ORDER BY count DESC
-        `
-
-        return values.map(v => ({
-            id: v.id,
-            name: v.name + (unit ? ` ${unit}` : ''),
-            count: Number(v.count),
-        }))
     }
 
     private async getSellerFilter(
