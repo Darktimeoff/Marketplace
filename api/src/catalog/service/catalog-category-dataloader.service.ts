@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
-import { CatalogCategoryFilterDataloaderService } from './catalog-category-filter-dataloader.service'
+import { CatalogCategoryFilterDataloaderService } from './filter/catalog-category-filter-dataloader.service'
 import { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 

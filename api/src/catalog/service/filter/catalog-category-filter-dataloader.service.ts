@@ -1,6 +1,4 @@
-import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
-import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
@@ -9,18 +7,19 @@ import {
     CatalogSortingEnum,
 } from 'contracts'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
-import { CatalogCategoryDynamicFilterDataloaderService } from './filter/catalog-category-dynamic-filter-dataloader.service'
-import { CatalogCategoryBrandFilterDataloaderService } from './filter/catalog-category-brand-filter-dataloader.service'
-import { CatalogCategorySellerFilterDataloaderService } from './filter/catalog-category-seller-filter-dataloader.service'
+import { CatalogCategoryDynamicFilterDataloaderService } from './catalog-category-dynamic-filter-dataloader.service'
+import { CatalogCategoryBrandFilterDataloaderService } from './catalog-category-brand-filter-dataloader.service'
+import { CatalogCategorySellerFilterDataloaderService } from './catalog-category-seller-filter-dataloader.service'
+import { CatalogCategoryPriceFilterDataloaderService } from './catalog-category-price-filter-dataloader.service'
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
     constructor(
-        private readonly db: DBService,
         private readonly dataloader: CatalogCategoryFilterDataloader,
         private readonly dynamicFilters: CatalogCategoryDynamicFilterDataloaderService,
         private readonly brandFilters: CatalogCategoryBrandFilterDataloaderService,
-        private readonly sellerFilters: CatalogCategorySellerFilterDataloaderService
+        private readonly sellerFilters: CatalogCategorySellerFilterDataloaderService,
+        private readonly priceFilters: CatalogCategoryPriceFilterDataloaderService
     ) {}
 
     async getFiltersByCategoryId(
@@ -31,7 +30,7 @@ export class CatalogCategoryFilterDataloaderService {
         const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
             this.sellerFilters.getFilters(categoryIds, filters),
             this.brandFilters.getFilters(categoryIds, filters),
-            this.getPriceFilter(categoryIds, filters),
+            this.priceFilters.getFilters(categoryIds, filters),
             this.dynamicFilters.getFilters(categoryId, filters),
         ])
         return [sellerFilter, brandFilter, priceFilter].concat(dynamicFilters)
@@ -79,31 +78,5 @@ export class CatalogCategoryFilterDataloaderService {
                 name: 'Дорогі',
             },
         ]
-    }
-
-    private async getPriceFilter(
-        categoryIds: number[],
-        filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterInteface> {
-        const priceAggregates = await this.db.product.aggregate({
-            where: {
-                categoryId: { in: categoryIds },
-                ...(await this.dataloader.buildProductWhereByFilters(
-                    filters,
-                    CatalogDefaultFilterSlugEnum.PRICE
-                )),
-            },
-            _min: { price: true },
-            _max: { price: true },
-        })
-        return {
-            id: 3,
-            name: 'Ціна',
-            slug: CatalogDefaultFilterSlugEnum.PRICE,
-            values: {
-                min: priceAggregates._min.price ? Number(priceAggregates._min.price) : 0,
-                max: priceAggregates._max.price ? Number(priceAggregates._max.price) : 0,
-            },
-        }
     }
 }

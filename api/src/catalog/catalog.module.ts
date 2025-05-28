@@ -3,11 +3,12 @@ import { CatalogCategoryController } from './controller/catalog-category.control
 import { CatalogCategoryDataloaderService } from './service/catalog-category-dataloader.service'
 import { CategoryModule } from '@/category/category.module'
 import { ProductModule } from '@/product/product.module'
-import { CatalogCategoryFilterDataloaderService } from './service/catalog-category-filter-dataloader.service'
+import { CatalogCategoryFilterDataloaderService } from './service/filter/catalog-category-filter-dataloader.service'
 import { CatalogCategoryFilterDataloader } from './dataloader/catalog-category-filter.dataloader'
 import { CatalogCategoryDynamicFilterDataloaderService } from './service/filter/catalog-category-dynamic-filter-dataloader.service'
 import { CatalogCategoryBrandFilterDataloaderService } from './service/filter/catalog-category-brand-filter-dataloader.service'
 import { CatalogCategorySellerFilterDataloaderService } from './service/filter/catalog-category-seller-filter-dataloader.service'
+import { CatalogCategoryPriceFilterDataloaderService } from './service/filter/catalog-category-price-filter-dataloader.service'
 @Module({
     imports: [CategoryModule, ProductModule],
     controllers: [CatalogCategoryController],
@@ -18,6 +19,7 @@ import { CatalogCategorySellerFilterDataloaderService } from './service/filter/c
         CatalogCategoryDynamicFilterDataloaderService,
         CatalogCategoryBrandFilterDataloaderService,
         CatalogCategorySellerFilterDataloaderService,
+        CatalogCategoryPriceFilterDataloaderService,
     ],
 })
 export class CatalogModule {}
