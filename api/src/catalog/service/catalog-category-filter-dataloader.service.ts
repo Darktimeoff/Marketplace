@@ -1,6 +1,6 @@
 import { DBService } from '@/generic/db/db.service'
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { isDefined, isEmptyArray, isNotEmptyArray, isPositiveNumber } from '@rnw-community/shared'
+import { isEmptyArray, isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Prisma } from '@/generic/db/generated'
 import {
@@ -40,7 +40,7 @@ export class CatalogCategoryFilterDataloaderService {
     ): Promise<number> {
         const productWhere = {
             categoryId: { in: categoryIds },
-            ...(await this.buildProductWhereByFilters(filters)),
+            ...(await this.dataloader.buildProductWhereByFilters(filters)),
         }
 
         return await this.db.product.count({
@@ -55,7 +55,7 @@ export class CatalogCategoryFilterDataloaderService {
     ): Promise<number[]> {
         const productWhere = {
             categoryId: { in: categoryIds },
-            ...(await this.buildProductWhereByFilters(filters)),
+            ...(await this.dataloader.buildProductWhereByFilters(filters)),
         }
 
         return (
@@ -159,7 +159,7 @@ export class CatalogCategoryFilterDataloaderService {
     ): Promise<CatalogFilterValuesSelectType[]> {
         const productWhere = {
             categoryId,
-            ...(await this.buildProductWhereByFilters(filters, attributeSlug)),
+            ...(await this.dataloader.buildProductWhereByFilters(filters, attributeSlug)),
         }
 
         const productIds = (
@@ -199,7 +199,7 @@ export class CatalogCategoryFilterDataloaderService {
         const sellerCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
-                ...(await this.buildProductWhereByFilters(
+                ...(await this.dataloader.buildProductWhereByFilters(
                     filters,
                     CatalogDefaultFilterSlugEnum.SELLER
                 )),
@@ -242,7 +242,7 @@ export class CatalogCategoryFilterDataloaderService {
             where: {
                 categoryId: { in: categoryIds },
                 brandId: { not: null },
-                ...(await this.buildProductWhereByFilters(
+                ...(await this.dataloader.buildProductWhereByFilters(
                     filters,
                     CatalogDefaultFilterSlugEnum.BRAND
                 )),
@@ -284,7 +284,7 @@ export class CatalogCategoryFilterDataloaderService {
         const priceAggregates = await this.db.product.aggregate({
             where: {
                 categoryId: { in: categoryIds },
-                ...(await this.buildProductWhereByFilters(
+                ...(await this.dataloader.buildProductWhereByFilters(
                     filters,
                     CatalogDefaultFilterSlugEnum.PRICE
                 )),
@@ -301,96 +301,5 @@ export class CatalogCategoryFilterDataloaderService {
                 max: priceAggregates._max.price ? Number(priceAggregates._max.price) : 0,
             },
         }
-    }
-
-    private async buildProductWhereByFilters(
-        filters: CatalogFilterInputInterface[],
-        excludeSlug?: string
-    ): Promise<Prisma.ProductWhereInput> {
-        const where: Prisma.ProductWhereInput = {}
-        const attributeFilters: { slug: string; values: number[] }[] = []
-
-        for (const filter of filters) {
-            if (filter.slug === excludeSlug) {
-                continue
-            }
-            switch (filter.slug) {
-                case CatalogDefaultFilterSlugEnum.SELLER:
-                    if (Array.isArray(filter.values)) {
-                        where.sellerId = { in: filter.values }
-                    }
-                    break
-                case CatalogDefaultFilterSlugEnum.BRAND:
-                    if (Array.isArray(filter.values)) {
-                        where.brandId = { in: filter.values }
-                    }
-                    break
-                case CatalogDefaultFilterSlugEnum.PRICE:
-                    if (!Array.isArray(filter.values)) {
-                        where.price = {
-                            gte: filter.values.min,
-                            lte: filter.values.max,
-                        }
-                    }
-                    break
-                default:
-                    if (Array.isArray(filter.values)) {
-                        attributeFilters.push({
-                            slug: filter.slug,
-                            values: filter.values,
-                        })
-                    }
-                    break
-            }
-        }
-
-        if (isEmptyArray(attributeFilters)) {
-            return where
-        }
-
-        const attributesValues = await this.dataloader.getAttributeValuesByAttributeIds(
-            attributeFilters.flatMap(f => f.values)
-        )
-
-        const attributeValuesMap = new Map<
-            string,
-            Array<{ numberValue: number | null; textValue: string | null }>
-        >()
-
-        attributesValues.forEach(value => {
-            const slug = value.attribute.slug
-            const currentValue = {
-                numberValue: value.numberValue,
-                textValue: value.textValue?.uk_ua ?? null,
-            }
-
-            if (!attributeValuesMap.has(slug)) {
-                attributeValuesMap.set(slug, [])
-            }
-
-            attributeValuesMap.get(slug)?.push(currentValue)
-        })
-
-        where.AND = attributeFilters.map(f => {
-            const values = attributeValuesMap.get(f.slug)
-
-            if (!isNotEmptyArray(values)) {
-                return {}
-            }
-
-            return {
-                productAttributeValues: {
-                    some: {
-                        attribute: { slug: f.slug },
-                        OR: values.map(v => ({
-                            ...(isDefined(v.textValue) && { textValue: { uk_ua: v.textValue } }),
-                            ...(isDefined(v.numberValue) && { numberValue: v.numberValue }),
-                        })),
-                    },
-                },
-            }
-        })
-
-        return where
     }
 }
