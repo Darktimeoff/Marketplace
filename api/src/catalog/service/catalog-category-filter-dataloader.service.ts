@@ -46,7 +46,11 @@ export class CatalogCategoryFilterDataloaderService {
         filters: CatalogFilterInputInterface[],
         { offset, limit, sorting }: CatalogPaginationInputInterface
     ): Promise<number[]> {
-        return await this.dataloader.getFilteredProductIds(categoryIds, filters, { offset, limit, sorting })
+        return await this.dataloader.getFilteredProductIds(categoryIds, filters, {
+            offset,
+            limit,
+            sorting,
+        })
     }
 
     getSortingOptions(): CatalogSoringInterface[] {

@@ -1,6 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { DBService } from '@/generic/db/db.service'
-import { CatalogFilterInputInterface, CatalogPaginationInputInterface, CatalogSortingEnum } from 'contracts'
+import {
+    CatalogFilterInputInterface,
+    CatalogPaginationInputInterface,
+    CatalogSortingEnum,
+} from 'contracts'
 import { Prisma } from '@/generic/db/generated'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { isEmptyArray, isNotEmptyArray } from '@rnw-community/shared'
@@ -9,7 +13,6 @@ import { isDefined } from 'class-validator'
 @Injectable()
 export class CatalogCategoryFilterDataloader {
     constructor(private readonly db: DBService) {}
-
 
     async getFilteredProductIds(
         categoryIds: number[],
@@ -143,7 +146,6 @@ export class CatalogCategoryFilterDataloader {
 
         return where
     }
-
 
     private buildOrderBy(sorting: CatalogSortingEnum): Prisma.ProductOrderByWithRelationInput {
         switch (sorting) {
