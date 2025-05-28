@@ -4,5 +4,5 @@ export interface CatalogCategoryFilterServiceInterface {
     getFilters(
         categoryId: number | number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterInteface[]>
+    ): Promise<CatalogFilterInteface | CatalogFilterInteface[]>
 }

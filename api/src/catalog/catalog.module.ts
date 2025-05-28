@@ -6,6 +6,7 @@ import { ProductModule } from '@/product/product.module'
 import { CatalogCategoryFilterDataloaderService } from './service/catalog-category-filter-dataloader.service'
 import { CatalogCategoryFilterDataloader } from './dataloader/catalog-category-filter.dataloader'
 import { CatalogCategoryDynamicFilterDataloaderService } from './service/filter/catalog-category-dynamic-filter-dataloader.service'
+import { CatalogCategoryBrandFilterDataloaderService } from './service/filter/catalog-category-brand-filter-dataloader.service'
 @Module({
     imports: [CategoryModule, ProductModule],
     controllers: [CatalogCategoryController],
@@ -14,6 +15,7 @@ import { CatalogCategoryDynamicFilterDataloaderService } from './service/filter/
         CatalogCategoryFilterDataloaderService,
         CatalogCategoryFilterDataloader,
         CatalogCategoryDynamicFilterDataloaderService,
+        CatalogCategoryBrandFilterDataloaderService,
     ],
 })
 export class CatalogModule {}

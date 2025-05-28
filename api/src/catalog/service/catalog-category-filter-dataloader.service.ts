@@ -5,20 +5,21 @@ import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-fil
 import {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
-    CatalogFilterValuesSelectType,
     CatalogPaginationInputInterface,
     CatalogSoringInterface,
     CatalogSortingEnum,
 } from 'contracts'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
 import { CatalogCategoryDynamicFilterDataloaderService } from './filter/catalog-category-dynamic-filter-dataloader.service'
+import { CatalogCategoryBrandFilterDataloaderService } from './filter/catalog-category-brand-filter-dataloader.service'
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
     constructor(
         private readonly db: DBService,
         private readonly dataloader: CatalogCategoryFilterDataloader,
-        private readonly dynamicFilters: CatalogCategoryDynamicFilterDataloaderService
+        private readonly dynamicFilters: CatalogCategoryDynamicFilterDataloaderService,
+        private readonly brandFilters: CatalogCategoryBrandFilterDataloaderService
     ) {}
 
     async getFiltersByCategoryId(
@@ -28,7 +29,7 @@ export class CatalogCategoryFilterDataloaderService {
     ): Promise<CatalogFilterInteface[]> {
         const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
             this.getSellerFilter(categoryIds, filters),
-            this.getBrandFilter(categoryIds, filters),
+            this.brandFilters.getFilters(categoryIds, filters),
             this.getPriceFilter(categoryIds, filters),
             this.dynamicFilters.getFilters(categoryId, filters),
         ])
@@ -117,49 +118,6 @@ export class CatalogCategoryFilterDataloaderService {
             id: 1,
             name: 'Продавец',
             slug: CatalogDefaultFilterSlugEnum.SELLER,
-            values,
-        }
-    }
-
-    private async getBrandFilter(
-        categoryIds: number[],
-        filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterInteface> {
-        const brandCounts = await this.db.product.groupBy({
-            where: {
-                categoryId: { in: categoryIds },
-                brandId: { not: null },
-                ...(await this.dataloader.buildProductWhereByFilters(
-                    filters,
-                    CatalogDefaultFilterSlugEnum.BRAND
-                )),
-            },
-            by: ['brandId'],
-            _count: { _all: true },
-        })
-        const brandIds = brandCounts
-            .filter(bc => isPositiveNumber(bc.brandId))
-            .map(bc => bc.brandId)
-        const brands =
-            brandIds.length > 0
-                ? await this.db.brand.findMany({
-                      where: { id: { in: brandIds.filter(isPositiveNumber) } },
-                      select: { id: true, name: true },
-                  })
-                : []
-        const brandMap = new Map(brands.map(b => [b.id, b.name]))
-        const values: CatalogFilterValuesSelectType[] = brandCounts
-            .filter(bc => isPositiveNumber(bc.brandId))
-            .map(bc => ({
-                id: bc.brandId as number,
-                name: brandMap.get(bc.brandId as number) ?? null,
-                count: bc._count._all || 0,
-            }))
-            .sort((a, b) => b.count - a.count)
-        return {
-            id: 2,
-            name: 'Бренд',
-            slug: CatalogDefaultFilterSlugEnum.BRAND,
             values,
         }
     }
