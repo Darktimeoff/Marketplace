@@ -1,5 +1,5 @@
 import { DBService } from '@/generic/db/db.service'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { isEmptyArray, isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Prisma } from '@/generic/db/generated'
@@ -46,20 +46,7 @@ export class CatalogCategoryFilterDataloaderService {
         filters: CatalogFilterInputInterface[],
         { offset, limit, sorting }: CatalogPaginationInputInterface
     ): Promise<number[]> {
-        const productWhere = {
-            categoryId: { in: categoryIds },
-            ...(await this.dataloader.buildProductWhereByFilters(filters)),
-        }
-
-        return (
-            await this.db.product.findMany({
-                where: productWhere,
-                select: { id: true },
-                skip: offset,
-                take: limit,
-                orderBy: this.buildOrderBy(sorting),
-            })
-        ).map(p => p.id)
+        return await this.dataloader.getFilteredProductIds(categoryIds, filters, { offset, limit, sorting })
     }
 
     getSortingOptions(): CatalogSoringInterface[] {
@@ -85,19 +72,6 @@ export class CatalogCategoryFilterDataloaderService {
                 name: 'Дорогі',
             },
         ]
-    }
-
-    private buildOrderBy(sorting: CatalogSortingEnum): Prisma.ProductOrderByWithRelationInput {
-        switch (sorting) {
-            case CatalogSortingEnum.NEWEST:
-                return { createdAt: 'desc' }
-            case CatalogSortingEnum.CHEAP:
-                return { price: 'asc' }
-            case CatalogSortingEnum.EXPENSIVE:
-                return { price: 'desc' }
-            default:
-                throw new BadRequestException('Unsupported sorting')
-        }
     }
 
     private async getDynamicFilter(

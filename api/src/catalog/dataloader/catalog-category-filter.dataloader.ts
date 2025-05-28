@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { DBService } from '@/generic/db/db.service'
-import { CatalogFilterInputInterface } from 'contracts'
+import { CatalogFilterInputInterface, CatalogPaginationInputInterface, CatalogSortingEnum } from 'contracts'
 import { Prisma } from '@/generic/db/generated'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { isEmptyArray, isNotEmptyArray } from '@rnw-community/shared'
@@ -9,6 +9,28 @@ import { isDefined } from 'class-validator'
 @Injectable()
 export class CatalogCategoryFilterDataloader {
     constructor(private readonly db: DBService) {}
+
+
+    async getFilteredProductIds(
+        categoryIds: number[],
+        filters: CatalogFilterInputInterface[],
+        { offset, limit, sorting }: CatalogPaginationInputInterface
+    ): Promise<number[]> {
+        const productWhere = {
+            categoryId: { in: categoryIds },
+            ...(await this.buildProductWhereByFilters(filters)),
+        }
+
+        return (
+            await this.db.product.findMany({
+                where: productWhere,
+                select: { id: true },
+                skip: offset,
+                take: limit,
+                orderBy: this.buildOrderBy(sorting),
+            })
+        ).map(p => p.id)
+    }
 
     async getTotalCount(
         categoryIds: number[],
@@ -120,5 +142,19 @@ export class CatalogCategoryFilterDataloader {
         })
 
         return where
+    }
+
+
+    private buildOrderBy(sorting: CatalogSortingEnum): Prisma.ProductOrderByWithRelationInput {
+        switch (sorting) {
+            case CatalogSortingEnum.NEWEST:
+                return { createdAt: 'desc' }
+            case CatalogSortingEnum.CHEAP:
+                return { price: 'asc' }
+            case CatalogSortingEnum.EXPENSIVE:
+                return { price: 'desc' }
+            default:
+                throw new BadRequestException('Unsupported sorting')
+        }
     }
 }
