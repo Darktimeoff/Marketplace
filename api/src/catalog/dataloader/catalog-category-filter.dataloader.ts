@@ -10,6 +10,20 @@ import { isDefined } from 'class-validator'
 export class CatalogCategoryFilterDataloader {
     constructor(private readonly db: DBService) {}
 
+    async getTotalCount(
+        categoryIds: number[],
+        filters: CatalogFilterInputInterface[]
+    ): Promise<number> {
+        const where = {
+            categoryId: { in: categoryIds },
+            ...(await this.buildProductWhereByFilters(filters)),
+        }
+
+        return await this.db.product.count({
+            where,
+        })
+    }
+
     async buildProductWhereByFilters(
         filters: CatalogFilterInputInterface[],
         excludeSlug?: string

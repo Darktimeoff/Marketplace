@@ -38,14 +38,7 @@ export class CatalogCategoryFilterDataloaderService {
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<number> {
-        const productWhere = {
-            categoryId: { in: categoryIds },
-            ...(await this.dataloader.buildProductWhereByFilters(filters)),
-        }
-
-        return await this.db.product.count({
-            where: productWhere,
-        })
+        return await this.dataloader.getTotalCount(categoryIds, filters)
     }
 
     async getProductIds(
