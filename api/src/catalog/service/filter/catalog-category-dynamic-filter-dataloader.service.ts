@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { DBService } from '@/generic/db/db.service'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
-import { isEmptyArray } from '@rnw-community/shared'
-import {
+import { getErrorMessage, isEmptyArray } from '@rnw-community/shared'
+import type {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
     CatalogFilterValuesSelectType,
 } from 'contracts'
 import { Prisma } from '@/generic/db/generated'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
+import { Log } from '@rnw-community/nestjs-enterprise'
 
 @Injectable()
 export class CatalogCategoryDynamicFilterDataloaderService
@@ -19,6 +20,14 @@ export class CatalogCategoryDynamicFilterDataloaderService
         private readonly filterDataloader: CatalogCategoryFilterDataloader
     ) {}
 
+    @Log(
+        (categoryId, filters) =>
+            `Get dynamic filters by category id "${categoryId}", filters "${JSON.stringify(filters)}"`,
+        (result, categoryId, filters) =>
+            `Got ${result.length} dynamic filters by category id "${categoryId}", filters "${JSON.stringify(filters)}"`,
+        (error, categoryId, filters) =>
+            `Error getting dynamic filters by category id "${categoryId}", filters "${JSON.stringify(filters)}": ${getErrorMessage(error)}`
+    )
     async getFilters(
         categoryId: number,
         filters: CatalogFilterInputInterface[]

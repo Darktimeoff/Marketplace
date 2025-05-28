@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
 import { DBService } from '@/generic/db/db.service'
-import {
+import type {
     CatalogFilterInputInterface,
     CatalogFilterInteface,
     CatalogFilterValuesSelectType,
 } from 'contracts'
-import { isPositiveNumber } from '@rnw-community/shared'
+import { getErrorMessage, isPositiveNumber } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
+import { Log } from '@rnw-community/nestjs-enterprise'
 
 @Injectable()
 export class CatalogCategoryBrandFilterDataloaderService
@@ -19,6 +20,14 @@ export class CatalogCategoryBrandFilterDataloaderService
         private readonly filterDataloader: CatalogCategoryFilterDataloader
     ) {}
 
+    @Log(
+        (categoryIds, filters) =>
+            `Get brand filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}"`,
+        (result, categoryIds, filters) =>
+            `Got ${result.name} brand filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}"`,
+        (error, categoryIds, filters) =>
+            `Error getting brand filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}": ${getErrorMessage(error)}`
+    )
     async getFilters(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]

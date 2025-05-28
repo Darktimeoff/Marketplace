@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
 import { DBService } from '@/generic/db/db.service'
 import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
-import { CatalogFilterInputInterface } from 'contracts'
-import { CatalogFilterInteface } from 'contracts'
+import type { CatalogFilterInputInterface, CatalogFilterInteface } from 'contracts'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
+import { Log } from '@rnw-community/nestjs-enterprise'
+import { getErrorMessage } from '@rnw-community/shared'
 
 @Injectable()
 export class CatalogCategoryPriceFilterDataloaderService
@@ -15,6 +16,14 @@ export class CatalogCategoryPriceFilterDataloaderService
         private readonly filterDataloader: CatalogCategoryFilterDataloader
     ) {}
 
+    @Log(
+        (categoryIds, filters) =>
+            `Get price filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}"`,
+        (result, categoryIds, filters) =>
+            `Got ${result.name} price filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}"`,
+        (error, categoryIds, filters) =>
+            `Error getting price filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}": ${getErrorMessage(error)}`
+    )
     async getFilters(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
