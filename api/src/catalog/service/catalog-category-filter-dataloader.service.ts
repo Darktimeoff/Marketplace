@@ -11,10 +11,14 @@ import {
     CatalogSoringInterface,
     CatalogSortingEnum,
 } from 'contracts'
+import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
-    constructor(private readonly db: DBService) {}
+    constructor(
+        private readonly db: DBService,
+        private readonly dataloader: CatalogCategoryFilterDataloader
+    ) {}
 
     async getFiltersByCategoryId(
         categoryId: number,
@@ -344,16 +348,9 @@ export class CatalogCategoryFilterDataloaderService {
             return where
         }
 
-        const attributesValues = await this.db.productAttributeValue.findMany({
-            where: {
-                id: { in: attributeFilters.flatMap(f => f.values) },
-            },
-            select: {
-                attribute: { select: { slug: true } },
-                numberValue: true,
-                textValue: { select: { uk_ua: true } },
-            },
-        })
+        const attributesValues = await this.dataloader.getAttributeValuesByAttributeIds(
+            attributeFilters.flatMap(f => f.values)
+        )
 
         const attributeValuesMap = new Map<
             string,
@@ -363,7 +360,7 @@ export class CatalogCategoryFilterDataloaderService {
         attributesValues.forEach(value => {
             const slug = value.attribute.slug
             const currentValue = {
-                numberValue: value.numberValue?.toNumber() ?? null,
+                numberValue: value.numberValue,
                 textValue: value.textValue?.uk_ua ?? null,
             }
 

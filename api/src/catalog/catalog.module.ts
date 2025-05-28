@@ -4,9 +4,14 @@ import { CatalogCategoryDataloaderService } from './service/catalog-category-dat
 import { CategoryModule } from '@/category/category.module'
 import { ProductModule } from '@/product/product.module'
 import { CatalogCategoryFilterDataloaderService } from './service/catalog-category-filter-dataloader.service'
+import { CatalogCategoryFilterDataloader } from './dataloader/catalog-category-filter.dataloader'
 @Module({
     imports: [CategoryModule, ProductModule],
     controllers: [CatalogCategoryController],
-    providers: [CatalogCategoryDataloaderService, CatalogCategoryFilterDataloaderService],
+    providers: [
+        CatalogCategoryDataloaderService,
+        CatalogCategoryFilterDataloaderService,
+        CatalogCategoryFilterDataloader,
+    ],
 })
 export class CatalogModule {}
