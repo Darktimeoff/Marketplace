@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
 import { CatalogCategoryFilterDataloaderService } from './filter/catalog-category-filter-dataloader.service'
-import { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
+import type { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
-
+import { Log } from '@rnw-community/nestjs-enterprise'
+import { getErrorMessage } from '@rnw-community/shared'
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
@@ -11,6 +12,14 @@ export class CatalogCategoryDataloaderService {
         private readonly filters: CatalogCategoryFilterDataloaderService
     ) {}
 
+    @Log(
+        (id, filtersInput) =>
+            `Get filters by category id "${id}", filters "${JSON.stringify(filtersInput)}"`,
+        (result, id, filtersInput) =>
+            `Got ${result.filters.length} filters by category id "${id}", filters "${JSON.stringify(filtersInput)}"`,
+        (error, id, filtersInput) =>
+            `Error getting filters by category id "${id}", filters "${JSON.stringify(filtersInput)}": ${getErrorMessage(error)}`
+    )
     async getByCategoryIdFilters(
         id: number,
         filtersInput: CatalogFilterInputInterface[]
@@ -28,6 +37,12 @@ export class CatalogCategoryDataloaderService {
         }
     }
 
+    @Log(
+        (id, pagination, filters) =>
+            `Get product ids by category id "${id}", pagination "${JSON.stringify(pagination)}", filters "${JSON.stringify(filters)}"`,
+        (result, id, pagination, filters) =>
+            `Got ${result.length} product ids by category id "${id}", pagination "${JSON.stringify(pagination)}", filters "${JSON.stringify(filters)}"`
+    )
     async getByCategoryId(
         id: number,
         pagination: CatalogPaginationInput,
