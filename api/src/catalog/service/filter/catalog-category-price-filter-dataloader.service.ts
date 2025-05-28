@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
-import { DBService } from '@/generic/db/db.service'
-import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
 import type { CatalogFilterInputInterface, CatalogFilterInteface } from 'contracts'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { CatalogCategoryPriceFilterDataloader } from '@/catalog/dataloader/catalog-category-price-filter.dataloader'
 
 @Injectable()
 export class CatalogCategoryPriceFilterDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
-    constructor(
-        private readonly db: DBService,
-        private readonly filterDataloader: CatalogCategoryFilterDataloader
-    ) {}
+    constructor(private readonly dataloader: CatalogCategoryPriceFilterDataloader) {}
 
     @Log(
         (categoryIds, filters) =>
@@ -28,26 +24,13 @@ export class CatalogCategoryPriceFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        const priceAggregates = await this.db.product.aggregate({
-            where: {
-                categoryId: { in: categoryIds },
-                ...(await this.filterDataloader.buildProductWhereByFilters(
-                    filters,
-                    CatalogDefaultFilterSlugEnum.PRICE
-                )),
-            },
-            _min: { price: true },
-            _max: { price: true },
-        })
+        const values = await this.dataloader.getRange(categoryIds, filters)
 
         return {
             id: 3,
             name: 'Ціна',
             slug: CatalogDefaultFilterSlugEnum.PRICE,
-            values: {
-                min: priceAggregates._min.price ? Number(priceAggregates._min.price) : 0,
-                max: priceAggregates._max.price ? Number(priceAggregates._max.price) : 0,
-            },
+            values,
         }
     }
 }
