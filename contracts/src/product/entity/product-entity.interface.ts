@@ -4,6 +4,7 @@ import { TranslationEntityInterface } from '@/translation'
 import { CategoryEntityInterface } from '@/category'
 import { ProductMediaEntityInterface } from '@/product/product-media'
 import { BrandEntityInterface } from '@/brand'
+import { SellerEntityInterface } from '@/seller'
 
 export interface ProductEntityInterface extends BaseEntityInterface {
     titleId: number
@@ -11,10 +12,12 @@ export interface ProductEntityInterface extends BaseEntityInterface {
     categoryId: number
     oldPrice: number | null
     brandId: number | null
+    sellerId: number
     price: number
     slug: string
 
-    [ProductAssociationEnum.BRAND]?: BrandEntityInterface
+    [ProductAssociationEnum.SELLER]?: SellerEntityInterface
+    [ProductAssociationEnum.BRAND]?: BrandEntityInterface | null
     [ProductAssociationEnum.TITLE]?: TranslationEntityInterface
     [ProductAssociationEnum.DESCRIPTION]?: TranslationEntityInterface | null
     [ProductAssociationEnum.CATEGORY]?: CategoryEntityInterface
