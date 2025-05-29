@@ -38,9 +38,9 @@ export class CatalogCategoryFilterDataloaderService {
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface[]> {
         const [sellerFilter, brandFilter, priceFilter, dynamicFilters] = await Promise.all([
-            this.sellerFilters.getFilters(categoryIds, filters),
-            this.brandFilters.getFilters(categoryIds, filters),
-            this.priceFilters.getFilters(categoryIds, filters),
+            this.sellerFilters.getFilter(categoryIds, filters),
+            this.brandFilters.getFilter(categoryIds, filters),
+            this.priceFilters.getFilter(categoryIds, filters),
             this.dynamicFilters.getFilters(categoryId, filters),
         ])
         return [sellerFilter, brandFilter, priceFilter].concat(dynamicFilters)

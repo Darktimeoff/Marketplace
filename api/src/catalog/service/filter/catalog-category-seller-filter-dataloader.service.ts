@@ -31,11 +31,11 @@ export class CatalogCategorySellerFilterDataloaderService
         (error, categoryIds, filters) =>
             `Error getting seller filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}": ${getErrorMessage(error)}`
     )
-    async getFilters(
+    async getFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        return await super.getFilters(categoryIds, filters)
+        return await super.getFilter(categoryIds, filters)
     }
 
     protected getCount(

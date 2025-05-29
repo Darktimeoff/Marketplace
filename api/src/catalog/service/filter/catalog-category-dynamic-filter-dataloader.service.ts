@@ -6,14 +6,11 @@ import type {
     CatalogFilterInteface,
     CatalogFilterValuesSelectType,
 } from 'contracts'
-import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { CatalogCategoryDynamicFilterDataloader } from '@/catalog/dataloader/catalog-category-dynamic-filter.dataloader'
 
 @Injectable()
-export class CatalogCategoryDynamicFilterDataloaderService
-    implements CatalogCategoryFilterServiceInterface
-{
+export class CatalogCategoryDynamicFilterDataloaderService {
     constructor(
         private readonly dataloader: CatalogCategoryDynamicFilterDataloader,
         private readonly filterDataloader: CatalogCategoryFilterDataloader

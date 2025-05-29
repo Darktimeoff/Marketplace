@@ -20,7 +20,7 @@ export class CatalogCategoryPriceFilterDataloaderService
         (error, categoryIds, filters) =>
             `Error getting price filters by category ids "${categoryIds}", filters "${JSON.stringify(filters)}": ${getErrorMessage(error)}`
     )
-    async getFilters(
+    async getFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {

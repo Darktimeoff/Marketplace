@@ -1,8 +1,8 @@
 import { CatalogFilterInputInterface, CatalogFilterInteface } from 'contracts'
 
 export interface CatalogCategoryFilterServiceInterface {
-    getFilters(
+    getFilter(
         categoryId: number | number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<CatalogFilterInteface | CatalogFilterInteface[]>
+    ): Promise<CatalogFilterInteface>
 }

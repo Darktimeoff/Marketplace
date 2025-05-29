@@ -10,7 +10,7 @@ import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-mode
 export abstract class CatalogCategorySelectFilterTemplateDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
-    async getFilters(
+    async getFilter(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
