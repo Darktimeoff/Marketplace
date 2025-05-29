@@ -28,22 +28,18 @@ export class CatalogCategoryBrandFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        const brandCounts = await this.dataloader.getCount(categoryIds, filters)
+        const counts = await this.dataloader.getCount(categoryIds, filters)
 
-        const brandIds = brandCounts
-            .filter(bc => isPositiveNumber(bc.brandId))
-            .map(bc => bc.brandId)
-        const brands =
-            brandIds.length > 0
-                ? await this.dataloader.getNames(brandIds.filter(isPositiveNumber))
-                : []
-        const brandMap = new Map(brands.map(b => [b.id, b.name]))
-        const values: CatalogFilterValuesSelectType[] = brandCounts
-            .filter(bc => isPositiveNumber(bc.brandId))
-            .map(bc => ({
-                id: bc.brandId as number,
-                name: brandMap.get(bc.brandId as number) ?? null,
-                count: bc._count._all || 0,
+        const ids = counts.filter(c => isPositiveNumber(c.id)).map(c => c.id)
+        const nameModels =
+            ids.length > 0 ? await this.dataloader.getNames(ids.filter(isPositiveNumber)) : []
+        const nameMap = new Map(nameModels.map(n => [n.id, n.name]))
+        const values: CatalogFilterValuesSelectType[] = counts
+            .filter(c => isPositiveNumber(c.id))
+            .map(c => ({
+                id: c.id,
+                name: nameMap.get(c.id) ?? null,
+                count: c.count,
             }))
             .sort((a, b) => b.count - a.count)
 

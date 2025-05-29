@@ -4,12 +4,12 @@ import { CatalogCategoryFilterDataloader } from './catalog-category-filter.datal
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { CatalogFilterInputInterface } from 'contracts'
 import { CatalogCategoryFilterDataloaderInterface } from '@/catalog/interface/catalog-category-filter-dataloader.interface'
-import { BrandFilterCountableModelInterface } from '@/catalog/interface/brand-filter-coutable-model.interface'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
+import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
 
 @Injectable()
 export class CatalogCategoryBrandFilterDataloader
-    implements CatalogCategoryFilterDataloaderInterface<BrandFilterCountableModelInterface>
+    implements CatalogCategoryFilterDataloaderInterface
 {
     constructor(
         private readonly db: DBService,
@@ -19,7 +19,7 @@ export class CatalogCategoryBrandFilterDataloader
     async getCount(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
-    ): Promise<BrandFilterCountableModelInterface[]> {
+    ): Promise<FilterCountableModelInterface[]> {
         const brandCounts = await this.db.product.groupBy({
             where: {
                 categoryId: { in: categoryIds },
@@ -33,7 +33,10 @@ export class CatalogCategoryBrandFilterDataloader
             _count: { _all: true },
         })
 
-        return brandCounts
+        return brandCounts.map(bc => ({
+            id: bc.brandId as number,
+            count: bc._count._all ?? 0,
+        }))
     }
 
     async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {

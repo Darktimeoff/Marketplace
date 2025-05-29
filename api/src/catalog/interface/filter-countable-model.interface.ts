@@ -1,5 +1,4 @@
 export interface FilterCountableModelInterface {
-    _count: {
-        _all: number
-    }
+    id: number
+    count: number
 }

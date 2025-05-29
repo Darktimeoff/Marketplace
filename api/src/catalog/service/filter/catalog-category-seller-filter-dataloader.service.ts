@@ -25,22 +25,18 @@ export class CatalogCategorySellerFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        const sellerCounts = await this.dataloader.getCount(categoryIds, filters)
+        const counts = await this.dataloader.getCount(categoryIds, filters)
 
-        const sellerIds = sellerCounts
-            .filter(sc => isPositiveNumber(sc.sellerId))
-            .map(sc => sc.sellerId)
-        const sellers =
-            sellerIds.length > 0
-                ? await this.dataloader.getNames(sellerIds.filter(isPositiveNumber))
-                : []
-        const sellerMap = new Map(sellers.map(s => [s.id, s.name]))
-        const values = sellerCounts
-            .filter(sc => isPositiveNumber(sc.sellerId))
-            .map(sc => ({
-                id: sc.sellerId,
-                name: sellerMap.get(sc.sellerId) || null,
-                count: sc._count._all || 0,
+        const ids = counts.filter(c => isPositiveNumber(c.id)).map(c => c.id)
+        const nameModels =
+            ids.length > 0 ? await this.dataloader.getNames(ids.filter(isPositiveNumber)) : []
+        const nameMap = new Map(nameModels.map(n => [n.id, n.name]))
+        const values = counts
+            .filter(c => isPositiveNumber(c.id))
+            .map(c => ({
+                id: c.id,
+                name: nameMap.get(c.id) || null,
+                count: c.count,
             }))
             .sort((a, b) => b.count - a.count)
         return {
