@@ -1,17 +1,27 @@
 import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
 
-import type { CatalogFilterInputInterface, CatalogFilterInteface } from 'contracts'
-import { getErrorMessage, isPositiveNumber } from '@rnw-community/shared'
+import type {
+    CatalogFilterInputInterface,
+    CatalogFilterInteface,
+    CatalogFilterValuesSelectType,
+} from 'contracts'
+import { getErrorMessage } from '@rnw-community/shared'
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { CatalogCategorySellerFilterDataloader } from '@/catalog/dataloader/catalog-category-seller-filter.dataloader'
+import { CatalogCategorySelectFilterTemplateDataloaderService } from './catalog-category-select-filter-template-dataloader.service'
+import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
+import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
 
 @Injectable()
 export class CatalogCategorySellerFilterDataloaderService
+    extends CatalogCategorySelectFilterTemplateDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
-    constructor(private readonly dataloader: CatalogCategorySellerFilterDataloader) {}
+    constructor(private readonly dataloader: CatalogCategorySellerFilterDataloader) {
+        super()
+    }
 
     @Log(
         (categoryIds, filters) =>
@@ -25,20 +35,21 @@ export class CatalogCategorySellerFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        const counts = await this.dataloader.getCount(categoryIds, filters)
+        return await super.getFilters(categoryIds, filters)
+    }
 
-        const ids = counts.filter(c => isPositiveNumber(c.id)).map(c => c.id)
-        const nameModels =
-            ids.length > 0 ? await this.dataloader.getNames(ids.filter(isPositiveNumber)) : []
-        const nameMap = new Map(nameModels.map(n => [n.id, n.name]))
-        const values = counts
-            .filter(c => isPositiveNumber(c.id))
-            .map(c => ({
-                id: c.id,
-                name: nameMap.get(c.id) || null,
-                count: c.count,
-            }))
-            .sort((a, b) => b.count - a.count)
+    protected getCount(
+        categoryIds: number[],
+        filters: CatalogFilterInputInterface[]
+    ): Promise<FilterCountableModelInterface[]> {
+        return this.dataloader.getCount(categoryIds, filters)
+    }
+
+    protected getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
+        return this.dataloader.getNames(ids)
+    }
+
+    protected prepareFilter(values: CatalogFilterValuesSelectType[]): CatalogFilterInteface {
         return {
             id: 1,
             name: 'Продавец',
