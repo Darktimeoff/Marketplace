@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
 import { CatalogFilterInputInterface, CatalogFilterValuesSelectType } from 'contracts'
 import { CatalogFilterInteface } from 'contracts'
@@ -6,7 +5,6 @@ import { FilterCountableModelInterface } from '@/catalog/interface/filter-counta
 import { isPositiveNumber } from '@rnw-community/shared'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
 
-@Injectable()
 export abstract class CatalogCategorySelectFilterTemplateDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
