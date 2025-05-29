@@ -49,6 +49,24 @@ export class CatalogCategoryFilterDataloader {
         })
     }
 
+    async getFilteredProductIdsWithoutPagination(
+        categoryIds: number[],
+        filters: CatalogFilterInputInterface[],
+        excludeSlug?: string
+    ): Promise<number[]> {
+        const productWhere = {
+            categoryId: { in: categoryIds },
+            ...(await this.buildProductWhereByFilters(filters, excludeSlug)),
+        }
+
+        const productIds = await this.db.product.findMany({
+            where: productWhere,
+            select: { id: true },
+        })
+
+        return productIds.map(p => p.id)
+    }
+
     async buildProductWhereByFilters(
         filters: CatalogFilterInputInterface[],
         excludeSlug?: string

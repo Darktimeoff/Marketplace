@@ -12,6 +12,7 @@ import { CatalogCategoryPriceFilterDataloaderService } from './service/filter/ca
 import { CatalogCategoryBrandFilterDataloader } from './dataloader/catalog-category-brand-filter.dataloader'
 import { CatalogCategorySellerFilterDataloader } from './dataloader/catalog-category-seller-filter.dataloader'
 import { CatalogCategoryPriceFilterDataloader } from './dataloader/catalog-category-price-filter.dataloader'
+import { CatalogCategoryDynamicFilterDataloader } from './dataloader/catalog-category-dynamic-filter.dataloader'
 @Module({
     imports: [CategoryModule, ProductModule],
     controllers: [CatalogCategoryController],
@@ -26,6 +27,7 @@ import { CatalogCategoryPriceFilterDataloader } from './dataloader/catalog-categ
         CatalogCategoryBrandFilterDataloader,
         CatalogCategorySellerFilterDataloader,
         CatalogCategoryPriceFilterDataloader,
+        CatalogCategoryDynamicFilterDataloader,
     ],
 })
 export class CatalogModule {}
