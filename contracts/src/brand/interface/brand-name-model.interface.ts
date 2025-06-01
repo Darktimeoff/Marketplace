@@ -1,5 +1,6 @@
-import { BaseModelInterface } from "@/generic"
-import { BrandEntityInterface } from "../entity/brand-entity.interface"
+import { BaseModelInterface } from '@/generic'
+import { BrandEntityInterface } from '@/brand/entity/brand-entity.interface'
 
-export interface BrandNameModelInterface extends BaseModelInterface, Pick<BrandEntityInterface, 'name'> {
-}
+export interface BrandNameModelInterface
+    extends BaseModelInterface,
+        Pick<BrandEntityInterface, 'name'> {}

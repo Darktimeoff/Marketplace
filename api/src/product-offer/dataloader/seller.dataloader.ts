@@ -1,13 +1,13 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
-import { BrandNameModelInterface } from 'contracts'
+import { SellerNameModelInterface } from 'contracts'
 
 @Injectable()
-export class BrandDataloader {
+export class SellerDataloader {
     constructor(private readonly db: DBService) {}
 
-    async getNameByIds(ids: number[]): Promise<BrandNameModelInterface[]> {
-        return await this.db.brand.findMany({
+    async findNameByIds(ids: number[]): Promise<SellerNameModelInterface[]> {
+        return await this.db.seller.findMany({
             where: { id: { in: ids } },
             select: { id: true, name: true },
         })

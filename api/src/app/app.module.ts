@@ -17,7 +17,7 @@ import { Module } from '@nestjs/common'
         ProductAttributeModule,
         ProductOfferModule,
         CatalogModule,
-        BrandModule
+        BrandModule,
     ],
     controllers: [],
     providers: [],

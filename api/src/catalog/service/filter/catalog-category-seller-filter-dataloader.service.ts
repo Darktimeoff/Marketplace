@@ -13,13 +13,17 @@ import { CatalogCategorySellerFilterDataloader } from '@/catalog/dataloader/cata
 import { CatalogCategorySelectFilterTemplateDataloaderService } from './catalog-category-select-filter-template-dataloader.service'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
 import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
+import { OfferFacade } from '@/product-offer/facade/offer.facade'
 
 @Injectable()
 export class CatalogCategorySellerFilterDataloaderService
     extends CatalogCategorySelectFilterTemplateDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
-    constructor(private readonly dataloader: CatalogCategorySellerFilterDataloader) {
+    constructor(
+        private readonly dataloader: CatalogCategorySellerFilterDataloader,
+        private readonly offer: OfferFacade
+    ) {
         super()
     }
 
@@ -38,15 +42,15 @@ export class CatalogCategorySellerFilterDataloaderService
         return await super.getFilter(categoryIds, filters)
     }
 
-    protected getCount(
+    protected async getCount(
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<FilterCountableModelInterface[]> {
-        return this.dataloader.getCount(categoryIds, filters)
+        return await this.dataloader.getCount(categoryIds, filters)
     }
 
-    protected getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
-        return this.dataloader.getNames(ids)
+    protected async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
+        return await this.offer.getSellerNameByIds(ids)
     }
 
     protected prepareFilter(values: CatalogFilterValuesSelectType[]): CatalogFilterInteface {

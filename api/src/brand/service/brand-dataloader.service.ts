@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { BrandDataloader } from "../dataloader/brand.dataloader";
-import { BrandNameModelInterface } from "contracts";
-import { Log } from "@rnw-community/nestjs-enterprise";
-import { getErrorMessage } from "@rnw-community/shared";
+import { Injectable } from '@nestjs/common'
+import { BrandDataloader } from '@/brand/dataloader/brand.dataloader'
+import { BrandNameModelInterface } from 'contracts'
+import { Log } from '@rnw-community/nestjs-enterprise'
+import { getErrorMessage } from '@rnw-community/shared'
 
 @Injectable()
 export class BrandDataloaderService {
