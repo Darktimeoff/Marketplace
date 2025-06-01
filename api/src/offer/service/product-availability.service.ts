@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { ProductAvailabilityDataloader } from '@/product-offer/dataloader/product-availability.dataloader'
+import { ProductAvailabilityDataloader } from '@/offer/dataloader/product-availability.dataloader'
 import { Prisma } from '@/generic/db/generated'
 import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
 import { ProductAvailabilityInterface } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
-import { getAvailableStatusByOffer } from '@/product-offer/util/get-available-status-by-offer.utilt'
+import { getAvailableStatusByOffer } from '@/offer/util/get-available-status-by-offer.util'
 
 @Injectable()
 export class ProductAvailabilityService {

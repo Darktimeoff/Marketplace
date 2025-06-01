@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { SellerDataloader } from '@/product-offer/dataloader/seller.dataloader'
 import { SellerNameInterface } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { SellerDataloader } from '@/seller/dataloader/seller.dataloader'
 
 @Injectable()
-export class SellerService {
+export class SellerDataloaderService {
     constructor(private readonly dataloader: SellerDataloader) {}
 
     @Log(

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ProductCatalogDataloader } from '@/product/dataloader/product-catalog.dataloader'
 import { ProductShortInfoInterface, ProductShortInfoModelInterface } from 'contracts'
-import { getAvailableStatusByOffer } from '@/product-offer/util/get-available-status-by-offer.utilt'
+import { getAvailableStatusByOffer } from '@/offer/util/get-available-status-by-offer.util'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
 

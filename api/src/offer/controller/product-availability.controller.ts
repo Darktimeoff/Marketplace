@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
-import { ProductAvailabilityDto } from '@/product-offer/dto/product-availability.dto'
+import { ProductAvailabilityDto } from '@/offer/dto/product-availability.dto'
 import { UseSerializeValidator } from '@/generic/decorator/use-transform-validator.decorator'
-import { ProductAvailabilityService } from '@/product-offer/service/product-availability.service'
+import { ProductAvailabilityService } from '@/offer/service/product-availability.service'
 import { ProductAvailabilityInterface } from 'contracts'
 
 @Controller('product/:productId/availability')

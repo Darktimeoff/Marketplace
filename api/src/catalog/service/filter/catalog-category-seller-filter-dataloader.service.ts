@@ -13,7 +13,7 @@ import { CatalogCategorySellerFilterDataloader } from '@/catalog/dataloader/cata
 import { CatalogCategorySelectFilterTemplateDataloaderService } from './catalog-category-select-filter-template-dataloader.service'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
 import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
-import { OfferFacade } from '@/product-offer/facade/offer.facade'
+import { SellerFacade } from '@/seller/facade/seller.facade'
 
 @Injectable()
 export class CatalogCategorySellerFilterDataloaderService
@@ -22,7 +22,7 @@ export class CatalogCategorySellerFilterDataloaderService
 {
     constructor(
         private readonly dataloader: CatalogCategorySellerFilterDataloader,
-        private readonly offer: OfferFacade
+        private readonly seller: SellerFacade
     ) {
         super()
     }
@@ -50,7 +50,7 @@ export class CatalogCategorySellerFilterDataloaderService
     }
 
     protected async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
-        return await this.offer.getSellerNameByIds(ids)
+        return await this.seller.getNameByIds(ids)
     }
 
     protected prepareFilter(values: CatalogFilterValuesSelectType[]): CatalogFilterInteface {
