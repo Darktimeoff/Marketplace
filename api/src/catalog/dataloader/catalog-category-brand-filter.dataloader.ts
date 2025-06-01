@@ -4,7 +4,6 @@ import { CatalogCategoryFilterDataloader } from './catalog-category-filter.datal
 import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { CatalogFilterInputInterface } from 'contracts'
 import { CatalogCategoryFilterDataloaderInterface } from '@/catalog/interface/catalog-category-filter-dataloader.interface'
-import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
 import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
 
 @Injectable()
@@ -37,12 +36,5 @@ export class CatalogCategoryBrandFilterDataloader
             id: bc.brandId as number,
             count: bc._count._all ?? 0,
         }))
-    }
-
-    async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
-        return await this.db.brand.findMany({
-            where: { id: { in: ids } },
-            select: { id: true, name: true },
-        })
     }
 }

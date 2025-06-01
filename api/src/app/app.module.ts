@@ -1,3 +1,4 @@
+import { BrandModule } from '@/brand/brand.module'
 import { CatalogModule } from '@/catalog/catalog.module'
 import { CategoryModule } from '@/category/category.module'
 import { ApiConfigModule } from '@/generic/config/api-config.module'
@@ -16,6 +17,7 @@ import { Module } from '@nestjs/common'
         ProductAttributeModule,
         ProductOfferModule,
         CatalogModule,
+        BrandModule
     ],
     controllers: [],
     providers: [],

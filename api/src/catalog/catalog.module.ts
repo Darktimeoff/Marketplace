@@ -13,8 +13,9 @@ import { CatalogCategoryBrandFilterDataloader } from './dataloader/catalog-categ
 import { CatalogCategorySellerFilterDataloader } from './dataloader/catalog-category-seller-filter.dataloader'
 import { CatalogCategoryPriceFilterDataloader } from './dataloader/catalog-category-price-filter.dataloader'
 import { CatalogCategoryDynamicFilterDataloader } from './dataloader/catalog-category-dynamic-filter.dataloader'
+import { BrandModule } from '@/brand/brand.module'
 @Module({
-    imports: [CategoryModule, ProductModule],
+    imports: [CategoryModule, ProductModule, BrandModule],
     controllers: [CatalogCategoryController],
     providers: [
         CatalogCategoryDataloaderService,

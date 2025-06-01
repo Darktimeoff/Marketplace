@@ -7,5 +7,5 @@ export interface CatalogCategoryFilterDataloaderInterface {
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<FilterCountableModelInterface[]>
-    getNames(ids: number[]): Promise<NamesFilterModelInterface[]>
+    getNames?(ids: number[]): Promise<NamesFilterModelInterface[]>
 }
