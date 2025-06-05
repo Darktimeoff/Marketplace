@@ -16,6 +16,13 @@ export class ProductDataloader {
                 id: productId,
             },
             include: {
+                [ProductAssociationEnum.BRAND]: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                    },
+                },
                 [ProductAssociationEnum.TITLE]: {
                     omit: this.db.getDefaultOmit(),
                 },

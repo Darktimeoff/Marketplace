@@ -3,9 +3,18 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { DBService } from '../../src/generic/db/db.service'
-import { ProductInterface } from 'contracts'
+import { BrandDtoInterface, ProductInterface } from 'contracts'
 import { Server } from 'http'
 import { checkProductMediaStructure } from '../shared/media.structure'
+import { isDefined } from '@rnw-community/shared'
+
+function checkBrandStructure(brand: BrandDtoInterface): void {
+    expect(brand).toHaveProperty('id')
+    expect(typeof brand.id).toBe('number')
+    expect(brand).toHaveProperty('name')
+    expect(typeof brand.name).toBe('string')
+}
+
 
 const checkProductStructure = (product: ProductInterface): void => {
     expect(product).toHaveProperty('id')
@@ -22,6 +31,11 @@ const checkProductStructure = (product: ProductInterface): void => {
     expect(product).toHaveProperty('media')
     expect(Array.isArray(product.media)).toBe(true)
     product.media.forEach(checkProductMediaStructure)
+    expect(product).toHaveProperty('brand')
+    expect(typeof product.brand === 'object' || product.brand === null).toBe(true)
+    if (isDefined(product.brand)) {
+        checkBrandStructure(product.brand)
+    }
 }
 
 describe('ProductController (e2e)', () => {

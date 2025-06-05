@@ -1,13 +1,25 @@
-import { NestJSTypedConfigModule } from '@rnw-community/nestjs-typed-config'
+import {
+    NestJSTypedConfigModule,
+    NestJSTypedConfigService,
+} from '@rnw-community/nestjs-typed-config'
 import { EnvironmentVariablesEnum } from './enum/enviroment-variables.enum'
 import { EnvironmentVariablesInterface } from './interface/environment-variables.interface'
 import { environmentVariablesValidationSchema } from './validation/enviroment-variables.validation'
-import { Global, Injectable, Module } from '@nestjs/common'
+import { DynamicModule, Global, Injectable, Module, Type } from '@nestjs/common'
 
-export const [BaseConfigModule, BaseConfigService] = NestJSTypedConfigModule.create<
+const [BaseConfigModuleClass, BaseConfigServiceClass] = NestJSTypedConfigModule.create<
     EnvironmentVariablesEnum,
     EnvironmentVariablesInterface
 >(environmentVariablesValidationSchema)
+
+export const BaseConfigModule: DynamicModule = BaseConfigModuleClass
+export const BaseConfigService: Type<
+    NestJSTypedConfigService<
+        EnvironmentVariablesEnum,
+        EnvironmentVariablesInterface,
+        keyof EnvironmentVariablesInterface
+    >
+> = BaseConfigServiceClass
 
 @Injectable()
 export class ApiConfigService extends BaseConfigService {}
