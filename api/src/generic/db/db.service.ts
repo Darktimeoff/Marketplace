@@ -7,17 +7,11 @@ import { ApiConfigService } from '@/generic/config/api-config.module'
 import { EnvironmentVariablesEnum } from '@/generic/config/enum/enviroment-variables.enum'
 import { BaseEntityInterface } from 'contracts'
 import { createPrismaQueryEventHandler } from 'prisma-query-log'
-import { PrismaPg } from '@prisma/adapter-pg'
 
 @Injectable()
 export class DBService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
     constructor(private readonly config: ApiConfigService) {
-        const adapter = new PrismaPg({
-            connectionString: config.get(EnvironmentVariablesEnum.DATABASE_URL),
-        })
-
         super({
-            adapter,
             log: config.get(EnvironmentVariablesEnum.PRISMA_QUERY_LOG_ENABLED)
                 ? [
                       {
