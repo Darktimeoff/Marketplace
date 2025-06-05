@@ -1,8 +1,8 @@
 import { DBService } from '@/generic/db/db.service'
 import { Injectable } from '@nestjs/common'
 import {
-    ProductAssociationEnum,
     ProductAvailabilityModelInterface,
+    ProductOfferAssociationEnum,
     SellerAssociationEnum,
 } from 'contracts'
 
@@ -11,20 +11,14 @@ export class ProductAvailabilityDataloader {
     constructor(private db: DBService) {}
 
     async findByProductId(productId: number): Promise<ProductAvailabilityModelInterface> {
-        return await this.db.product.findUniqueOrThrow({
+        const productOffer = await this.db.productOffer.findUniqueOrThrow({
             where: {
-                id: productId,
+                productId,
             },
             select: {
-                id: true,
-                [ProductAssociationEnum.BRAND]: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    },
-                },
-                [ProductAssociationEnum.SELLER]: {
+                isActive: true,
+                quantity: true,
+                [ProductOfferAssociationEnum.SELLER]: {
                     select: {
                         id: true,
                         name: true,
@@ -36,14 +30,12 @@ export class ProductAvailabilityDataloader {
                         },
                     },
                 },
-                [ProductAssociationEnum.OFFERS]: {
-                    select: {
-                        isActive: true,
-                        quantity: true,
-                    },
-                    take: 1,
-                },
             },
         })
+
+        return {
+            id: productId + productOffer.seller.id,
+            ...productOffer,
+        }
     }
 }

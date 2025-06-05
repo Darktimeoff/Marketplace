@@ -24,7 +24,7 @@ export class ProductAvailabilityService {
 
             return {
                 ...productAvailability,
-                availabilityStatus: getAvailableStatusByOffer(productAvailability.offers[0]),
+                availabilityStatus: getAvailableStatusByOffer(productAvailability),
             }
         } catch (error) {
             if (

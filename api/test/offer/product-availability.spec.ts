@@ -3,15 +3,8 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { DBService } from '../../src/generic/db/db.service'
-import {  BrandDtoInterface, ProductAvailabilityDtoInterface, ProductAvailabilityStatusEnum, SellerDtoInterface } from 'contracts'
+import { ProductAvailabilityDtoInterface, ProductAvailabilityStatusEnum, SellerDtoInterface } from 'contracts'
 import { Server } from 'http'
-
-function checkBrandStructure(brand: BrandDtoInterface): void {
-    expect(brand).toHaveProperty('id')
-    expect(typeof brand.id).toBe('number')
-    expect(brand).toHaveProperty('name')
-    expect(typeof brand.name).toBe('string')
-}
 
 function checkSellerStructure(seller: SellerDtoInterface): void {
     expect(seller).toHaveProperty('id')
@@ -20,16 +13,11 @@ function checkSellerStructure(seller: SellerDtoInterface): void {
     expect(typeof seller.name).toBe('string')
 }
 function checkProductAvailabilityStructure(availability: ProductAvailabilityDtoInterface): void {
-    expect(availability).toHaveProperty('brand')
-    expect(typeof availability.brand === 'object' || availability.brand === null).toBe(true)
-    if (availability.brand) {
-        checkBrandStructure(availability.brand)
-    }
     expect(availability).toHaveProperty('seller')
     expect(typeof availability.seller).toBe('object')
     checkSellerStructure(availability.seller)
     expect(availability).toHaveProperty('availabilityStatus')
-    expect(Object.values(ProductAvailabilityStatusEnum).includes(availability.availabilityStatus as ProductAvailabilityStatusEnum)).toBe(true)
+    expect(availability.availabilityStatus).toBe(ProductAvailabilityStatusEnum.AVAILABLE)
 }
 
 describe('ProductAvailabilityController (e2e)', () => {

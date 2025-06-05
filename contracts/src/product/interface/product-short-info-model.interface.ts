@@ -4,7 +4,7 @@ import {
     ProductEntityInterface,
     ProductMediaModelInterface,
 } from '@/product'
-import { ProductOfferModelInterface } from '@/product-offer'
+import { ProductOfferModelInterface } from '@/offer'
 import { TranslationModelInterface } from '@/translation'
 
 type ProductShortInforModelFields = 'slug' | 'price' | 'oldPrice'
