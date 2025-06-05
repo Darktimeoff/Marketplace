@@ -1,10 +1,9 @@
-import { CatalogFilterInteface } from "contracts";
-import { CatalogDefaultFilterSlugEnum } from "../../src/catalog/enum/catalog-default-filter-slug.enum";
+import { CatalogFilterInteface, ProductFilterSlugEnum } from "contracts";
 import { isNotEmptyArray } from "@rnw-community/shared";
 
 export function getDynamicFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
     const dynamicFilter = filters.find(f => 
-        !Object.values(CatalogDefaultFilterSlugEnum).includes(f.slug as CatalogDefaultFilterSlugEnum) &&
+        !Object.values(ProductFilterSlugEnum).includes(f.slug as ProductFilterSlugEnum) &&
         Array.isArray(f.values) &&
         isNotEmptyArray(f.values)
     )

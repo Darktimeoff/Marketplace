@@ -4,14 +4,14 @@ import {
     CatalogFilterInputInterface,
     CatalogPaginationInputInterface,
     CatalogSortingEnum,
+    ProductFilterSlugEnum,
 } from 'contracts'
 import { Prisma } from '@/generic/db/generated'
-import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { isEmptyArray, isNotEmptyArray } from '@rnw-community/shared'
 import { isDefined } from 'class-validator'
 
 @Injectable()
-export class CatalogCategoryFilterDataloader {
+export class ProductFilterBaseDataloader {
     constructor(private readonly db: DBService) {}
 
     async getFilteredProductIds(
@@ -79,17 +79,17 @@ export class CatalogCategoryFilterDataloader {
                 continue
             }
             switch (filter.slug) {
-                case CatalogDefaultFilterSlugEnum.SELLER:
+                case ProductFilterSlugEnum.SELLER:
                     if (Array.isArray(filter.values)) {
                         where.sellerId = { in: filter.values }
                     }
                     break
-                case CatalogDefaultFilterSlugEnum.BRAND:
+                case ProductFilterSlugEnum.BRAND:
                     if (Array.isArray(filter.values)) {
                         where.brandId = { in: filter.values }
                     }
                     break
-                case CatalogDefaultFilterSlugEnum.PRICE:
+                case ProductFilterSlugEnum.PRICE:
                     if (!Array.isArray(filter.values)) {
                         where.price = {
                             gte: filter.values.min,

@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { CatalogCategoryFilterServiceInterface } from '@/catalog/interface/catalog-category-filter-service.interface'
-import type { CatalogFilterInputInterface, CatalogFilterInteface } from 'contracts'
-import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
+import {
+    type CatalogFilterInputInterface,
+    type CatalogFilterInteface,
+    ProductFilterSlugEnum,
+} from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
-import { CatalogCategoryPriceFilterDataloader } from '@/catalog/dataloader/catalog-category-price-filter.dataloader'
+import { ProductFacade } from '@/product/facade/product-filter.facade'
 
 @Injectable()
 export class CatalogCategoryPriceFilterDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
-    constructor(private readonly dataloader: CatalogCategoryPriceFilterDataloader) {}
+    constructor(private readonly products: ProductFacade) {}
 
     @Log(
         (categoryIds, filters) =>
@@ -24,12 +27,12 @@ export class CatalogCategoryPriceFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface> {
-        const values = await this.dataloader.getRange(categoryIds, filters)
+        const values = await this.products.getPriceRange(categoryIds, filters)
 
         return {
             id: 3,
             name: 'Ціна',
-            slug: CatalogDefaultFilterSlugEnum.PRICE,
+            slug: ProductFilterSlugEnum.PRICE,
             values,
         }
     }

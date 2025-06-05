@@ -3,8 +3,7 @@ import { INestApplication } from '@nestjs/common'
 import request, { Response } from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogCategoryFiltersDtoInterface, CatalogFilterDtoInterface, CatalogFilterValuesRangeDtoInterface, CatalogFilterValuesSelectDtoInterface, CatalogSortingDtoInterface, CatalogSortingEnum } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterDtoInterface, CatalogFilterValuesRangeDtoInterface, CatalogFilterValuesSelectDtoInterface, CatalogSortingDtoInterface, CatalogSortingEnum, ProductFilterSlugEnum } from 'contracts'
 import { MOBILE_CATEGORY_ID } from '../shared/mobile-category-id.constant'
 
 function checkFilterValueStructure(value: CatalogFilterValuesSelectDtoInterface | CatalogFilterValuesRangeDtoInterface) {
@@ -61,7 +60,7 @@ function checkCatalogCategoryFiltersStructure(catalog: CatalogCategoryFiltersDto
     catalog.sorting.forEach(checkSortingOptionStructure)
     expect(catalog.sorting.find(sorting => sorting.isDefault)?.id).toBe(CatalogSortingEnum.NEWEST)
     expect(catalog.sorting.every(sorting => Object.values(CatalogSortingEnum).includes(sorting.id as CatalogSortingEnum))).toBe(true)
-    expect(Object.values(CatalogDefaultFilterSlugEnum).every(slug => catalog.filters.find(filter => filter.slug === slug))).toBe(true)
+    expect(Object.values(ProductFilterSlugEnum).every(slug => catalog.filters.find(filter => filter.slug === slug))).toBe(true)
 }
 
 describe('CatalogCategoryController (e2e)', () => {

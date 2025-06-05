@@ -6,18 +6,18 @@ import {
     type CatalogSoringInterface,
     CatalogSortingEnum,
 } from 'contracts'
-import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
 import { CatalogCategoryDynamicFilterDataloaderService } from './catalog-category-dynamic-filter-dataloader.service'
 import { CatalogCategoryBrandFilterDataloaderService } from './catalog-category-brand-filter-dataloader.service'
 import { CatalogCategorySellerFilterDataloaderService } from './catalog-category-seller-filter-dataloader.service'
 import { CatalogCategoryPriceFilterDataloaderService } from './catalog-category-price-filter-dataloader.service'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { ProductFacade } from '@/product/facade/product-filter.facade'
 
 @Injectable()
 export class CatalogCategoryFilterDataloaderService {
     constructor(
-        private readonly dataloader: CatalogCategoryFilterDataloader,
+        private readonly products: ProductFacade,
         private readonly dynamicFilters: CatalogCategoryDynamicFilterDataloaderService,
         private readonly brandFilters: CatalogCategoryBrandFilterDataloaderService,
         private readonly sellerFilters: CatalogCategorySellerFilterDataloaderService,
@@ -58,7 +58,7 @@ export class CatalogCategoryFilterDataloaderService {
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<number> {
-        return await this.dataloader.getTotalCount(categoryIds, filters)
+        return await this.products.getTotalCount(categoryIds, filters)
     }
 
     @Log(
@@ -74,7 +74,7 @@ export class CatalogCategoryFilterDataloaderService {
         filters: CatalogFilterInputInterface[],
         { offset, limit, sorting }: CatalogPaginationInputInterface
     ): Promise<number[]> {
-        return await this.dataloader.getFilteredProductIds(categoryIds, filters, {
+        return await this.products.getFilteredProductIds(categoryIds, filters, {
             offset,
             limit,
             sorting,

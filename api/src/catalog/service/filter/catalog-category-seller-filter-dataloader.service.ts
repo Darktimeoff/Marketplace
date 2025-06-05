@@ -7,13 +7,12 @@ import type {
     CatalogFilterValuesSelectType,
 } from 'contracts'
 import { getErrorMessage } from '@rnw-community/shared'
-import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Log } from '@rnw-community/nestjs-enterprise'
-import { CatalogCategorySellerFilterDataloader } from '@/catalog/dataloader/catalog-category-seller-filter.dataloader'
 import { CatalogCategorySelectFilterTemplateDataloaderService } from './catalog-category-select-filter-template-dataloader.service'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
-import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
+import { FilterCountableModelInterface, ProductFilterSlugEnum } from 'contracts'
 import { SellerFacade } from '@/seller/facade/seller.facade'
+import { ProductFacade } from '@/product/facade/product-filter.facade'
 
 @Injectable()
 export class CatalogCategorySellerFilterDataloaderService
@@ -21,8 +20,8 @@ export class CatalogCategorySellerFilterDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
     constructor(
-        private readonly dataloader: CatalogCategorySellerFilterDataloader,
-        private readonly seller: SellerFacade
+        private readonly seller: SellerFacade,
+        private readonly products: ProductFacade
     ) {
         super()
     }
@@ -46,7 +45,7 @@ export class CatalogCategorySellerFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<FilterCountableModelInterface[]> {
-        return await this.dataloader.getCount(categoryIds, filters)
+        return await this.products.getCountBySellerId(categoryIds, filters)
     }
 
     protected async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
@@ -57,7 +56,7 @@ export class CatalogCategorySellerFilterDataloaderService
         return {
             id: 1,
             name: 'Продавец',
-            slug: CatalogDefaultFilterSlugEnum.SELLER,
+            slug: ProductFilterSlugEnum.SELLER,
             values,
         }
     }

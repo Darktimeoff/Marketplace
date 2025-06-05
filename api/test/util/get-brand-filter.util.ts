@@ -1,8 +1,7 @@
-import { CatalogFilterInteface, CatalogFilterValuesSelectType } from "contracts"
-import { CatalogDefaultFilterSlugEnum } from "../../src/catalog/enum/catalog-default-filter-slug.enum"
+import { CatalogFilterInteface, CatalogFilterValuesSelectType, ProductFilterSlugEnum } from "contracts"
 
 export function getBrandFilter(filters: CatalogFilterInteface[]): CatalogFilterInteface {
-    const brandFilter = filters.find(f => f.slug === CatalogDefaultFilterSlugEnum.BRAND)
+    const brandFilter = filters.find(f => f.slug === ProductFilterSlugEnum.BRAND)
     expect(brandFilter).toBeDefined()
     return brandFilter!
 }

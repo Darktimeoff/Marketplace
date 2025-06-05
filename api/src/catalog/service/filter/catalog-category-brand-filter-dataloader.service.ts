@@ -6,13 +6,12 @@ import type {
     CatalogFilterValuesSelectType,
 } from 'contracts'
 import { getErrorMessage } from '@rnw-community/shared'
-import { CatalogDefaultFilterSlugEnum } from '@/catalog/enum/catalog-default-filter-slug.enum'
 import { Log } from '@rnw-community/nestjs-enterprise'
-import { CatalogCategoryBrandFilterDataloader } from '@/catalog/dataloader/catalog-category-brand-filter.dataloader'
 import { CatalogCategorySelectFilterTemplateDataloaderService } from './catalog-category-select-filter-template-dataloader.service'
 import { NamesFilterModelInterface } from '@/catalog/interface/names-filter-model.interface'
-import { FilterCountableModelInterface } from '@/catalog/interface/filter-countable-model.interface'
+import { FilterCountableModelInterface, ProductFilterSlugEnum } from 'contracts'
 import { BrandFacade } from '@/brand/facade/brand.facade'
+import { ProductFacade } from '@/product/facade/product-filter.facade'
 
 @Injectable()
 export class CatalogCategoryBrandFilterDataloaderService
@@ -20,8 +19,8 @@ export class CatalogCategoryBrandFilterDataloaderService
     implements CatalogCategoryFilterServiceInterface
 {
     constructor(
-        private readonly dataloader: CatalogCategoryBrandFilterDataloader,
-        private readonly brands: BrandFacade
+        private readonly brands: BrandFacade,
+        private readonly products: ProductFacade
     ) {
         super()
     }
@@ -45,7 +44,7 @@ export class CatalogCategoryBrandFilterDataloaderService
         categoryIds: number[],
         filters: CatalogFilterInputInterface[]
     ): Promise<FilterCountableModelInterface[]> {
-        return await this.dataloader.getCount(categoryIds, filters)
+        return await this.products.getCountByGroupId(categoryIds, filters)
     }
 
     protected async getNames(ids: number[]): Promise<NamesFilterModelInterface[]> {
@@ -56,7 +55,7 @@ export class CatalogCategoryBrandFilterDataloaderService
         return {
             id: 2,
             name: 'Бренд',
-            slug: CatalogDefaultFilterSlugEnum.BRAND,
+            slug: ProductFilterSlugEnum.BRAND,
             values,
         }
     }

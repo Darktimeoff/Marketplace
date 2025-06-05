@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { CatalogCategoryFilterDataloader } from '@/catalog/dataloader/catalog-category-filter.dataloader'
 import { getErrorMessage, isEmptyArray } from '@rnw-community/shared'
 import type {
     CatalogFilterInputInterface,
@@ -8,12 +7,13 @@ import type {
 } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { CatalogCategoryDynamicFilterDataloader } from '@/catalog/dataloader/catalog-category-dynamic-filter.dataloader'
+import { ProductFacade } from '@/product/facade/product-filter.facade'
 
 @Injectable()
 export class CatalogCategoryDynamicFilterDataloaderService {
     constructor(
         private readonly dataloader: CatalogCategoryDynamicFilterDataloader,
-        private readonly filterDataloader: CatalogCategoryFilterDataloader
+        private readonly productFacade: ProductFacade
     ) {}
 
     @Log(
@@ -53,7 +53,7 @@ export class CatalogCategoryDynamicFilterDataloaderService {
         unit: string | null,
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterValuesSelectType[]> {
-        const productIds = await this.filterDataloader.getFilteredProductIdsWithoutPagination(
+        const productIds = await this.productFacade.getFilteredProductIdsWithoutPagination(
             [categoryId],
             filters,
             attributeSlug

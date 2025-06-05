@@ -3,8 +3,7 @@ import { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { AppModule } from '../../src/app/app.module'
 import { Server } from 'node:http'
-import { CatalogDefaultFilterSlugEnum } from '../../src/catalog/enum/catalog-default-filter-slug.enum'
-import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectDtoInterface } from 'contracts'
+import { CatalogCategoryFiltersDtoInterface, CatalogFilterValuesSelectDtoInterface, ProductFilterSlugEnum } from 'contracts'
 import { getDynamicFilter } from '../util/get-dynamic-filter.util'
 import { getBrandFilter, getBrandValues } from '../util/get-brand-filter.util'
 import { getSellerFilter, getSellerValues } from '../util/get-seller-filter.util'
@@ -79,7 +78,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const expectedTotal = firstBrand.count + secondBrand.count
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.BRAND}:${firstBrand.id},${secondBrand.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${ProductFilterSlugEnum.BRAND}:${firstBrand.id},${secondBrand.id}`)
                 .expect(200)
 
             const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
@@ -110,7 +109,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const firstSeller = sellerValues[0]
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${ProductFilterSlugEnum.SELLER}:${firstSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
@@ -140,7 +139,7 @@ describe('CatalogCategoryFilters (e2e)', () => {
             const expectedTotal = firstSeller.count + secondSeller.count
 
             const filteredResponse = await request(app.getHttpServer())
-                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${CatalogDefaultFilterSlugEnum.SELLER}:${firstSeller.id},${secondSeller.id}`)
+                .get(`/catalog/category/${MOBILE_CATEGORY_ID}/filters?filters=${ProductFilterSlugEnum.SELLER}:${firstSeller.id},${secondSeller.id}`)
                 .expect(200)
 
             const filteredBody: CatalogCategoryFiltersDtoInterface = filteredResponse.body
