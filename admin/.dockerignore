@@ -1,4 +1,0 @@
-ADMINFORTH_SECRET=123
-NODE_ENV=development
-DATABASE_URL=postgresql://Yevhenii.Korolikhin:DB_PASSWORD@localhost:5455/api?schema&#x3D;public
-PRISMA_DATABASE_URL=postgresql://Yevhenii.Korolikhin:DB_PASSWORD@localhost:5455/api?schema&#x3D;public
