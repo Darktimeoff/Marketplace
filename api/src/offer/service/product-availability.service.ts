@@ -2,10 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { ProductAvailabilityDataloader } from '@/offer/dataloader/product-availability.dataloader'
 import { Prisma } from '@/generic/db/generated'
 import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
-import { ProductAvailabilityInterface } from 'contracts'
+import {
+    ProductAvailabilityInterface,
+    ProductAvailabilityStatusEnum,
+    ProductOfferModelInterface,
+} from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
-import { getAvailableStatusByOffer } from '@/offer/util/get-available-status-by-offer.util'
 
 @Injectable()
 export class ProductAvailabilityService {
@@ -24,7 +27,7 @@ export class ProductAvailabilityService {
 
             return {
                 ...productAvailability,
-                availabilityStatus: getAvailableStatusByOffer(productAvailability),
+                availabilityStatus: this.getAvailableStatysByOffer(productAvailability),
             }
         } catch (error) {
             if (
@@ -35,5 +38,21 @@ export class ProductAvailabilityService {
             }
             throw error
         }
+    }
+
+    @Log(
+        offer =>
+            `Get avaialablility status availability by offer active: ${offer.isActive} quantity: ${offer.quantity}`,
+        (status, offer) =>
+            `Found product availability by offer active: ${offer.isActive} quantity: ${offer.quantity} status: ${status}`,
+        (error, offer) =>
+            `Error finding product availability by offer active: ${offer.isActive} quantity: ${offer.quantity}: ${getErrorMessage(error)}`
+    )
+    getAvailableStatysByOffer(offer: Pick<ProductOfferModelInterface, 'isActive' | 'quantity'>) {
+        if (offer.isActive && offer.quantity > 0) {
+            return ProductAvailabilityStatusEnum.AVAILABLE
+        }
+
+        return ProductAvailabilityStatusEnum.UNAVAILABLE
     }
 }

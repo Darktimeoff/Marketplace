@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { ProductCatalogDataloader } from '@/product/dataloader/product-catalog.dataloader'
 import { ProductShortInfoInterface, ProductShortInfoModelInterface } from 'contracts'
-import { getAvailableStatusByOffer } from '@/offer/util/get-available-status-by-offer.util'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { OfferFacade } from '@/offer/facade/offer.facade'
 
 @Injectable()
 export class ProductCatalogDataloaderService {
-    constructor(private readonly productCatalogDataloader: ProductCatalogDataloader) {}
+    constructor(
+        private readonly productCatalogDataloader: ProductCatalogDataloader,
+        private readonly offers: OfferFacade
+    ) {}
 
     @Log(
         ids => `Getting product short info by ids: ${ids.join(', ')}`,
@@ -28,7 +31,7 @@ export class ProductCatalogDataloaderService {
         return {
             ...productShortInfo,
             image: productShortInfo.productMedia.map(media => media.media)[0],
-            status: getAvailableStatusByOffer(productShortInfo.offers[0]),
+            status: this.offers.getAvailableStatusByOffer(productShortInfo.offers[0]),
             title: productShortInfo.title.uk_ua,
             shortDescription: productShortInfo.shortDescription?.uk_ua ?? null,
         }

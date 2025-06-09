@@ -8,9 +8,10 @@ import { ProductFilterBaseDataloader } from './dataloader/product-filter-base.da
 import { ProductFilterDataloader } from './dataloader/product-filter.dataloader'
 import { ProductCatalogDataloaderService } from './service/product-catalog-dataloader.service'
 import { ProductCatalogDataloader } from './dataloader/product-catalog.dataloader'
+import { OfferModule } from '@/offer/offer.module'
 
 @Module({
-    imports: [],
+    imports: [OfferModule],
     controllers: [ProductController],
     providers: [
         ProductDataloader,
