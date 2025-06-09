@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { ProductFilterService } from '@/product/service/product-filter.service'
-import { CatalogFilterInputInterface, CatalogFilterValuesSelectType, CatalogPaginationInputInterface } from 'contracts'
+import {
+    CatalogFilterInputInterface,
+    CatalogFilterValuesSelectType,
+    CatalogPaginationInputInterface,
+} from 'contracts'
 import { FilterCountableModelInterface } from 'contracts'
 
 @Injectable()

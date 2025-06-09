@@ -57,7 +57,11 @@ export class CatalogCategoryDynamicFilterDataloaderService {
             return []
         }
 
-        const values = await this.products.getCountByAttributeId(categoryId, attributeId, productIds)
+        const values = await this.products.getCountByAttributeId(
+            categoryId,
+            attributeId,
+            productIds
+        )
 
         return values.map(v => ({
             id: v.id,

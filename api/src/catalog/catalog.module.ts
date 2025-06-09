@@ -20,7 +20,7 @@ import { SellerModule } from '@/seller/seller.module'
         CatalogCategoryDynamicFilterDataloaderService,
         CatalogCategoryBrandFilterDataloaderService,
         CatalogCategorySellerFilterDataloaderService,
-        CatalogCategoryPriceFilterDataloaderService
+        CatalogCategoryPriceFilterDataloaderService,
     ],
 })
 export class CatalogModule {}
