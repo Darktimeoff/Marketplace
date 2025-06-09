@@ -6,7 +6,6 @@ import type {
     CatalogFilterValuesSelectType,
 } from 'contracts'
 import { Log } from '@rnw-community/nestjs-enterprise'
-import { CatalogCategoryDynamicFilterDataloader } from '@/catalog/dataloader/catalog-category-dynamic-filter.dataloader'
 import { ProductFacade } from '@/product/facade/product-filter.facade'
 import { CategoryFacade } from '@/category/facade/category.facade'
 
@@ -14,8 +13,7 @@ import { CategoryFacade } from '@/category/facade/category.facade'
 export class CatalogCategoryDynamicFilterDataloaderService {
     constructor(
         private readonly categories: CategoryFacade,
-        private readonly products: ProductFacade,
-        private readonly dataloader: CatalogCategoryDynamicFilterDataloader
+        private readonly products: ProductFacade
     ) {}
 
     @Log(
@@ -59,7 +57,7 @@ export class CatalogCategoryDynamicFilterDataloaderService {
             return []
         }
 
-        const values = await this.dataloader.getFilterValues(categoryId, attributeId, productIds)
+        const values = await this.products.getCountByAttributeId(categoryId, attributeId, productIds)
 
         return values.map(v => ({
             id: v.id,

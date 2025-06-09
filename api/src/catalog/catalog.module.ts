@@ -8,7 +8,6 @@ import { CatalogCategoryDynamicFilterDataloaderService } from './service/filter/
 import { CatalogCategoryBrandFilterDataloaderService } from './service/filter/catalog-category-brand-filter-dataloader.service'
 import { CatalogCategorySellerFilterDataloaderService } from './service/filter/catalog-category-seller-filter-dataloader.service'
 import { CatalogCategoryPriceFilterDataloaderService } from './service/filter/catalog-category-price-filter-dataloader.service'
-import { CatalogCategoryDynamicFilterDataloader } from './dataloader/catalog-category-dynamic-filter.dataloader'
 import { BrandModule } from '@/brand/brand.module'
 import { SellerModule } from '@/seller/seller.module'
 
@@ -21,8 +20,7 @@ import { SellerModule } from '@/seller/seller.module'
         CatalogCategoryDynamicFilterDataloaderService,
         CatalogCategoryBrandFilterDataloaderService,
         CatalogCategorySellerFilterDataloaderService,
-        CatalogCategoryPriceFilterDataloaderService,
-        CatalogCategoryDynamicFilterDataloader,
+        CatalogCategoryPriceFilterDataloaderService
     ],
 })
 export class CatalogModule {}

@@ -3,9 +3,11 @@ import { Injectable } from '@nestjs/common'
 import { ProductFilterBaseDataloader } from './product-filter-base.dataloader'
 import {
     CatalogFilterInputInterface,
+    CatalogFilterValuesSelectType,
     FilterCountableModelInterface,
     ProductFilterSlugEnum,
 } from 'contracts'
+import { Prisma } from '@/generic/db/generated'
 
 @Injectable()
 export class ProductFilterDataloader {
@@ -79,5 +81,26 @@ export class ProductFilterDataloader {
             min: priceAggregates._min.price ? Number(priceAggregates._min.price) : 0,
             max: priceAggregates._max.price ? Number(priceAggregates._max.price) : 0,
         }
+    }
+
+    async getCountByAttributeId(
+        categoryId: number,
+        attributeId: number,
+        productIds: number[]
+    ): Promise<CatalogFilterValuesSelectType[]> {
+        const values = await this.db.$queryRaw<CatalogFilterValuesSelectType[]>`
+            SELECT 
+                MIN(PAV.id) AS id,
+                COALESCE(T_PAV.uk_ua, TO_CHAR(ROUND(PAV."numberValue", 2), 'FM999999999.00')) AS name,
+                COUNT(*) AS count
+            FROM "ProductAttributeValue" PAV
+            LEFT JOIN "Translation" T_PAV ON T_PAV.id = PAV."textValueId"
+            JOIN "Product" P ON PAV."productId" = P.id
+            WHERE PAV."attributeId" = ${attributeId} AND P."categoryId" = ${categoryId} AND PAV."productId" IN (${Prisma.join(productIds)})
+            GROUP BY name
+            ORDER BY count DESC
+        `
+
+        return values
     }
 }

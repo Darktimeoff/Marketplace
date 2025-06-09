@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ProductFilterService } from '@/product/service/product-filter.service'
-import { CatalogFilterInputInterface, CatalogPaginationInputInterface } from 'contracts'
+import { CatalogFilterInputInterface, CatalogFilterValuesSelectType, CatalogPaginationInputInterface } from 'contracts'
 import { FilterCountableModelInterface } from 'contracts'
 
 @Injectable()
@@ -53,5 +53,13 @@ export class ProductFacade {
         filters: CatalogFilterInputInterface[]
     ): Promise<number> {
         return await this.filters.getTotalCount(categoryIds, filters)
+    }
+
+    async getCountByAttributeId(
+        categoryId: number,
+        attributeId: number,
+        productIds: number[]
+    ): Promise<CatalogFilterValuesSelectType[]> {
+        return await this.filters.getCountByAttributeId(categoryId, attributeId, productIds)
     }
 }
