@@ -1,4 +1,4 @@
-import { ProductAttributeDataloader } from '@/product-attributes/dataloader/product-attribute.dataloader'
+import { ProductAttributeDataloader } from '@/attribute/dataloader/product-attribute.dataloader'
 import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'

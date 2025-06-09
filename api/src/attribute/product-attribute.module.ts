@@ -9,4 +9,4 @@ import { ProductAttributeService } from './service/product-attributes.service'
     providers: [ProductAttributeDataloader, ProductAttributeService],
     exports: [ProductAttributeService],
 })
-export class ProductAttributeModule {}
+export class AttributeModule {}

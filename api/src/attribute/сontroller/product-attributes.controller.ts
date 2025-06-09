@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
-import { ProductAttributeService } from '@/product-attributes/service/product-attributes.service'
+import { ProductAttributeService } from '@/attribute/service/product-attributes.service'
 import { UseSerializeValidator } from '@/generic/decorator/use-transform-validator.decorator'
-import { ProductAttributesDto } from '@/product-attributes/dto/product-attributes.dto'
+import { ProductAttributesDto } from '@/attribute/dto/product-attributes.dto'
 import { ProductAttributesWithoutGroupingInterface } from 'contracts'
-import { ProductAttributesGroupedDto } from '@/product-attributes/dto/product-attributes-grouped.dto'
+import { ProductAttributesGroupedDto } from '@/attribute/dto/product-attributes-grouped.dto'
 
 @Controller('product/:productId/characteristics')
 export class ProductAttributesController {
