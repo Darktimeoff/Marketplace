@@ -1,39 +1,11 @@
 import { DBService } from '@/generic/db/db.service'
 import { Prisma } from '@/generic/db/generated'
 import { Injectable } from '@nestjs/common'
-import { AttributeAssociationEnum, CatalogFilterValuesSelectType } from 'contracts'
-import { DynamicFilterModelInterface } from '@/catalog/interface/dynamic-filter-model.interface'
+import { CatalogFilterValuesSelectType } from 'contracts'
 
 @Injectable()
 export class CatalogCategoryDynamicFilterDataloader {
     constructor(private readonly db: DBService) {}
-
-    async getFiltersByCategoryId(categoryId: number): Promise<DynamicFilterModelInterface[]> {
-        const categoryAttributes = await this.db.categoryAttributeFilter.findMany({
-            where: { categoryId },
-            orderBy: { order: 'asc' },
-            select: {
-                attribute: {
-                    select: {
-                        id: true,
-                        [AttributeAssociationEnum.NAME]: {
-                            omit: {
-                                ...this.db.getDefaultOmit(),
-                            },
-                        },
-                        slug: true,
-                        [AttributeAssociationEnum.UNIT]: {
-                            omit: {
-                                ...this.db.getDefaultOmit(),
-                            },
-                        },
-                    },
-                },
-            },
-        })
-
-        return categoryAttributes.map(categoryAttribute => categoryAttribute.attribute)
-    }
 
     async getFilterValues(
         categoryId: number,

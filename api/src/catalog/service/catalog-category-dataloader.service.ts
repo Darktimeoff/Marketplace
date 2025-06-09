@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CategoryDataloaderService } from '@/category/service/category-dataloader.service'
+import { CategoryFacade } from '@/category/facade/category.facade'
 import { CatalogCategoryFilterDataloaderService } from './filter/catalog-category-filter-dataloader.service'
 import type { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from 'contracts'
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
@@ -8,7 +8,7 @@ import { getErrorMessage } from '@rnw-community/shared'
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
-        private readonly categories: CategoryDataloaderService,
+        private readonly categories: CategoryFacade,
         private readonly filters: CatalogCategoryFilterDataloaderService
     ) {}
 
@@ -24,7 +24,7 @@ export class CatalogCategoryDataloaderService {
         id: number,
         filtersInput: CatalogFilterInputInterface[]
     ): Promise<CatalogCategoryFiltersInteface> {
-        const categories = await this.categories.getChildrenIds(id)
+        const categories = await this.categories.getChildrenIdsByCategoryId(id)
         const [total, filters] = await Promise.all([
             this.filters.getTotalCount(categories, filtersInput),
             this.filters.getFiltersByCategoryId(id, categories, filtersInput),
@@ -48,7 +48,7 @@ export class CatalogCategoryDataloaderService {
         pagination: CatalogPaginationInput,
         filters: CatalogFilterInputInterface[]
     ): Promise<number[]> {
-        const categories = await this.categories.getChildrenIds(id)
+        const categories = await this.categories.getChildrenIdsByCategoryId(id)
 
         return await this.filters.getProductIds(categories, filters, pagination)
     }

@@ -8,12 +8,14 @@ import type {
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { CatalogCategoryDynamicFilterDataloader } from '@/catalog/dataloader/catalog-category-dynamic-filter.dataloader'
 import { ProductFacade } from '@/product/facade/product-filter.facade'
+import { CategoryFacade } from '@/category/facade/category.facade'
 
 @Injectable()
 export class CatalogCategoryDynamicFilterDataloaderService {
     constructor(
-        private readonly dataloader: CatalogCategoryDynamicFilterDataloader,
-        private readonly productFacade: ProductFacade
+        private readonly categories: CategoryFacade,
+        private readonly products: ProductFacade,
+        private readonly dataloader: CatalogCategoryDynamicFilterDataloader
     ) {}
 
     @Log(
@@ -28,20 +30,14 @@ export class CatalogCategoryDynamicFilterDataloaderService {
         categoryId: number,
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterInteface[]> {
-        const attributes = await this.dataloader.getFiltersByCategoryId(categoryId)
+        const attributes = await this.categories.getDynamicFiltersByCategoryId(categoryId)
 
         return await Promise.all(
             attributes.map(async a => ({
                 id: a.id,
-                name: a.name.uk_ua,
+                name: a.name,
                 slug: a.slug,
-                values: await this.getValues(
-                    categoryId,
-                    a.id,
-                    a.slug,
-                    a.unit?.uk_ua ?? null,
-                    filters
-                ),
+                values: await this.getValues(categoryId, a.id, a.slug, a.unit, filters),
             }))
         )
     }
@@ -53,7 +49,7 @@ export class CatalogCategoryDynamicFilterDataloaderService {
         unit: string | null,
         filters: CatalogFilterInputInterface[]
     ): Promise<CatalogFilterValuesSelectType[]> {
-        const productIds = await this.productFacade.getFilteredProductIdsWithoutPagination(
+        const productIds = await this.products.getFilteredProductIdsWithoutPagination(
             [categoryId],
             filters,
             attributeSlug
