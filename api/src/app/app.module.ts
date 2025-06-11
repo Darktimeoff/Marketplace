@@ -2,6 +2,7 @@ import { AttributeModule } from '@/attribute/product-attribute.module'
 import { BrandModule } from '@/brand/brand.module'
 import { CatalogModule } from '@/catalog/catalog.module'
 import { CategoryModule } from '@/category/category.module'
+import { AppCacheModule } from '@/generic/cache/cache.module'
 import { ApiConfigModule } from '@/generic/config/api-config.module'
 import { DBModule } from '@/generic/db/db.module'
 import { OfferModule } from '@/offer/offer.module'
@@ -11,6 +12,7 @@ import { Module } from '@nestjs/common'
 
 @Module({
     imports: [
+        AppCacheModule,
         ApiConfigModule,
         DBModule,
         CategoryModule,

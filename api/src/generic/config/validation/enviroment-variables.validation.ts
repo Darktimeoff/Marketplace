@@ -16,4 +16,5 @@ export const environmentVariablesValidationSchema = Joi.object<EnvironmentVariab
     [EnvironmentVariablesEnum.DATABASE_URL]: Joi.string().required(),
     [EnvironmentVariablesEnum.PRISMA_OPTIMIZE_API_KEY]: Joi.string(),
     [EnvironmentVariablesEnum.PRISMA_QUERY_LOG_ENABLED]: Joi.boolean().default(false),
+    [EnvironmentVariablesEnum.REDIS_CACHE_PORT]: Joi.number().default(6381),
 })
