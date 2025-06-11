@@ -6,7 +6,7 @@ import { getErrorMessage } from '@rnw-community/shared'
 import { Prisma } from '@/generic/db/generated'
 import { DBErrorCodeEnum } from '@/generic/db/db-error-code.enum'
 import { Cached } from '@/generic/decorator/сached.decorator'
-import { getProductByIdKey } from '@/product/cache/get-product-by-id-key.cache'
+import { getProductByIdCacheKey } from '@/product/cache-key/get-product-by-id.cache-key'
 import { CacheTTLEnum } from '@/generic/cache/cache-ttl.enum'
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ProductService {
         (product, productId) => `Found product by id ${productId}: ${product.id}`,
         (error, productId) => `Error finding product by id ${productId}: ${getErrorMessage(error)}`
     )
-    @Cached(getProductByIdKey, CacheTTLEnum.ONE_DAY)
+    @Cached(getProductByIdCacheKey, CacheTTLEnum.ONE_DAY)
     async findById(productId: number): Promise<ProductInterface> {
         try {
             const product = await this.dataloader.findById(productId)
