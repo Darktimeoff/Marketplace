@@ -8,7 +8,7 @@ export type CacheKeyFactory<TArgs extends unknown[]> = (...args: TArgs) => strin
 
 export function Cached<TResult, TArgs extends unknown[] = unknown[]>(
     key: string | CacheKeyFactory<TArgs>,
-    ttl: CacheTTLEnum = CacheTTLEnum.ONE_MINUTE
+    ttl: CacheTTLEnum = CacheTTLEnum.ONE_DAY
 ): MethodDecoratorType<TResult, TArgs> {
     const injectCacheService = Inject(CacheService)
 

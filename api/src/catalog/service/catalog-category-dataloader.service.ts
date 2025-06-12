@@ -5,6 +5,10 @@ import type { CatalogCategoryFiltersInteface, CatalogFilterInputInterface } from
 import { CatalogPaginationInput } from '@/catalog/input/catalog-pagination.input'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
+import { getByCategoryIdFiltersCacheKey } from '@/catalog/cache-key/get-by-category-id-filters.cache-key'
+import { Cached } from '@/generic/decorator/сached.decorator'
+import { getByCategoryIdCacheKey } from '@/catalog/cache-key/get-by-category-id.cache-key'
+
 @Injectable()
 export class CatalogCategoryDataloaderService {
     constructor(
@@ -20,6 +24,7 @@ export class CatalogCategoryDataloaderService {
         (error, id, filtersInput) =>
             `Error getting filters by category id "${id}", filters "${JSON.stringify(filtersInput)}": ${getErrorMessage(error)}`
     )
+    @Cached(getByCategoryIdFiltersCacheKey)
     async getByCategoryIdFilters(
         id: number,
         filtersInput: CatalogFilterInputInterface[]
@@ -43,6 +48,7 @@ export class CatalogCategoryDataloaderService {
         (result, id, pagination, filters) =>
             `Got ${result.length} product ids by category id "${id}", pagination "${JSON.stringify(pagination)}", filters "${JSON.stringify(filters)}"`
     )
+    @Cached(getByCategoryIdCacheKey)
     async getByCategoryId(
         id: number,
         pagination: CatalogPaginationInput,
