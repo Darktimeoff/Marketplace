@@ -4,6 +4,8 @@ import { ProductShortInfoInterface, ProductShortInfoModelInterface } from 'contr
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
 import { OfferFacade } from '@/offer/facade/offer.facade'
+import { Cached } from '@/generic/decorator/сached.decorator'
+import { getProductsShortInfoByIdsCacheKey } from '@/product/cache-key/get-products-short-info-by-ids.cache-key'
 
 @Injectable()
 export class ProductCatalogDataloaderService {
@@ -18,6 +20,7 @@ export class ProductCatalogDataloaderService {
         (error, ids) =>
             `Error getting product short info by ids: ${ids.join(', ')}, ${getErrorMessage(error)}`
     )
+    @Cached(getProductsShortInfoByIdsCacheKey)
     async getProductShortInfoByIds(productIds: number[]): Promise<ProductShortInfoInterface[]> {
         const productShortInfo =
             await this.productCatalogDataloader.getProductShortInfoByIds(productIds)

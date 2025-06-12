@@ -1,4 +1,5 @@
 import { ProductAttributeDataloader } from '@/attribute/dataloader/product-attribute.dataloader'
+import { Cached } from '@/generic/decorator/сached.decorator'
 import { Injectable } from '@nestjs/common'
 import { Log } from '@rnw-community/nestjs-enterprise'
 import { getErrorMessage } from '@rnw-community/shared'
@@ -7,6 +8,8 @@ import {
     ProductAttributesWithoutGroupingInterface,
     ProductAttributesWithoutGroupingModelInterface,
 } from 'contracts'
+import { getProductAttributesFlatCacheKey } from '../cache-key/get-product-attributes-flat.cache-key'
+import { getProductAttributesCacheKey } from '../cache-key/get-product-attributes.cache-key'
 
 @Injectable()
 export class ProductAttributeService {
@@ -19,6 +22,7 @@ export class ProductAttributeService {
         (error, productId) =>
             `Error finding attributes by product id ${productId}: ${getErrorMessage(error)}`
     )
+    @Cached(getProductAttributesFlatCacheKey)
     async findByProductIdWithoutGrouping(
         productId: number
     ): Promise<ProductAttributesWithoutGroupingInterface[]> {
@@ -34,6 +38,7 @@ export class ProductAttributeService {
         (error, productId) =>
             `Error finding grouped attributes by product id ${productId}: ${getErrorMessage(error)}`
     )
+    @Cached(getProductAttributesCacheKey)
     async findByProductIdGrouped(productId: number): Promise<ProductAttributesGroupedInterface[]> {
         const attributesGrouped = await this.dataloader.findByProductIdGrouped(productId)
 
