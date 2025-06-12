@@ -8,8 +8,8 @@ import {
     ProductAttributesWithoutGroupingInterface,
     ProductAttributesWithoutGroupingModelInterface,
 } from 'contracts'
-import { getProductAttributesFlatCacheKey } from '../cache-key/get-product-attributes-flat.cache-key'
-import { getProductAttributesCacheKey } from '../cache-key/get-product-attributes.cache-key'
+import { getProductAttributesFlatCacheKey } from '@/attribute/cache-key/get-product-attributes-flat.cache-key'
+import { getProductAttributesCacheKey } from '@/attribute/cache-key/get-product-attributes.cache-key'
 
 @Injectable()
 export class ProductAttributeService {
